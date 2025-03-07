@@ -50,74 +50,91 @@
 ```bash
 git clone https://github.com/diganta688/DRIVEHUB.git
 cd DRIVEHUB
+```
 
-2️⃣ Backend Setup
+#### 2️⃣ Backend Setup
+```bash
 cd backend
 npm install
+```
 
-Create a .env file in the backend folder with:
+#### Create a .env file in the backend folder with:
+```bash
 PORT=8080
 MONGO_URL=<your_mongodb_connection_string>
 JWT_SECRET=<your_jwt_secret>
 FRONTEND=http://localhost:5173
+```
 
-3️⃣ Frontend Setup
+#### 3️⃣ Frontend Setup
+```bash
 cd ../client
 npm install
+```
 
-Create a .env file in the client folder with:
+#### Create a .env file in the client folder with:
+```bash
 VITE_BACKEND_URL=http://localhost:8080
+```
 
-🎬 Running the Application
-Start Backend Server
+## 🎬 Running the Application 
+#### Start Backend Server
+```bash
 cd backend
 npm start
+```
 
-Start Frontend Server
+#### Start Frontend Server
+```bash
 cd ../client
 npm run dev
+```
+
 Open http://localhost:5173 in your browser.
 
-🔒 Authentication & Authorization
-🔑 JWT Authentication: Users receive a secure token after login.
-🍪 Cookie-Based Sessions: Tokens are stored in secure HTTP-only cookies.
-🛡️ Protected Routes: Dashboard, booking history, and profile pages are restricted to authenticated users only.
-🚘 Car Listings & Booking Flow
-🛻 Browse cars with images, descriptions, rental rates, and availability.
-📍 Filter cars by location, type (SUV, Sedan), or price range.
-📅 Book a car by selecting dates, providing details, and confirming the booking.
-📊 Manage all bookings from the User Dashboard.
-🛠️ Admins can add, edit, or remove cars and approve/reject bookings.
-📂 Media & File Management
-🖼️ Car Images: Stored under public/media/Images.
-🎥 Video Banners: Promo videos shown on the homepage.
-📑 Uploaded Documents (optional): For user verification (like driving licenses).
-⚠️ Note: Large files (like videos) should ideally be stored on cloud storage platforms like AWS S3 or Cloudinary for better performance.
+## 🔒 Authentication & Authorization
+- 🔑 JWT Authentication: Users receive a secure token after login.
+- 🍪 Cookie-Based Sessions: Tokens are stored in secure HTTP-only cookies.
+ -🛡️ Protected Routes: Dashboard, booking history, and profile pages are restricted to authenticated users only.
+## 🚘 Car Listings & Booking Flow
+- 🛻 Browse cars with images, descriptions, rental rates, and availability.
+- 📍 Filter cars by location, type (SUV, Sedan), or price range.
+- 📅 Book a car by selecting dates, providing details, and confirming the booking.
+- 📊 Manage all bookings from the User Dashboard.
+- 🛠️ Admins can add, edit, or remove cars and approve/reject bookings.
+- 📂 Media & File Management
+- 🖼️ Car Images: Stored under public/media/Images.
+- 🎥 Video Banners: Promo videos shown on the homepage.
+- 📑 Uploaded Documents (optional): For user verification (like driving licenses).
+- ⚠️ Note: Large files (like videos) should ideally be stored on cloud storage platforms like AWS S3 or Cloudinary for better performance.
 
-📊 Security & Error Handling
-✅ Form Validations: Input fields are validated on both frontend and backend.
-✅ Session Management: Active sessions are verified for each protected request.
-✅ Error Handling: Meaningful error messages are returned to the frontend to improve user experience.
-✨ Future Enhancements
-✅ Payment Gateway Integration (Razorpay, Stripe)
-✅ Advanced Search Filters (Car brand, fuel type, transmission)
-✅ Location-Based Recommendations
-✅ Car Reviews & Ratings System
-✅ Cloud Storage Migration (for efficient media management)
-🤝 Contributing
-Contributions are welcome! To contribute:
+## 📊 Security & Error Handling
+- ✅ Form Validations: Input fields are validated on both frontend and backend.
+- ✅ Session Management: Active sessions are verified for each protected request.
+- ✅ Error Handling: Meaningful error messages are returned to the frontend to improve user experience.
+## ✨ Future Enhancements
+- ✅ Payment Gateway Integration (Razorpay, Stripe)
+- ✅ Advanced Search Filters (Car brand, fuel type, transmission)
+- ✅ Location-Based Recommendations
+- ✅ Car Reviews & Ratings System
+- ✅ Cloud Storage Migration (for efficient media management)
 
-Fork the repository.
-Create a feature branch (e.g., feature/booking-improvements).
-Commit your changes.
-Push the branch and submit a pull request.
-👨‍💻 Authors
-Diganta Chakraborty
-Anusree Das
-Sameer Raj Singh
-Sourav Debnath
-Souradeep Banerjee
-Feroja Khatun
-📧 Contact
-📧 Email: digantachakraborty688@gmail.com
-🔗 GitHub: @diganta688
+## 🤝 Contributing
+#### Contributions are welcome! To contribute:
+
+- Fork the repository.
+- Create a feature branch (e.g., feature/booking-improvements).
+- Commit your changes.
+- Push the branch and submit a pull request.
+
+## 👨‍💻 Authors
+#### Diganta Chakraborty
+#### Anusree Das
+#### Sameer Raj Singh
+#### Sourav Debnath
+#### Souradeep Banerjee
+####  Feroja Khatun
+
+## 📧 Contact
+#### 📧 Email: digantachakraborty688@gmail.com
+#### 🔗 GitHub: @diganta688
