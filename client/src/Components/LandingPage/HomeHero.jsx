@@ -18,17 +18,20 @@ function HomeHero() {
     check();
   }, []);
   const check = async () => {
-    await axios.get(`${import.meta.env.VITE_BACKEND_URL}/auth/home`, {
-      withCredentials: true,
-    }).then((response) => {
-      if (response.status !== 200) {
-        setDisplay(false);
-      }
-    }).catch((error) => {
-      if (error.response?.status === 401) {
-        setDisplay(false);
-      }
-    });
+    await axios
+      .get(`${import.meta.env.VITE_BACKEND_URL}/auth/home`, {
+        withCredentials: true,
+      })
+      .then((response) => {
+        if (response.status !== 200) {
+          setDisplay(false);
+        }
+      })
+      .catch((error) => {
+        if (error.response?.status === 401) {
+          setDisplay(false);
+        }
+      });
   };
   const videoRef = useRef(null);
   useEffect(() => {
@@ -49,7 +52,16 @@ function HomeHero() {
   return (
     <div className="main-home-hero">
       <div className="HomeHeroVideo">
-        <HomeHeroNav display={display}/>
+        <HomeHeroNav
+          display={display}
+          mainclass="nav-main"
+          navItemMain="nav-item-main"
+          navItemUser="nav-items-user"
+          Home="home"
+          img="media\Images\logo.png"
+          imgClass="nav-logo"
+          is={false}
+        />
         <video
           className="background-video"
           ref={videoRef}

@@ -13,7 +13,16 @@ import { Link } from "react-router";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-function HomeHeroNav({ display }) {
+function HomeHeroNav({
+  display,
+  mainclass,
+  navItemMain,
+  navItemUser,
+  Home,
+  img,
+  imgClass,
+  is,
+}) {
   const scrollToAbout = () => {
     handleCloseUserMenu();
     window.scrollTo({
@@ -40,7 +49,10 @@ function HomeHeroNav({ display }) {
 
   const handleLogout = async () => {
     try {
-      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/auth/logout`, { withCredentials: true });
+      const res = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/auth/logout`,
+        { withCredentials: true }
+      );
       if (res.status === 200) {
         window.location.reload();
       }
@@ -50,22 +62,37 @@ function HomeHeroNav({ display }) {
       toast.error("Logout error");
     }
   };
-  
+
   return (
-    <div className="nav-main">
-      <div className="nav-logo">
-        <img src="media/Images/logo.png" alt="Logo" />
-      </div>
-      <div className="nav-item-main">
-        <div className="nav-items home">Home</div>
-        <div className="nav-items about" onClick={scrollToAbout}>
-          About
+    <div className={`${mainclass}`}>
+      <Link to="/">
+        <div className={`${imgClass}`}>
+          <img src={`${img}`} alt="Logo" />
         </div>
-        <div className="nav-items contact" onClick={scrollToContact}>
-          Contact us
-        </div>
+      </Link>
+      <div
+        className={`${navItemMain}`}
+        style={{
+          ...(is && { justifyContent: "flex-end" }),
+        }}
+      >
+        {!is && (
+          <>
+            <div className={`nav-items ${Home}`}>
+              <Link to="/home" style={{ color: "rgba(255, 255, 255, 0.664)" }}>
+                Home
+              </Link>
+            </div>
+            <div className="nav-items about" onClick={scrollToAbout}>
+              About
+            </div>
+            <div className="nav-items contact" onClick={scrollToContact}>
+              Contact us
+            </div>
+          </>
+        )}
         <div
-          className="nav-items-user"
+          className={`${navItemUser}`}
           onClick={handleOpenUserMenu}
           style={{ cursor: "pointer" }}
         >
@@ -107,7 +134,7 @@ function HomeHeroNav({ display }) {
         {display && (
           <Link to="/home">
             <MenuItem onClick={handleCloseUserMenu}>
-              <Typography>Dashboard</Typography>
+              <Typography>Home</Typography>
             </MenuItem>
           </Link>
         )}
@@ -115,13 +142,15 @@ function HomeHeroNav({ display }) {
           className="divider"
           style={{ borderBottom: "1px solid #00000021" }}
         ></div>
-        <MenuItem onClick={scrollToAbout} className="about-in-dropdown">
-          <DirectionsCarOutlinedIcon style={{ marginRight: "1rem" }} />
-          <Typography>About</Typography>
-        </MenuItem>
+        {!is && (
+          <MenuItem onClick={scrollToAbout} className="about-in-dropdown">
+            <DirectionsCarOutlinedIcon style={{ marginRight: "1rem" }} />
+            <Typography>About</Typography>
+          </MenuItem>
+        )}
         <MenuItem onClick={handleCloseUserMenu}>
           <DirectionsCarOutlinedIcon style={{ marginRight: "1rem" }} />
-          <Typography>Become a host</Typography>
+          <Link to="/host/login">Become a host</Link>
         </MenuItem>
         <Link to="/how-it-work">
           <MenuItem onClick={handleCloseUserMenu}>
@@ -135,15 +164,17 @@ function HomeHeroNav({ display }) {
           <RestoreIcon style={{ marginRight: "1rem" }} />
           <Typography>My Bookings</Typography>
         </MenuItem>
-        <MenuItem onClick={scrollToContact}>
-          <SupportAgentIcon style={{ marginRight: "1rem" }} />
-          <Typography>Contact support</Typography>
-        </MenuItem>
+        {!is && (
+          <MenuItem onClick={scrollToContact}>
+            <SupportAgentIcon style={{ marginRight: "1rem" }} />
+            <Typography>Contact support</Typography>
+          </MenuItem>
+        )}
         {display && (
           <MenuItem onClick={handleLogout}>
-          <LogoutRoundedIcon style={{ marginRight: "1rem" }} />
-          <Typography>Logout</Typography>
-        </MenuItem>
+            <LogoutRoundedIcon style={{ marginRight: "1rem" }} />
+            <Typography>Logout</Typography>
+          </MenuItem>
         )}
       </Menu>
     </div>

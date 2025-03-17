@@ -1,6 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,100..1000&display=swap");
 @import url('https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Playwrite+GB+S:ital,wght@0,100..400;1,100..400&family=Playwrite+IT+Moderna:wght@100..400&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Playwrite+GB+S:ital,wght@0,100..400;1,100..400&family=Playwrite+IT+Moderna:wght@100..400&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Emblema+One&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 @import "tailwindcss";
 
 
@@ -140,7 +141,7 @@ a{
     filter: invert(1) brightness(1000%);
   }
 
-  .nav-items-user{
+  .nav-items-user, .nav-items-user-list{
     cursor: pointer;
     display: flex;
     color: white;
@@ -150,7 +151,7 @@ a{
     padding: 5px 9px;
   }
 
-  .nav-item-main{
+  .nav-item-main, .nav-item-main-list{
     display: flex;
     width: 30%;
     justify-content: space-between;
@@ -577,10 +578,10 @@ margin-bottom: 4rem;
   }
 }
 @media (max-width: 768px) {
-  .home, .about{
+  .home, .homee, .about{
     display: none;
   }
-  .nav-item-main{
+  .nav-item-main, .nav-item-main-list{
     justify-content: flex-end;
   }
   .about-in-dropdown{
@@ -747,4 +748,107 @@ margin-bottom: 4rem;
 
 .filter-left::-webkit-scrollbar {
  display: none;
+}
+
+.nav-main-list{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.062);
+  z-index: 1000;
+  background-color: #c7c5c538;  
+}
+
+.nav-item-main-list{
+  color: rgba(0, 0, 0, 0.658) !important;
+}
+.nav-items-user-list{
+  background-color: #00000057;
+}
+.homee a{
+  color: rgba(0, 0, 0, 0.658) !important;
+}
+.nav-logo-list img{
+  width: 200px;
+  cursor: pointer;
+  filter: invert(1) brightness(0%);
+}
+
+.host-main{
+  padding-bottom: 2rem;
+}
+
+.host-top{
+  display: flex;
+  justify-content: center;
+  align-items: center;  
+  height: 40vh;
+  padding: 2rem 5rem;
+}
+
+.inner-host-top div{
+ margin-bottom: 2rem;
+}
+.inner-host-top div h6 {
+  font-weight: 700;
+}
+
+.inner-host-top {
+  width: 60%;
+}
+
+.inner-host-h1{
+  font-family: "Emblema One", system-ui;
+    font-weight: 900;
+  font-size: 45px;
+}
+
+.get-started-btn{
+  width: 25%;
+  font-weight: 700;
+}
+
+.host-img{
+  height: 32rem;
+  margin-bottom: 5rem;
+}
+
+.host-img img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.host-text{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.host-text div{
+  width: 50%;
+}
+
+.button-container {
+  text-align: center;
+  width: 14% !important;
+}
+
+
+.host-end{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.btn-primary {
+  background-color: orange !important;
+  border-color: rgb(112, 80, 20) !important;
+  color: white !important;
+}
+
+.btn-primary:hover {
+  background-color: darkorange !important;
+  border-color: darkorange !important;
 }
