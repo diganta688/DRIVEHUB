@@ -150,7 +150,7 @@ function HomeHeroNav({
         )}
         <MenuItem onClick={handleCloseUserMenu}>
           <DirectionsCarOutlinedIcon style={{ marginRight: "1rem" }} />
-          <Link to="/host/login">Become a host</Link>
+          <Link to="/host">Become a host</Link>
         </MenuItem>
         <Link to="/how-it-work">
           <MenuItem onClick={handleCloseUserMenu}>
@@ -160,7 +160,7 @@ function HomeHeroNav({
             </Typography>
           </MenuItem>
         </Link>
-        <MenuItem onClick={handleLogout}>
+        <MenuItem >
           <RestoreIcon style={{ marginRight: "1rem" }} />
           <Typography>My Bookings</Typography>
         </MenuItem>

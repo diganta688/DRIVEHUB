@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
+import HomeHeroNav from "../LandingPage/HomeHeroNav";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 50 },
@@ -84,77 +85,94 @@ const steps = [
 
 const HowItWorks = () => {
   return (
-    <div className="min-h-screen " style={{ padding: "5rem 1rem 0 1rem" }}>
-      <motion.header
-        initial={{ opacity: 0, y: -50 }}
-        animate={{ opacity: 1, y: 0, transition: { duration: 1 } }}
-        className="text-center py-16"
-      >
-        <h1 className="text-5xl font-bold mb-6">
-          How DriveHUB Car Booking Works
-        </h1>
-        <p className="text-lg max-w-3xl mx-auto">
-          From your first visit to booking a car and leaving feedback, DriveHUB
-          provides a seamless experience. Follow this step-by-step guide to
-          understand the process.
-        </p>
-      </motion.header>
-      <motion.div
-        className="space-y-20 max-w-6xl mx-auto px-6"
-        variants={staggerContainer}
-        initial="hidden"
-        animate="visible"
-      >
-        {steps.map((step, index) => (
-          <motion.div
-            key={index}
-            variants={fadeInUp}
-            className={`flex flex-col md:flex-row items-center gap-6 ${
-              index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
-            }`}
-          >
-            <div className="md:w-1/2 text-center md:text-left">
-              <motion.h2
-                className="text-3xl font-bold mb-4"
-                whileHover={{ scale: 1.05 }}
-              >
-                {step.title}
-              </motion.h2>
-              <p className="text-lg leading-relaxed">{step.description}</p>
-            </div>
-            <motion.div className="md:w-1/2" whileHover={{ scale: 1.05 }}>
-              <img
-                src={step.image}
-                alt={step.title}
-                className="rounded-xl shadow-xl"
-              />
-            </motion.div>
-          </motion.div>
-        ))}
-      </motion.div>
-
-      <motion.footer
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0, transition: { duration: 1, delay: 0.5 } }}
-        className="text-center py-16 mt-20 bg-white text-gray-900 mt-5 pb-5"
-      >
-        <h2 className="text-4xl font-bold">
-          Book Your Perfect Car Today with DriveHUB
-        </h2>
-        <p className="text-lg mt-4">
-          Start your journey with DriveHUB - Safe, reliable, and flexible car
-          rentals for all your needs.
-        </p>
-        <Link to="/log-in">
-        <button
-          className="mt-6 px-8 py-3 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition"
-          style={{ borderRadius: "15px", padding: "0 1.5rem" }}
+    <>
+      <HomeHeroNav
+        display={true}
+        mainclass="nav-main-list"
+        navItemMain="nav-item-main-list"
+        navItemUser="nav-items-user-list"
+        Home="homee"
+        img="\media\Images\logo.png"
+        imgClass="nav-logo-list"
+        is={true}
+      />
+      <div className="min-h-screen " style={{ padding: "5rem 1rem 0 1rem" }}>
+        <motion.header
+          initial={{ opacity: 0, y: -50 }}
+          animate={{ opacity: 1, y: 0, transition: { duration: 1 } }}
+          className="text-center py-16"
         >
-          Find Your Car Now
-        </button>
-        </Link>
-      </motion.footer>
-    </div>
+          {/* <img src="media\Images\logo.png" alt="" style={{width: "20%"}}/> */}
+          <h1 className="text-5xl font-bold mb-6">
+            How DriveHUB Car Booking Works
+          </h1>
+          <p className="text-lg max-w-3xl mx-auto">
+            From your first visit to booking a car and leaving feedback,
+            DriveHUB provides a seamless experience. Follow this step-by-step
+            guide to understand the process.
+          </p>
+        </motion.header>
+        <motion.div
+          className="space-y-20 max-w-6xl mx-auto px-6"
+          variants={staggerContainer}
+          initial="hidden"
+          animate="visible"
+        >
+          {steps.map((step, index) => (
+            <motion.div
+              key={index}
+              variants={fadeInUp}
+              className={`flex flex-col md:flex-row items-center gap-6 ${
+                index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
+              }`}
+            >
+              <div className="md:w-1/2 text-center md:text-left">
+                <motion.h2
+                  className="text-3xl font-bold mb-4"
+                  whileHover={{ scale: 1.05 }}
+                >
+                  {step.title}
+                </motion.h2>
+                <p className="text-lg leading-relaxed">{step.description}</p>
+              </div>
+              <motion.div className="md:w-1/2" whileHover={{ scale: 1.05 }}>
+                <img
+                  src={step.image}
+                  alt={step.title}
+                  className="rounded-xl shadow-xl"
+                />
+              </motion.div>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        <motion.footer
+          initial={{ opacity: 0, y: 50 }}
+          animate={{
+            opacity: 1,
+            y: 0,
+            transition: { duration: 1, delay: 0.5 },
+          }}
+          className="text-center py-16 mt-20 bg-white text-gray-900 mt-5 pb-5"
+        >
+          <h2 className="text-4xl font-bold">
+            Book Your Perfect Car Today with DriveHUB
+          </h2>
+          <p className="text-lg mt-4">
+            Start your journey with DriveHUB - Safe, reliable, and flexible car
+            rentals for all your needs.
+          </p>
+          <Link to="/log-in">
+            <button
+              className="mt-6 px-8 py-3 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition"
+              style={{ borderRadius: "15px", padding: "0 1.5rem" }}
+            >
+              Find Your Car Now
+            </button>
+          </Link>
+        </motion.footer>
+      </div>
+    </>
   );
 };
 

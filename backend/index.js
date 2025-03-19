@@ -37,10 +37,7 @@ app.use("/auth", auth);
 
 app.listen(process.env.PORT || 8080, () => {
   mongoose
-    .connect(process.env.MONGO_URL, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    })
+    .connect(process.env.MONGO_URL,{})
     .then(() => {
       console.log("DB connected");
     })

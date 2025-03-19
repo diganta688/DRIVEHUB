@@ -5,7 +5,6 @@ const userSchema = new Schema({
   name: {
     type: String,
     required: [true, "Your username is required"],
-    unique: true,
   },
   password: {
     type: String,
@@ -14,12 +13,10 @@ const userSchema = new Schema({
   phone: {
     type: String,
     required: [true, "Your phone number is required"],
-    unique: true,
   },
   email: {
     type: String,
     required: [true, "Your email address is required"],
-    unique: true,
   },
   dob: {
     type: Date,
@@ -37,6 +34,7 @@ userSchema.pre("save", async function (next) {
 userSchema.methods.comparePassword = async function (password) {
   return bcrypt.compare(password, this.password);
 };
+
 const UserModel = model("User", userSchema);
 
 module.exports = { UserModel };
