@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { FaGithub, FaTwitter, FaLinkedin } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";

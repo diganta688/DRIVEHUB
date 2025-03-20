@@ -3,6 +3,8 @@ import { LogIn, Mail, Lock } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 function HostLogin() {
   const [formData, setFormData] = useState({
@@ -12,9 +14,28 @@ function HostLogin() {
 
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    console.log('Login submitted:', formData);
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/auth/host/login`,
+        formData,{ withCredentials: true }
+      );
+      if (res.data.success) {
+        toast.success(res.data.message);        
+      }
+    } catch (error) {
+      console.error("Signup failed:", error);
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("Something went wrong. Please try again.");
+      }
+    }
   };
 
   const handleInputChange = (e) => {

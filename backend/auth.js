@@ -4,18 +4,18 @@ require("dotenv").config();
 const { UserModel } = require("./models/User");
 const { generateToken } = require("./util/jwt");
 const { Protect } = require("./middleware");
+const { Hostmodel } = require("./models/Host");
 
 const cookieOptions = {
-    httpOnly: true,
-    secure: false,
-    sameSite: "lax",
-    maxAge: 24 * 60 * 60 * 1000,
+  httpOnly: true,
+  secure: false,
+  sameSite: "lax",
+  maxAge: 24 * 60 * 60 * 1000,
 };
-
 
 router.post("/signup", async (req, res) => {
   try {
-    const { name, email, password, phone, dob } = req.body;    
+    const { name, email, password, phone, dob } = req.body;
     const existingUser = await UserModel.findOne({
       $or: [{ email }, { phone }],
     });
@@ -39,13 +39,12 @@ router.post("/signup", async (req, res) => {
     res.status(201).json({
       message: "User signed up successfully",
       success: true,
-        redirectTo: `${process.env.FRONTEND}`,
+      redirectTo: `${process.env.FRONTEND}`,
     });
   } catch (error) {
     console.error("Signup error:", error);
     res.status(500).json({ message: error.message });
   }
-
 });
 
 router.post("/login", async (req, res) => {
@@ -64,7 +63,7 @@ router.post("/login", async (req, res) => {
     res.status(200).json({
       message: "User logged in successfully",
       success: true,
-        redirectTo: `${process.env.FRONTEND}`,
+      redirectTo: `${process.env.FRONTEND}`,
     });
   } catch (error) {
     console.error("Login error:", error);
@@ -80,5 +79,88 @@ router.get("/logout", (req, res) => {
   res.status(200).json({ success: true, message: "Logged out successfully" });
 });
 
+router.post("/host/signup", async (req, res) => {
+  try {
+    const {
+      name,
+      email,
+      password,
+      phone,
+      address,
+      city,
+      state,
+      zipCode,
+      country,
+      serviceArea,
+      businessName,
+      experience,
+      description,
+    } = req.body;
+    const existingHost = await Hostmodel.findOne({
+      $or: [{ email }, { phone }],
+    });
+    if (existingHost) {
+      if (existingHost.email === email) {
+        return res.status(400).json({ message: "Email already exists" });
+      }
+      if (existingHost.phone === phone) {
+        return res.status(400).json({ message: "phoneNumber already exists" });
+      }
+    }
+    const user = await Hostmodel.create({
+      name,
+      email,
+      password,
+      phone,
+      address,
+      city,
+      state,
+      zipCode,
+      country,
+      serviceArea,
+      businessName,
+      experience,
+      description,
+    });
+    const token = generateToken(user._id);
+    res.cookie("jwt", token, cookieOptions);
+    res.status(201).json({
+      message: "User signed up successfully",
+      success: true,
+      redirectTo: `${process.env.FRONTEND}`,
+    });
+  } catch (error) {
+    console.error("Signup error:", error);
+    res.status(500).json({ message: error.message });
+  }
+});
 
-module.exports = router;    
+router.post("/host/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const Host = await Hostmodel.findOne({ email });
+    if (!Host) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+    const isMatch = await Host.comparePassword(password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+    const token = generateToken(Host._id);
+    res.cookie("jwt", token, cookieOptions);
+    res.status(200).json({
+      message: "User logged in successfully",
+      success: true,
+    });
+  } catch (error) {
+    console.error("Login error:", error);
+    res.status(500).json({ message: error.message });
+  }
+});
+
+router.get("/host/logout", (req, res) => {
+  res.clearCookie("jwt", cookieOptions);
+  res.status(200).json({ success: true, message: "Logged out successfully" });
+});
+
+module.exports = router;

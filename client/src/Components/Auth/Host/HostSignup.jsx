@@ -16,6 +16,8 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import axios from "axios";
+import { toast } from "react-toastify";
 function HostSignup() {
   const [formData, setFormData] = useState({
     email: "",
@@ -37,9 +39,29 @@ function HostSignup() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const accessToken = import.meta.env.VITE_MAP_TOKEN;
   const [suggestions, setSuggestions] = useState([]);
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/auth/host/signup`,
+        formData,
+        { withCredentials: true }
+      );
+      if (res.data.success) {
+        toast.success(res.data.message);
+      }
+    } catch (error) {
+      console.error("Signup failed:", error);
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("Something went wrong. Please try again.");
+      }
+    }
   };
 
   const handleInputChange = (e) => {
@@ -68,10 +90,7 @@ function HostSignup() {
   };
   const handleSelect = (place) => {
     const placeName = place.place_name;
-    const context = place.context || []; // Context contains detailed address parts
-    console.log(place);
-
-    // Extracting details from context
+    const context = place.context || [];
     let city = "";
     let state = "";
     let zipCode = "";
@@ -79,13 +98,13 @@ function HostSignup() {
 
     context.forEach((item) => {
       if (item.id.includes("place")) {
-        city = item.text; // City
+        city = item.text;
       } else if (item.id.includes("region")) {
-        state = item.text; // State
+        state = item.text;
       } else if (item.id.includes("postcode")) {
-        zipCode = item.text; // ZIP Code
+        zipCode = item.text;
       } else if (item.id.includes("country")) {
-        country = item.text; // Country
+        country = item.text;
       }
     });
 
@@ -108,6 +127,7 @@ function HostSignup() {
   const toggleConfirmPasswordVisibility = () => {
     setShowConfirmPassword((prev) => !prev);
   };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-500 to-600 flex items-center justify-center p-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden p-4">
@@ -147,7 +167,7 @@ function HostSignup() {
               <div className="relative">
                 <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <input
-                  type="tel"
+                  type="number"
                   name="phone"
                   value={formData.phone}
                   onChange={handleInputChange}
@@ -298,7 +318,6 @@ function HostSignup() {
                     onChange={handleInputChange}
                     className="pl-10 w-full px-5 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                     placeholder="e.g., Within 50 miles of city center"
-                    required
                   />
                 </div>
               </div>
