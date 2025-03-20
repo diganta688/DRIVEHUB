@@ -3,15 +3,16 @@ import HomeHeroNav from "../LandingPage/HomeHeroNav";
 import HostInfo from "./HostInfo";
 import Footer from "../LandingPage/Footer";
 import LocationFind from "./LocationFind";
+import { useNavigate } from "react-router";
 
 function ListYourCar() {
   const [open, setOpen] = useState(false);
   const [count, setCount] = useState(0);
-  useEffect(() => {
-    if (count === 1) {
-      setOpen(true);
-    }
-  }, [count]);
+  let navigate = useNavigate();
+
+const click = ()=>{
+  navigate("/host/login")
+}
 
   return (
     <>
@@ -30,7 +31,7 @@ function ListYourCar() {
           <div className="inner-host-top">
             <h6>Find your drive</h6>
             <h1 className="inner-host-h1">Start a car-sharing business on DriveHUB</h1>
-            <button className="get-started-btn btn btn-primary" onClick={() => setCount(1)}>
+            <button className="get-started-btn btn btn-primary" onClick={click}>
               Get started
             </button>
           </div>
@@ -48,7 +49,7 @@ function ListYourCar() {
             share on the marketplace.
           </p>
           <p>List your first car now to get started!</p>
-          <button className="get-started-btn btn btn-primary" style={{ width: "100%" }} onClick={() => setCount(1)}>
+          <button className="get-started-btn btn btn-primary" style={{ width: "100%" }} onClick={click}>
             Get started
           </button>
         </div>
@@ -56,7 +57,7 @@ function ListYourCar() {
         <div className="host-end px-4">
           <h1 className="inner-host-h1">Start building your business plan</h1>
           <p>List your first car to get started today and take control of your financial future.</p>
-          <button className="get-started-btn btn btn-primary" style={{ width: "100%" }} onClick={() => setCount(1)}>
+          <button className="get-started-btn btn btn-primary" style={{ width: "100%" }} onClick={click}>
             Get started
           </button>
         </div>

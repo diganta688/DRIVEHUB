@@ -12,7 +12,10 @@ import {
   Globe,
   Navigation,
 } from "lucide-react";
-
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 function HostSignup() {
   const [formData, setFormData] = useState({
     email: "",
@@ -30,10 +33,12 @@ function HostSignup() {
     experience: "",
     description: "",
   });
-
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const accessToken = import.meta.env.VITE_MAP_TOKEN;
+  const [suggestions, setSuggestions] = useState([]);
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission here
     console.log("Form submitted:", formData);
   };
 
@@ -45,8 +50,66 @@ function HostSignup() {
     }));
   };
 
+  const findlocation = async (input) => {
+    if (!input) {
+      setSuggestions([]);
+      return;
+    }
+
+    const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${input}.json?access_token=${accessToken}&autocomplete=true&limit=5`;
+
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      setSuggestions(data.features || []);
+    } catch (error) {
+      console.error("Error fetching locations:", error);
+    }
+  };
+  const handleSelect = (place) => {
+    const placeName = place.place_name;
+    const context = place.context || []; // Context contains detailed address parts
+    console.log(place);
+
+    // Extracting details from context
+    let city = "";
+    let state = "";
+    let zipCode = "";
+    let country = "";
+
+    context.forEach((item) => {
+      if (item.id.includes("place")) {
+        city = item.text; // City
+      } else if (item.id.includes("region")) {
+        state = item.text; // State
+      } else if (item.id.includes("postcode")) {
+        zipCode = item.text; // ZIP Code
+      } else if (item.id.includes("country")) {
+        country = item.text; // Country
+      }
+    });
+
+    setFormData((prev) => ({
+      ...prev,
+      address: placeName,
+      city,
+      state,
+      zipCode,
+      country,
+    }));
+
+    setSuggestions([]);
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword((prev) => !prev);
+  };
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-500 to-600 flex items-center justify-center p-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden p-4">
         <div className="bg-gray-50 px-8 py-6 text-center">
           <h2 className="text-2xl font-bold text-gray-800">Become a Host</h2>
@@ -89,13 +152,13 @@ function HostSignup() {
                   value={formData.phone}
                   onChange={handleInputChange}
                   className="pl-10 w-full px-5 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                  placeholder="+91 629XX32X52"
+                  placeholder="629XX32X52"
                   required
                 />
               </div>
             </div>
 
-            <div className="space-y-4 border-t pt-4">
+            <div className="space-y-4 pt-4">
               <h4 className="text-md font-medium text-gray-700 border-b">
                 Location Details
               </h4>
@@ -110,11 +173,45 @@ function HostSignup() {
                     type="text"
                     name="address"
                     value={formData.address}
-                    onChange={handleInputChange}
+                    onChange={(e) => {
+                      handleInputChange(e);
+                      findlocation(e.target.value);
+                    }}
                     className="pl-10 w-full px-5 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                     placeholder="123 Main St"
                     required
                   />
+                  {formData.address.length > 0 && (
+                    <HighlightOffIcon
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 cursor-pointer hover:text-gray-600"
+                      onClick={() => {
+                        setFormData((prev) => ({
+                          ...prev,
+                          address: "",
+                          city: "",
+                          state: "",
+                          zipCode: "",
+                          country: "",
+                        }));
+                        setSuggestions([]);
+                      }}
+                    />
+                  )}
+
+                  {suggestions.length > 0 && (
+                    <ul className="absolute z-50 w-full bg-white border border-gray-200 rounded-lg shadow-lg mt-1 max-h-56 overflow-y-auto px-0">
+                      {suggestions.map((place) => (
+                        <li
+                          key={place.id}
+                          className="flex items-center px-4 py-3 cursor-pointer group transition duration-200 hover:text-blue-500"
+                          onClick={() => handleSelect(place)}
+                        >
+                          <LocationOnIcon className="text-gray-500 group-hover:text-blue-500 mr-2" />
+                          {place.place_name}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
               </div>
 
@@ -290,46 +387,72 @@ function HostSignup() {
             </label>
             <div className="relative">
               <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 name="password"
                 value={formData.password}
                 onChange={handleInputChange}
-                className="pl-10 w-full px-5 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                className="pl-10 pr-10 w-full px-5 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                 placeholder="••••••••"
                 required
               />
+
+              <button
+                type="button"
+                onClick={togglePasswordVisibility}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+              >
+                {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+              </button>
             </div>
           </div>
-          <div className="space-y-2 mb-3">
+
+          <div className="space-y-2 mb-4">
             <label className="block text-sm font-medium text-gray-700">
               Confirm Password
             </label>
             <div className="relative">
               <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+
               <input
-                type="password"
+                type={showConfirmPassword ? "text" : "password"}
                 name="confirmPassword"
                 value={formData.confirmPassword}
                 onChange={handleInputChange}
-                className="pl-10 w-full px-5 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                className="pl-10 pr-10 w-full px-5 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                 placeholder="••••••••"
                 required
               />
+
+              <button
+                type="button"
+                onClick={toggleConfirmPasswordVisibility}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+              >
+                {showConfirmPassword ? (
+                  <VisibilityOffIcon />
+                ) : (
+                  <VisibilityIcon />
+                )}
+              </button>
             </div>
           </div>
 
           <button
             type="submit"
-            style={{borderRadius: "10px"}}
+            style={{ borderRadius: "10px" }}
             className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200 flex items-center justify-center space-x-2"
           >
             <UserPlus className="w-5 h-5" />
-            <span style={{marginLeft: "0.5rem"}}>Create Account</span>
+            <span style={{ marginLeft: "0.5rem" }}>Create Account</span>
           </button>
 
           <div className="text-center mt-4 ">
-            <Link to="/host/login"  style={{color: "blue"}}> Already have an account? Sign in</Link>
+            <Link to="/host/login" style={{ color: "blue" }}>
+              {" "}
+              Already have an account? Sign in
+            </Link>
           </div>
         </form>
       </div>
