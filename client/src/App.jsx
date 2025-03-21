@@ -9,7 +9,7 @@ import CarDescription from "./Components/Home/Description/CarDescription";
 import { ToastContainer, Flip } from "react-toastify";
 import ListYourCar from "./Components/Host/ListYourCar";
 import HostLogin from "./Components/Auth/Host/HostLogin";
-import HostSignup from "./Components/Auth/Host/HostSignup";
+import HostSignupMain from "./Components/Auth/Host/Signup/HostSignupMain";
 
 
 function App() {
@@ -40,7 +40,7 @@ function App() {
           <Route path="/car-description" element={<CarDescription />} />
           <Route path="/host" element={<ListYourCar />} />
           <Route path="/host/login" element={<HostLogin />} />
-          <Route path="/host/signup" element={<HostSignup />} />
+          <Route path="/host/signup" element={<HostSignupMain />} />
         </Routes>
       </BrowserRouter>
     </>
