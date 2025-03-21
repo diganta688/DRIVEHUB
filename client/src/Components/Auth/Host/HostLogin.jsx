@@ -5,6 +5,8 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { toast } from "react-toastify";
 import axios from "axios";
+import CancelIcon from '@mui/icons-material/Cancel';
+
 
 function HostLogin() {
   const [formData, setFormData] = useState({
@@ -54,9 +56,11 @@ function HostLogin() {
   };
 
   return (
+      <>
     <div className="min-h-screen bg-gradient-to-br from-500 to-600 flex items-center justify-center p-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden p-4">
         <div className="bg-gray-50 px-8 py-6 text-center">
+        <Link to="/" style={{display: "flex", justifyContent: "flex-end", padding: "0.5rem"}} ><CancelIcon/></Link>
           <h2 className="text-2xl font-bold text-gray-800">
             Welcome Back, Host!
           </h2>
@@ -135,7 +139,7 @@ function HostLogin() {
           </div>
         </form>
       </div>
-    </div>
+    </div></>
   );
 }
 

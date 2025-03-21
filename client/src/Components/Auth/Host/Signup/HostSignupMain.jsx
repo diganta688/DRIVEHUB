@@ -8,6 +8,8 @@ import BusinessInfo from "./BusinessInfo";
 import EmainPass from "./EmainPass";
 import SubmitBtn from "./SubmitBtn";
 import { SignupContext } from "../../../../Context/context";
+import CancelIcon from '@mui/icons-material/Cancel';
+
 function HostSignupMain() {
   const [formData, setFormData] = useState({
     email: "",
@@ -27,8 +29,9 @@ function HostSignupMain() {
   });
   const [isSubmit, setIsSubmit] = useState(false);
   const [error, setError] = useState(false);
-  const [passValidationError, setPassValidationError] = useState(false);
-
+  const [passValidationError, setPassValidationError] = useState(false);  
+  const [EmailValidator, setEmailValidator] = useState(false);
+  const [phoneError, setPhoneError] = useState(false);
   const handleSubmit = async (e) => {
     setIsSubmit(true);
     e.preventDefault();
@@ -70,6 +73,7 @@ function HostSignupMain() {
       <div className="min-h-screen bg-gradient-to-br from-500 to-600 flex items-center justify-center p-4">
         <div className="w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden p-4">
           <div className="bg-gray-50 px-8 py-6 text-center">
+          <Link to="/" style={{display: "flex", justifyContent: "flex-end", padding: "0.5rem"}} ><CancelIcon/></Link>
             <h2 className="text-2xl font-bold text-gray-800">Become a Host</h2>
             <p className="text-gray-600 mt-2">Start your car rental journey</p>
           </div>
@@ -79,7 +83,7 @@ function HostSignupMain() {
               <h3 className="text-lg font-semibold text-gray-700 border-b pb-2">
                 Personal Information
               </h3>
-              <PersonalInfo />
+              <PersonalInfo setPhoneError={setPhoneError} phoneError={phoneError}/>
               <Location setFormData={setFormData} />
             </div>
             <BusinessInfo setFormData={setFormData} />
@@ -89,11 +93,15 @@ function HostSignupMain() {
               passValidationError={passValidationError}
               error={error}
               setError={setError}
+              EmailValidator={EmailValidator}
+              setEmailValidator={setEmailValidator}
             />
             <SubmitBtn
               passValidationError={passValidationError}
               error={error}
               isSubmit={isSubmit}
+              EmailValidator={EmailValidator}
+              phoneError={phoneError}
             />
             <div className="text-center mt-4 ">
               <Link to="/host/login" style={{ color: "blue" }}>

@@ -1,33 +1,31 @@
 import HomeHero from "./Components/LandingPage/HomeHero";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import UserLoginRight from "./Components/Auth/User/Login/right/UserLoginRight"
-import UserSignupRight from "./Components/Auth/User/Signup/Right/UserSignup"
+import UserLoginRight from "./Components/Auth/User/Login/right/UserLoginRight";
+import UserSignupRight from "./Components/Auth/User/Signup/Right/UserSignup";
 import Work from "./Components/HowWork/Work";
 import Homee from "./Components/Home/Homee";
 import ModifySearch from "./Components/Home/Search/ModifySearch";
 import CarDescription from "./Components/Home/Description/CarDescription";
-import { ToastContainer, Flip } from "react-toastify";
+import { ToastContainer, Slide } from "react-toastify";
 import ListYourCar from "./Components/Host/ListYourCar";
 import HostLogin from "./Components/Auth/Host/HostLogin";
 import HostSignupMain from "./Components/Auth/Host/Signup/HostSignupMain";
-
 
 function App() {
   return (
     <>
       <ToastContainer
-        position="top-right"
-        autoClose={2000}
-        limit={5}
-        hideProgressBar
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
         newestOnTop={false}
         closeOnClick={false}
         rtl={false}
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme="dark"
-        transition={Flip}
+        theme="light"
+        transition={Slide}
       />
       <BrowserRouter>
         <Routes>

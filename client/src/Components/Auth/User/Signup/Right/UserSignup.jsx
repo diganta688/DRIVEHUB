@@ -1,25 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import {
-  TextField,
-  InputAdornment,
-  IconButton,
-  CircularProgress,
-} from "@mui/material";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
 import axios from "axios";
 import { toast } from "react-toastify";
 import UserSignupLeft from "../Left/UserSignupLeft";
+import NameEmailPhone from "./NameEmailPhone";
+import PasswordDOB from "./PasswordDOB";
+import EmailValidator from "./EmailValidator";
 
 const UserSignup = () => {
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [animate, setAnimate] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [input, setInput] = useState({
     name: "",
     email: "",
@@ -29,45 +18,46 @@ const UserSignup = () => {
     confirmPassword: "",
   });
   const navigate = useNavigate();
-
+  const [emailError, setEmailError] = useState("");
+  const [ageError, setAgeError] = useState("");
+  const [passValidationError, setPassValidationError] = useState(false);
+  const [error, setError] = useState(false);
+  const [open, setOpen] = useState(false);
+  const onetimepass = useRef(0);
+  const [phoneError, setPhoneError] = useState("")
   useEffect(() => {
     setAnimate(true);
   }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    setOpen(true);
+    OtpSend();
+  };
+  const OtpSend = async () => {
     try {
       const res = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/auth/signup`,
-        input, { withCredentials: true }
+        `${import.meta.env.VITE_BACKEND_URL}/auth/email/validator`,
+        { email: input.email },
+        { withCredentials: true }
       );
-      if (res.data.success) {
+  
+      if (res.status === 200) {
         toast.success(res.data.message);
-        setLoading(false);
-        window.location.href = (res.data.redirectTo);  
-        
-      }
-    } catch (error) {
-      setLoading(false);
-      console.error("Signup failed:", error);
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
-        toast.error(error.response.data.message);
+        onetimepass.current = res.data.otp;
       } else {
         toast.error("Something went wrong. Please try again.");
       }
+    } catch (error) {
+      toast.error("Something went wrong. Please try again.");
     }
   };
-
   const moveTologin = () => {
     navigate("/log-in");
   };
 
   return (
+    <>
     <div className="relative h-screen w-full">
       <video
         autoPlay
@@ -80,7 +70,7 @@ const UserSignup = () => {
       <div className="relative z-10 flex h-screen w-full">
         <div className="m-auto w-full max-w-4xl overflow-hidden rounded-2xl shadow-2xl">
           <div className="flex flex-col md:flex-row">
-            <UserSignupLeft/>
+            <UserSignupLeft />
             <div className="flex flex-col justify-center bg-white p-8 md:w-1/2 p-5">
               <div
                 className={`transition-all duration-1000 ${
@@ -96,125 +86,30 @@ const UserSignup = () => {
                   Create an account to get started
                 </p>
                 <form className="space-y-4" onSubmit={handleSubmit}>
-                  <TextField
-                    label="Full Name"
-                    variant="outlined"
-                    required
-                    fullWidth
-                    className="mb-2"
-                    value={input.name}
-                    onChange={(e) =>
-                      setInput({ ...input, name: e.target.value })
-                    }
-                  />
-                  <TextField
-                    label="Email address"
-                    variant="outlined"
-                    required
-                    fullWidth
-                    className="mb-2"
-                    value={input.email}
-                    onChange={(e) =>
-                      setInput({ ...input, email: e.target.value })
-                    }
-                  />
-                  <TextField
-                    label="Phone Number"
-                    variant="outlined"
-                    type="number"
-                    required
-                    fullWidth
-                    value={input.phone}
-                    onChange={(e) => {
-                      if (e.target.value.length <= 10) {
-                        setInput({ ...input, phone: e.target.value });
-                      }
-                    }}
+                  <NameEmailPhone input={input} setInput={setInput} phoneError={phoneError} setPhoneError={setPhoneError} emailError={emailError} setEmailError={setEmailError}/>
+
+                  <PasswordDOB
+                    input={input}
+                    setInput={setInput}
+                    ageError={ageError}
+                    passValidationError={passValidationError}
+                    setPassValidationError={setPassValidationError}
+                    error={error}
+                    setAgeError={setAgeError}
+                    setError={setError}
                   />
 
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DemoContainer components={["DatePicker"]}>
-                      <DatePicker
-                        label="Enter Your Date of Birth"
-                        sx={{ width: "100%" }}
-                        value={input.dob}
-                        onChange={(newValue) =>
-                          setInput({ ...input, dob: newValue })
-                        }
-                      />
-                    </DemoContainer>
-                  </LocalizationProvider>
-                  <TextField
-                    style={{ marginTop: "8px" }}
-                    label="Password"
-                    variant="outlined"
-                    type={showPassword ? "text" : "password"}
-                    fullWidth
-                    className="mb-2"
-                    value={input.password}
-                    onChange={(e) =>
-                      setInput({ ...input, password: e.target.value })
-                    }
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton
-                            onClick={() => setShowPassword(!showPassword)}
-                            edge="end"
-                          >
-                            {showPassword ? <VisibilityOff /> : <Visibility />}
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                  <TextField
-                    label="Confirm Password"
-                    variant="outlined"
-                    type={showConfirmPassword ? "text" : "password"}
-                    fullWidth
-                    className="mb-2"
-                    value={input.confirmPassword}
-                    onChange={(e) =>
-                      setInput({ ...input, confirmPassword: e.target.value })
-                    }
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton
-                            onClick={() =>
-                              setShowConfirmPassword(!showConfirmPassword)
-                            }
-                            edge="end"
-                          >
-                            {showConfirmPassword ? (
-                              <VisibilityOff />
-                            ) : (
-                              <Visibility />
-                            )}
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
                   <button
                     type="submit"
                     className="w-full flex items-center justify-center rounded-lg bg-blue-600 py-3 text-white transition-all hover:bg-blue-700 disabled:bg-blue-400"
-                    disabled={loading}
+                    disabled={
+                      !!ageError || passValidationError || error ||phoneError || emailError
+                    }
                     style={{ borderRadius: "10px", marginBottom: "1rem" }}
                   >
-                    {loading ? (
-                      <>
-                        <CircularProgress
-                          size={20}
-                          color="inherit"
-                          className="mr-2"
-                        />
-                        <span style={{ marginLeft: "5px" }}>Signing up...</span>
-                      </>
-                    ) : (
-                      "Sign Up"
-                    )}
+                    
+                      Sign Up
+                    
                   </button>
                 </form>
                 <p className="mt-8 text-center text-sm text-gray-600">
@@ -233,6 +128,8 @@ const UserSignup = () => {
         </div>
       </div>
     </div>
+    {open && <EmailValidator open={open} setOpen={setOpen} input={input}/>}
+    </>
   );
 };
 

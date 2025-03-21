@@ -8,12 +8,23 @@ import {
   import { SignupContext } from "../../../../Context/context";
 
 
-function EmainPass({ error, setError, setPassValidationError, passValidationError }) {
+function EmainPass({ error, setError, setPassValidationError, passValidationError, EmailValidator, setEmailValidator }) {
       const { formData, handleInputChange } = useContext(SignupContext);
     
     const [showPassword, setShowPassword] = useState(false);
       const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-      
+      const validateEmail = (email) => {
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        return emailRegex.test(email);
+      };
+      const handlechange = (e) => {
+        const value = e;
+     if (!validateEmail(value)) {
+          setEmailValidator("Invalid email format");
+        } else {
+          setEmailValidator("");
+        }
+      }
       const passCheck = (e)=>{
         if (e.length < 8) {
           return "Password must be at least 8 characters long";
@@ -39,6 +50,7 @@ function EmainPass({ error, setError, setPassValidationError, passValidationErro
       const toggleConfirmPasswordVisibility = () => {
         setShowConfirmPassword((prev) => !prev);
       };
+      
   return (
     <>
       <div className="space-y-2">
@@ -49,12 +61,20 @@ function EmainPass({ error, setError, setPassValidationError, passValidationErro
             type="email"
             name="email"
             value={formData.email}
-            onChange={handleInputChange}
-            className="pl-10 w-full px-5 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+            onChange={(e)=>{
+              handleInputChange(e);
+              handlechange(e.target.value);
+            }}
+            className={`pl-10 pr-10 w-full px-5 py-2 border rounded-lg transition focus:ring-2 ${
+              EmailValidator
+                ? "border-red-500 focus:ring-red-500"
+                : "border-gray-300 focus:ring-blue-500"
+            }`}
             placeholder="your@email.com"
             required
           />
         </div>
+        {EmailValidator &&<p className="text-red-500 text-sm m-0">{EmailValidator}</p>}
       </div>
 
       <div className="space-y-2">
