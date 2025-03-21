@@ -1,6 +1,6 @@
 import * as React from "react";
-import axios from "axios"; // Import axios
-import { toast } from "react-toastify"; // Import toast for notifications
+import axios from "axios";
+import { toast } from "react-toastify";
 import {
   Button,
   Dialog,
@@ -13,23 +13,23 @@ import {
 } from "@mui/material";
 import { motion } from "framer-motion";
 
-function EmailValidator({ open, setOpen, input }) {
+function EmailValidator({ open, setOpen, formData }) {
   const [otp, setOtp] = React.useState("");
   const [loading, setLoading] = React.useState(false);
 
   const handleOtpChange = (e) => {
-    const value = e.target.value.replace(/\D/g, ""); // Remove non-numeric characters
+    const value = e.target.value.replace(/\D/g, "");
     if (value.length <= 6) {
       setOtp(value);
     }
   };
-
   const signupProcess = async () => {
+    
     setLoading(true);
     try {
       const res = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/auth/signup`,
-        input,
+        `${import.meta.env.VITE_BACKEND_URL}/auth/host/signup`,
+        formData,
         { withCredentials: true }
       );
       

@@ -128,7 +128,7 @@ const UserSignup = () => {
         </div>
       </div>
     </div>
-    {open && <EmailValidator open={open} setOpen={setOpen} input={input}/>}
+    {open && <EmailValidator open={open} setOpen={setOpen} formdata={input}/>}
     </>
   );
 };

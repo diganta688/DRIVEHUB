@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import Location from "./Location";
 import axios from "axios";
@@ -9,6 +9,7 @@ import EmainPass from "./EmainPass";
 import SubmitBtn from "./SubmitBtn";
 import { SignupContext } from "../../../../Context/context";
 import CancelIcon from '@mui/icons-material/Cancel';
+import EmailValidatorHost from "./EmailValidatorHost";
 
 function HostSignupMain() {
   const [formData, setFormData] = useState({
@@ -27,36 +28,34 @@ function HostSignupMain() {
     experience: "",
     description: "",
   });
+    const onetimepass = useRef(0);
   const [isSubmit, setIsSubmit] = useState(false);
   const [error, setError] = useState(false);
   const [passValidationError, setPassValidationError] = useState(false);  
   const [EmailValidator, setEmailValidator] = useState(false);
   const [phoneError, setPhoneError] = useState(false);
+  const [open, setOpen] = useState(false);
   const handleSubmit = async (e) => {
-    setIsSubmit(true);
     e.preventDefault();
+    setOpen(true);
+    OtpSend();
+  };
+  const OtpSend = async () => {    
     try {
       const res = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/auth/host/signup`,
-        formData,
+        `${import.meta.env.VITE_BACKEND_URL}/auth/email/validator`,
+        { email: formData.email },
         { withCredentials: true }
       );
-      if (res.data.success) {
-        setIsSubmit(false);
+  
+      if (res.status === 200) {
         toast.success(res.data.message);
-      }
-    } catch (error) {
-      setIsSubmit(false);
-      console.error("Signup failed:", error);
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
-        toast.error(error.response.data.message);
+        onetimepass.current = res.data.otp;
       } else {
         toast.error("Something went wrong. Please try again.");
       }
+    } catch (error) {
+      toast.error("Something went wrong. Please try again.");
     }
   };
 
@@ -111,6 +110,7 @@ function HostSignupMain() {
           </form>
         </div>
       </div>
+      {open && <EmailValidatorHost open={open} setOpen={setOpen} formData={formData} setIsSubmit={setIsSubmit} />}
     </SignupContext.Provider>
   );
 }
