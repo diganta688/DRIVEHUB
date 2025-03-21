@@ -37,27 +37,27 @@ function HostSignupMain() {
   const [open, setOpen] = useState(false);
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setOpen(true);
     OtpSend();
+    setOpen(true);
   };
   const OtpSend = async () => {    
     try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/auth/email/validator`,
-        { email: formData.email },
-        { withCredentials: true }
-      );
-  
-      if (res.status === 200) {
-        toast.success(res.data.message);
-        onetimepass.current = res.data.otp;
-      } else {
-        toast.error("Something went wrong. Please try again.");
-      }
+        const res = await axios.post(
+            `${import.meta.env.VITE_BACKEND_URL}/auth/host/email/validator`,
+            { email: formData.email, phone: formData.phone },
+            { withCredentials: true }
+        );
+        if (res.status === 200) {
+            toast.success(res.data.message);
+            onetimepass.current = res.data.otp;
+        }
     } catch (error) {
-      toast.error("Something went wrong. Please try again.");
+        console.error("Error in OtpSend:", error);
+        const errorMessage = error.response?.data?.message || error.response?.data?.error || "Something went wrong. Please try again.";
+        toast.error(errorMessage);
     }
-  };
+};
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;

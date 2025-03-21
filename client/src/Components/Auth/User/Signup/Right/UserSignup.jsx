@@ -34,24 +34,24 @@ const UserSignup = () => {
     setOpen(true);
     OtpSend();
   };
-  const OtpSend = async () => {
+  const OtpSend = async () => {    
     try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/auth/email/validator`,
-        { email: input.email },
-        { withCredentials: true }
-      );
-  
-      if (res.status === 200) {
-        toast.success(res.data.message);
-        onetimepass.current = res.data.otp;
-      } else {
-        toast.error("Something went wrong. Please try again.");
-      }
+        const res = await axios.post(
+            `${import.meta.env.VITE_BACKEND_URL}/auth/user/email/validator`,
+            { email: input.email, phone: input.phone },
+            { withCredentials: true }
+        );
+
+        if (res.status === 200) {
+            toast.success(res.data.message);
+            onetimepass.current = res.data.otp;
+        }
     } catch (error) {
-      toast.error("Something went wrong. Please try again.");
+        console.error("Error in OtpSend:", error);
+        const errorMessage = error.response?.data?.message || error.response?.data?.error || "Something went wrong. Please try again.";
+        toast.error(errorMessage);
     }
-  };
+};
   const moveTologin = () => {
     navigate("/log-in");
   };

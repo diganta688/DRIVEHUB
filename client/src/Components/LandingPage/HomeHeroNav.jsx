@@ -54,9 +54,12 @@ function HomeHeroNav({
         { withCredentials: true }
       );
       if (res.status === 200) {
-        window.location.reload();
+        toast.success("Logout Done", {
+          onClose: () => {
+            window.location.reload();
+          },
+        });
       }
-      toast.success("Logout Done");
     } catch (error) {
       console.error("Logout failed:", error);
       toast.error("Logout error");
@@ -160,7 +163,7 @@ function HomeHeroNav({
             </Typography>
           </MenuItem>
         </Link>
-        <MenuItem >
+        <MenuItem>
           <RestoreIcon style={{ marginRight: "1rem" }} />
           <Typography>My Bookings</Typography>
         </MenuItem>

@@ -6,7 +6,6 @@ const { generateToken } = require("./util/jwt");
 const { Protect } = require("./middleware");
 const { Hostmodel } = require("./models/Host");
 const nodemailer = require ("nodemailer");
-
 const cookieOptions = {
   httpOnly: true,
   secure: false,
@@ -126,7 +125,7 @@ router.post("/host/signup", async (req, res) => {
     const token = generateToken(user._id);
     res.cookie("jwt", token, cookieOptions);
     res.status(201).json({
-      message: "User signed up successfully",
+      message: "Host signed up successfully",
       success: true,
       redirectTo: `${process.env.FRONTEND}`,
     });
@@ -150,7 +149,7 @@ router.post("/host/login", async (req, res) => {
     const token = generateToken(Host._id);
     res.cookie("jwt", token, cookieOptions);
     res.status(200).json({
-      message: "User logged in successfully",
+      message: "Host logged in successfully",
       success: true,
     });
   } catch (error) {
@@ -170,10 +169,34 @@ const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASS,
   },
 });
-router.post("/email/validator", async (req, res) => {
-  const { email } = req.body;
+router.post("/host/email/validator", async (req, res) => {
+  const { email, phone="222" } = req.body;
   if (!email || email.trim() === "") {
     return res.status(400).json({ error: "No email provided" });
+  }
+  const exist = await Hostmodel.findOne({
+    $or: [{ email }, { phone }],
+  });
+  console.log(exist);
+  
+  if(exist){
+    if (exist.email === email) {
+      return res.status(400).json({ message: "Email already exists" });
+    }
+    if (exist.phone === phone) {
+      return res.status(400).json({ message: "phoneNumber already exists" });
+    }
+  }
+  const existUser = await UserModel.findOne({
+    $or: [{ email }, { phone }],
+  });
+  if(existUser){
+    if (existUser.email === email) {
+      return res.status(400).json({ message: "Email already registered as a User try with other Email" });
+    }
+    if (existUser.phone === phone) {
+      return res.status(400).json({ message: "phoneNumber already registerd as a User try with other phoneNumber" });
+    }
   }
   const otp = Math.floor(100000 + Math.random() * 900000);
   const subject = "Otp for Signup on DRIVEHUB";
@@ -192,5 +215,150 @@ router.post("/email/validator", async (req, res) => {
     res.status(500).json({ error: "Failed to send email" });
   }
 });
+router.post("/user/email/validator", async (req, res) => {
+  const { email, phone="222" } = req.body;
+  if (!email || email.trim() === "") {
+    return res.status(400).json({ error: "No email provided" });
+  }
+  const exist = await UserModel.findOne({
+    $or: [{ email }, { phone }],
+  });  
+  if(exist){
+    if (exist.email === email) {
+      return res.status(400).json({ message: "Email already exists" });
+    }
+    if (exist.phone === phone) {
+      return res.status(400).json({ message: "phoneNumber already exists" });
+    }
+  }
+  const existUser = await Hostmodel.findOne({
+    $or: [{ email }, { phone }],
+  });
+  if(existUser){
+    if (existUser.email === email) {
+      return res.status(400).json({ message: "This email is registered as a Host email" });
+    }
+    if (existUser.phone === phone) {
+      return res.status(400).json({ message: " this phoneNumber registerd as a Host phoneNumber" });
+    }
+  }
+  const otp = Math.floor(100000 + Math.random() * 900000);
+  const subject = "Otp for Signup on DRIVEHUB";
+  const message = `Your OTP is: ${otp}. It is valid for 10 minutes.`;
+
+  try {
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject,
+      text: message,
+    });
+    res.status(200).json({ message: "OTP sent successfully!", otp: otp});
+  } catch (error) {
+    console.error("Error sending email:", error);
+    res.status(500).json({ error: "Failed to send email" });
+  }
+});
+
+
+
+router.post("/user/email/forgot/validator", async (req, res) => {
+  const { email} = req.body;
+  if (!email || email.trim() === "") {
+    return res.status(400).json({ error: "No email provided" });
+  }
+  const exist = await UserModel.findOne({ email });  
+  if(!exist){
+      return res.status(400).json({ message: "Email not exists" });
+  }
+  const otp = Math.floor(100000 + Math.random() * 900000);
+  const subject = "Otp for Signup on DRIVEHUB";
+  const message = `Your OTP is: ${otp}. It is valid for 10 minutes.`;
+
+  try {
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject,
+      text: message,
+    });
+    res.status(200).json({ message: "OTP sent successfully!", otp: otp});
+  } catch (error) {
+    console.error("Error sending email:", error);
+    res.status(500).json({ error: "Failed to send email" });
+  }
+});
+
+router.post("/user/reset-password", async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({ message: "Email and new password are required" });
+  }
+
+  try {
+    const user = await UserModel.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    user.password = password;
+    await user.save();
+
+    res.status(200).json({ message: "Password reset successfully" });
+  } catch (error) {
+    console.error("Error resetting password:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+router.post("/host/email/forgot/validator", async (req, res) => {
+  const { email} = req.body;
+  if (!email || email.trim() === "") {
+    return res.status(400).json({ error: "No email provided" });
+  }
+  const exist = await Hostmodel.findOne({ email });  
+  if(!exist){
+      return res.status(400).json({ message: "Email not exists" });
+  }
+  const otp = Math.floor(100000 + Math.random() * 900000);
+  const subject = "Otp for Signup on DRIVEHUB";
+  const message = `Your OTP is: ${otp}. It is valid for 10 minutes.`;
+
+  try {
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject,
+      text: message,
+    });
+    res.status(200).json({ message: "OTP sent successfully!", otp: otp});
+  } catch (error) {
+    console.error("Error sending email:", error);
+    res.status(500).json({ error: "Failed to send email" });
+  }
+});
+
+router.post("/host/reset-password", async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({ message: "Email and new password are required" });
+  }
+
+  try {
+    const Host = await Hostmodel.findOne({ email });
+
+    if (!Host) {
+      return res.status(404).json({ message: "Host not found" });
+    }
+    Host.password = password;
+    await Host.save();
+    res.status(200).json({ message: "Password reset successfully" });
+  } catch (error) {
+    console.error("Error resetting password:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 
 module.exports = router;

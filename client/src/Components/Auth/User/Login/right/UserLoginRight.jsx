@@ -11,12 +11,14 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import UserLoginLeft from "../left/UserLoginLeft";
+import Forgotpassword from "./Forgotpassword";
 
 const UserLogin = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [animate, setAnimate] = useState(false);
   const [loading, setLoading] = useState(false);
   const [input, setInput] = useState({email: "", password: ""});
+  const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -56,7 +58,11 @@ const UserLogin = () => {
     navigate("/sign-up");
   };
 
+  const sendotp = ()=>{
+    setOpen(true);
+  }
   return (
+    <>
     <div className="relative h-screen w-full">
       <video
         autoPlay
@@ -148,12 +154,13 @@ const UserLogin = () => {
                         Remember me
                       </label>
                     </div>
-                    <a
-                      href="#"
-                      className="text-sm font-medium text-blue-600 hover:text-blue-800"
+                    <p 
+                      onClick={sendotp}
+                      className="text-sm font-medium text-blue-600 hover:text-blue-800 m-0"
+                      style={{cursor: "pointer"}}
                     >
                       Forgot password?
-                    </a>
+                    </p>
                   </div>
                   <button
                     type="submit"
@@ -222,6 +229,8 @@ const UserLogin = () => {
         </div>
       </div>
     </div>
+    {open && <Forgotpassword open={open} setOpen={setOpen}/>}
+    </>
   );
 };
 
