@@ -12,8 +12,11 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+
 
 function EmailValidator({ open, setOpen, formData }) {
+  const navigate = useNavigate();
   const [otp, setOtp] = React.useState("");
   const [loading, setLoading] = React.useState(false);
 
@@ -36,7 +39,7 @@ function EmailValidator({ open, setOpen, formData }) {
       if (res.data.success) {
         toast.success(res.data.message, {
           onClose: () => {
-            window.location.href = res.data.redirectTo;
+            navigate(res.data.redirectTo);
           },
         });
       }

@@ -12,6 +12,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import EmailValidatorHost from "./EmailValidatorHost";
 
 function HostSignupMain() {
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",

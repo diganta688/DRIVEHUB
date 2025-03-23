@@ -10,6 +10,7 @@ import { ToastContainer, Slide } from "react-toastify";
 import ListYourCar from "./Components/Host/ListYourCar";
 import HostLogin from "./Components/Auth/Host/HostLogin";
 import HostSignupMain from "./Components/Auth/Host/Signup/HostSignupMain";
+import Home from "./Components/HostHome/LeftSection/Home"
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
           <Route path="/host" element={<ListYourCar />} />
           <Route path="/host/login" element={<HostLogin />} />
           <Route path="/host/signup" element={<HostSignupMain />} />
+          <Route path="/host/home" element={<Home />} />
         </Routes>
       </BrowserRouter>
     </>

@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import CancelIcon from "@mui/icons-material/Cancel";
 import ForgotpasswordHost from "./ForgotpasswordHost";
+import { useNavigate } from "react-router-dom";
 
 function HostLogin() {
   const [formData, setFormData] = useState({
@@ -16,6 +17,7 @@ function HostLogin() {
   const [isSubmit, setIsSubmit] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
   const handleSubmit = async (e) => {
     setIsSubmit(true);
     e.preventDefault();
@@ -28,6 +30,7 @@ function HostLogin() {
       if (res.data.success) {
         setIsSubmit(false);
         toast.success(res.data.message);
+        navigate(res.data.redirectTo);
       }
     } catch (error) {
       setIsSubmit(false);

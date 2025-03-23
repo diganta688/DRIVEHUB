@@ -3,7 +3,7 @@ const router = express.Router();
 require("dotenv").config();
 const { UserModel } = require("./models/User");
 const { generateToken } = require("./util/jwt");
-const { Protect } = require("./middleware");
+const { Protect, ProtectHost } = require("./middleware");
 const { Hostmodel } = require("./models/Host");
 const nodemailer = require ("nodemailer");
 const cookieOptions = {
@@ -74,10 +74,6 @@ router.post("/login", async (req, res) => {
 router.get("/home", Protect, (req, res) => {
   res.status(200).json({ message: "Welcome to the Home Page" });
 });
-router.get("/logout", (req, res) => {
-  res.clearCookie("jwt", cookieOptions);
-  res.status(200).json({ success: true, message: "Logged out successfully" });
-});
 
 router.post("/host/signup", async (req, res) => {
   try {
@@ -127,7 +123,7 @@ router.post("/host/signup", async (req, res) => {
     res.status(201).json({
       message: "Host signed up successfully",
       success: true,
-      redirectTo: `${process.env.FRONTEND}`,
+      redirectTo: `/host/home`,
     });
   } catch (error) {
     console.error("Signup error:", error);
@@ -138,19 +134,20 @@ router.post("/host/signup", async (req, res) => {
 router.post("/host/login", async (req, res) => {
   try {
     const { email, password } = req.body;
-    const Host = await Hostmodel.findOne({ email });
-    if (!Host) {
+    const user = await Hostmodel.findOne({ email });
+    if (!user) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
-    const isMatch = await Host.comparePassword(password);
+    const isMatch = await user.comparePassword(password);
     if (!isMatch) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
-    const token = generateToken(Host._id);
+    const token = generateToken(user._id);
     res.cookie("jwt", token, cookieOptions);
     res.status(200).json({
       message: "Host logged in successfully",
       success: true,
+      redirectTo: `/host/home`,
     });
   } catch (error) {
     console.error("Login error:", error);
@@ -158,10 +155,14 @@ router.post("/host/login", async (req, res) => {
   }
 });
 
-router.get("/host/logout", (req, res) => {
+router.get("/host/home", ProtectHost, (req, res) => {
+  res.status(200).json({ message: "Welcome to the Home Page" });
+});
+router.get("/logout", (req, res) => {
   res.clearCookie("jwt", cookieOptions);
   res.status(200).json({ success: true, message: "Logged out successfully" });
 });
+
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
