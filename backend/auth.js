@@ -103,7 +103,7 @@ router.post("/host/signup", async (req, res) => {
         return res.status(400).json({ message: "phoneNumber already exists" });
       }
     }
-    const user = await Hostmodel.create({
+    const host = await Hostmodel.create({
       name,
       email,
       password,
@@ -118,12 +118,13 @@ router.post("/host/signup", async (req, res) => {
       experience,
       description,
     });
-    const token = generateToken(user._id);
+    const token = generateToken(host._id);
     res.cookie("jwt", token, cookieOptions);
     res.status(201).json({
       message: "Host signed up successfully",
       success: true,
       redirectTo: `/host/home`,
+      host: host
     });
   } catch (error) {
     console.error("Signup error:", error);
@@ -134,20 +135,21 @@ router.post("/host/signup", async (req, res) => {
 router.post("/host/login", async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await Hostmodel.findOne({ email });
-    if (!user) {
+    const host = await Hostmodel.findOne({ email });
+    if (!host) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
-    const isMatch = await user.comparePassword(password);
+    const isMatch = await host.comparePassword(password);
     if (!isMatch) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
-    const token = generateToken(user._id);
+    const token = generateToken(host._id);
     res.cookie("jwt", token, cookieOptions);
     res.status(200).json({
       message: "Host logged in successfully",
       success: true,
       redirectTo: `/host/home`,
+      host:host
     });
   } catch (error) {
     console.error("Login error:", error);
@@ -156,8 +158,9 @@ router.post("/host/login", async (req, res) => {
 });
 
 router.get("/host/home", ProtectHost, (req, res) => {
-  res.status(200).json({ message: "Welcome to the Home Page" });
+  res.status(200).json({ message: "Welcome to the Home Page", host: req.user });
 });
+
 router.get("/logout", (req, res) => {
   res.clearCookie("jwt", cookieOptions);
   res.status(200).json({ success: true, message: "Logged out successfully" });

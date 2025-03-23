@@ -10,7 +10,7 @@ import { ToastContainer, Slide } from "react-toastify";
 import ListYourCar from "./Components/Host/ListYourCar";
 import HostLogin from "./Components/Auth/Host/HostLogin";
 import HostSignupMain from "./Components/Auth/Host/Signup/HostSignupMain";
-import Home from "./Components/HostHome/LeftSection/Home"
+import Home from "./Components/HostHome/Home"
 
 function App() {
   return (
