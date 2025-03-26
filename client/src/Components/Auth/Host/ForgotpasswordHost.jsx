@@ -28,7 +28,7 @@ function ForgotpasswordHost({ open, setOpen }) {
     setEmailLoading(true);
     try {
       const res = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/auth/host/email/forgot/validator`,
+        `${import.meta.env.VITE_BACKEND_URL}/forget/host/email/check`,
         { email: input.email },
         { withCredentials: true }
       );
@@ -85,7 +85,7 @@ function ForgotpasswordHost({ open, setOpen }) {
   const updatepass = async () => {
     try {
       const res = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/auth/host/reset-password`,
+        `${import.meta.env.VITE_BACKEND_URL}/reset/host/password`,
         { email: input.email, password: input.password },
         { withCredentials: true }
       );

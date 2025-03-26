@@ -37,7 +37,7 @@ const UserSignup = () => {
   const OtpSend = async () => {    
     try {
         const res = await axios.post(
-            `${import.meta.env.VITE_BACKEND_URL}/auth/user/email/validator`,
+            `${import.meta.env.VITE_BACKEND_URL}/validate/user/email`,
             { email: input.email, phone: input.phone },
             { withCredentials: true }
         );

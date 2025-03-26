@@ -44,7 +44,7 @@ function HostSignupMain() {
   const OtpSend = async () => {    
     try {
         const res = await axios.post(
-            `${import.meta.env.VITE_BACKEND_URL}/auth/host/email/validator`,
+            `${import.meta.env.VITE_BACKEND_URL}/validate/host/email`,
             { email: formData.email, phone: formData.phone },
             { withCredentials: true }
         );

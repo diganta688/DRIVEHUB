@@ -23,7 +23,7 @@ function HostNav() {
   const logout = async () => {
       try {
         const res = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/auth/logout`,
+          `${import.meta.env.VITE_BACKEND_URL}/auth/host/logout`,
           { withCredentials: true }
         );
         if (res.status === 200) {

@@ -3,6 +3,9 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const auth = require("./auth");
+const EmailValidatorSignup = require("./routes/EmailValidatorSignup");
+const forgetEmailCheck = require("./routes/forgetEmailCheck");
+const resetPassword = require("./routes/resetPassword");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const session = require("express-session");
@@ -34,6 +37,9 @@ app.use(
   })
 );
 app.use("/auth", auth);
+app.use("/validate", EmailValidatorSignup);
+app.use("/forget", forgetEmailCheck);
+app.use("/reset", resetPassword);
 
 
 

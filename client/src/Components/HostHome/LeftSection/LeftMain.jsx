@@ -77,7 +77,6 @@ const SelectField = ({ label, name, value, onChange, options }) => (
   </div>
 );
 
-/* ✅ Styled TextArea Component */
 const TextAreaField = ({ label, name, value, onChange }) => (
   <div>
     <label className="block text-sm font-semibold text-gray-700">{label}</label>

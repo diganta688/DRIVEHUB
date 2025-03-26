@@ -28,7 +28,7 @@ function Forgotpassword({ open, setOpen }) {
     setEmailLoading(true);
     try {
       const res = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/auth/user/email/forgot/validator`,
+        `${import.meta.env.VITE_BACKEND_URL}/forget/user/email/check`,
         { email: input.email },
         { withCredentials: true }
       );
@@ -85,7 +85,7 @@ function Forgotpassword({ open, setOpen }) {
   const updatepass = async () => {
     try {
       const res = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/auth/user/reset-password`,
+        `${import.meta.env.VITE_BACKEND_URL}/reset/user/password`,
         { email: input.email, password: input.password },
         { withCredentials: true }
       );
