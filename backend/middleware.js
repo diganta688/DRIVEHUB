@@ -5,7 +5,7 @@ const {Hostmodel} = require("./models/Host")
 
 exports.Protect = async (req, res, next) => {
   try {
-    const token = req.cookies.jwt;
+    const token = req.cookies.jwtUser;
     if (!token)
       return res.status(401).json({ status: false, error: "Unauthorized" });
     const decoded = verifyToken(token);
@@ -19,13 +19,13 @@ exports.Protect = async (req, res, next) => {
     next();
   } catch (error) {
     console.error("Protect middleware error:", error);
-    res.clearCookie("jwt", cookieOptions);
+    res.clearCookie("jwtUser", cookieOptions);
     res.status(401).json({ status: false, error: "Invalid token" });
   }
 };
 exports.ProtectHost = async (req, res, next) => {
   try {
-    const token = req.cookies.jwt2;
+    const token = req.cookies.jwtHost;
     if (!token)
       return res.status(401).json({ status: false, error: "Unauthorized" });
     const decoded = verifyToken(token);
@@ -39,7 +39,7 @@ exports.ProtectHost = async (req, res, next) => {
     next();
   } catch (error) {
     console.error("Protect middleware error:", error);
-    res.clearCookie("jwt2", cookieOptions);
+    res.clearCookie("jwtHost", cookieOptions);
     res.status(401).json({ status: false, error: "Invalid token" });
   }
 };

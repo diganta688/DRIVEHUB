@@ -21,23 +21,24 @@ function HostNav() {
     };
   }, []);
   const logout = async () => {
-      try {
-        const res = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/auth/host/logout`,
-          { withCredentials: true }
-        );
-        if (res.status === 200) {
-          toast.success("Logout Done", {
-            onClose: () => {
-              window.location.reload();
-            },
-          });
-        }
-      } catch (error) {
-        console.error("Logout failed:", error);
-        toast.error("Logout error");
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/auth/host/logout`,
+        { withCredentials: true }
+      );
+      if (res.status === 200) {
+        toast.success("Logout Done", {
+          onClose: () => {
+            window.location.reload();
+          },
+        });
       }
-    };
+    } catch (error) {
+      console.error("Logout failed:", error);
+      toast.error("Logout error");
+    }
+  };
+  
 
   return (
     <nav className="bg-white shadow-md p-3 flex justify-between items-center">

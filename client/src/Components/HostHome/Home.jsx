@@ -15,7 +15,11 @@ function App() {
     model: "",
     year: 2024,
     price: 0,
-    location: "",
+    address: "",
+    city: "",
+    state: "",
+    zipCode: "",
+    country: "",
     fuelType: "",
     transmission: "",
     seats: 4,
@@ -36,8 +40,11 @@ function App() {
       model: "",
       year: 2024,
       price: 0,
-      location: "",
-      fuelType: "",
+      address: "",
+      city: "",
+      state: "",
+      zipCode: "",
+      country: "",      fuelType: "",
       transmission: "",
       seats: 4,
       mileage: 0,
@@ -82,7 +89,7 @@ function App() {
   }, []);
 
   return (
-    <HostMainContext.Provider value={{ formData, handleInputChange }}>
+    <HostMainContext.Provider value={{ formData, handleInputChange, setFormData }}>
       <div className="min-h-screen bg-gray-50">
         <HostNav/>
         <div

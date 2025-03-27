@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
 require("dotenv").config();
-const { UserModel } = require("./models/User");
-const { generateToken } = require("./util/jwt");
-const { Protect, ProtectHost } = require("./middleware");
-const { Hostmodel } = require("./models/Host");
+const { UserModel } = require("../models/User");
+const { generateToken } = require("../util/jwt");
+const { Protect, ProtectHost } = require("../middleware");
+const { Hostmodel } = require("../models/Host");
 const cookieOptions = {
   httpOnly: true,
   secure: false,
@@ -34,7 +34,7 @@ router.post("/signup", async (req, res) => {
       dob,
     });
     const token = generateToken(user._id);
-    res.cookie("jwt", token, cookieOptions);
+    res.cookie("jwtUser", token, cookieOptions);
     res.status(201).json({
       message: "User signed up successfully",
       success: true,
@@ -58,7 +58,7 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ message: "Invalid credentials" });
     }
     const token = generateToken(user._id);
-    res.cookie("jwt", token, cookieOptions);
+    res.cookie("jwtUser", token, cookieOptions);
     res.status(200).json({
       message: "User logged in successfully",
       success: true,
@@ -74,7 +74,7 @@ router.get("/home", Protect, (req, res) => {
   res.status(200).json({ message: "Welcome to the Home Page" });
 });
 router.get("/logout", (req, res) => {
-  res.clearCookie("jwt", cookieOptions);
+  res.clearCookie("jwtUser", cookieOptions);
   res.status(200).json({ success: true, message: "Logged out successfully" });
 });
 
@@ -122,7 +122,7 @@ router.post("/host/signup", async (req, res) => {
       description,
     });
     const token = generateToken(host._id);
-    res.cookie("jwt2", token, cookieOptions);
+    res.cookie("jwtHost", token, cookieOptions);
     res.status(201).json({
       message: "Host signed up successfully",
       success: true,
@@ -147,7 +147,7 @@ router.post("/host/login", async (req, res) => {
       return res.status(401).json({ message: "Invalid credentials" });
     }
     const token = generateToken(host._id);
-    res.cookie("jwt2", token, cookieOptions);
+    res.cookie("jwtHost", token, cookieOptions);
     res.status(200).json({
       message: "Host logged in successfully",
       success: true,
@@ -166,7 +166,7 @@ router.get("/host/home", ProtectHost, (req, res) => {
 
 
 router.get("/host/logout", (req, res) => {
-  res.clearCookie("jwt2", { httpOnly: true, secure: false, sameSite: "lax" });
+  res.clearCookie("jwtHost", cookieOptions);
   res.status(200).json({ success: true, message: "Logged out successfully" });
 });
 
