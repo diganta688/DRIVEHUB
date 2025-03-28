@@ -77,6 +77,11 @@ const carSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    files: [
+      {
+        type: String,
+      },
+    ],
   },
   { timestamps: true }
 );

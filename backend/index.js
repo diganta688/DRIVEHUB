@@ -6,6 +6,7 @@ const auth = require("./routes/Auth/auth");
 const EmailValidatorSignup = require("./routes/Auth/EmailValidatorSignup");
 const forgetEmailCheck = require("./routes/Auth/forgetEmailCheck");
 const resetPassword = require("./routes/Auth/resetPassword");
+const host = require("./routes/Host/Host");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const session = require("express-session");
@@ -40,6 +41,7 @@ app.use("/auth", auth);
 app.use("/validate", EmailValidatorSignup);
 app.use("/forget", forgetEmailCheck);
 app.use("/reset", resetPassword);
+app.use("/host", host);
 
 
 

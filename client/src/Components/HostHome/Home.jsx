@@ -5,8 +5,12 @@ import RightMain from "./RightSection/RightMain";
 import { HostMainContext } from "../../Context/context";
 import HostInfo from "./HostInfo";
 import HostNav from "./HostNav";
+import { toast } from "react-toastify";
+import "./Home.css"; 
 
 function App() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [isPreviewDisplay , setIsPreviewDisplay] = useState(true);
   const [cars, setCars] = useState([]);
   const [name, setName] = useState(null);
   const [formData, setFormData] = useState({
@@ -25,34 +29,8 @@ function App() {
     mileage: 0,
     imageUrl: "",
     description: "",
-  });
-
-  const handleSubmit = (e) => {
-    // e.preventDefault();
-    // const newCar = {
-    //   ...formData,
-    //   id: Date.now().toString(),
-    // };
-    // setCars([...cars, newCar]);
-    // setFormData({
-    //   make: "",
-    //   model: "",
-    //   year: 2024,
-    //   price: 0,
-    //   address: "",
-    //   city: "",
-    //   state: "",
-    //   zipCode: "",
-    //   country: "",      fuelType: "",
-    //   transmission: "",
-    //   seats: 4,
-    //   mileage: 0,
-    //   imageUrl: "",
-    //   description: "",
-    // });
-    
-  };
-
+    files: [], // Add this line to store files
+});
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -88,9 +66,59 @@ function App() {
     check();
   }, []);
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+setIsLoading(true);
+const data = new FormData();
+Object.keys(formData).forEach(key => {
+  if (key === "files") {
+    formData.files.forEach(file => data.append("files", file));
+  } else {
+    data.append(key, formData[key]);
+  }
+});
+
+try {
+  const response = await axios.post(
+    `${import.meta.env.VITE_BACKEND_URL}/host/cars/upload`, 
+    data, 
+    {
+      headers: { "Content-Type": "multipart/form-data" },
+      withCredentials: true,
+    }
+  );
+  toast.success("Car uploaded successfully!");
+  setIsLoading(false);
+  setFormData({
+    make: "",
+        model: "",
+        year: 2024,
+        price: 0,
+        address: "",
+        city: "",
+        state: "",
+        zipCode: "",
+        country: "",
+        fuelType: "",
+        transmission: "",
+        seats: 4,
+        mileage: 0,
+        imageUrl: "",
+        description: "",
+        files: [],
+      });
+      setIsPreviewDisplay(false);
+    } catch (error) {
+      setIsLoading(false);
+      console.error("Failed to upload car", error);
+      toast.error("Failed to upload car.");
+    }
+  };
+
+
   return (
     <HostMainContext.Provider value={{ formData, handleInputChange, setFormData }}>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50 pb-3 moving-gradient" >
         <HostNav/>
         <div
           className="p-5"
@@ -108,9 +136,9 @@ function App() {
           />
         </div>
 
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-4 py-8" style={{backgroundColor:"rgba(255, 255, 255, 0.8)"}}>
           <div className="flex flex-col lg:flex-row gap-8">
-            <LeftMain handleSubmit={handleSubmit} />
+            <LeftMain handleSubmit={handleSubmit} isLoading={isLoading} isPreviewDisplay={isPreviewDisplay}/>
             <RightMain cars={cars} />
           </div>
         </div>

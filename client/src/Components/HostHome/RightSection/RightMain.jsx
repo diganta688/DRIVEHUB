@@ -5,7 +5,7 @@ function RightMain({cars}) {
   return (
     <>
       <div className="lg:w-1/2 animate-slide-in" style={{ animationDelay: '0.2s' }}>
-            <div className="bg-white rounded-lg shadow-md transition-all duration-300 hover:shadow-lg p-3">
+            <div className="bg-transparent rounded-lg shadow-md transition-all duration-300 hover:shadow-lg p-3">
               <div className="flex items-center space-x-2 mb-6">
                 <Car className="h-5 w-5 text-blue-600" />
                 <h2 className="text-xl font-semibold  m-0 mx-2">Your Listed Cars</h2>

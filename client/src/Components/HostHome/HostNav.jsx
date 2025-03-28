@@ -41,19 +41,19 @@ function HostNav() {
   
 
   return (
-    <nav className="bg-white shadow-md p-3 flex justify-between items-center">
+    <nav className=" shadow-md p-3 flex justify-between items-center" style={{backgroundColor: "rgba(0, 0, 0)"}}>
       <div className="flex items-center">
-        <img src="\media\Images\logo.png" alt="Logo" className="h-7 w-auto" /> 
+        <img src="\media\Images\logo.png" alt="Logo" className="h-7 w-auto" style={{  filter: 'brightness(0) invert(1)'}}/> 
       </div>
 
       <div className="relative" ref={menuRef}>
         <button
-          className="flex items-center gap-2 px-2 py-1 border rounded-md bg-gray-100 hover:bg-gray-200 transition"
+          className="flex items-center gap-2 px-2 py-1 transition"
           onClick={() => setMenuOpen(!menuOpen)}
           style={{borderRadius: "10px"}}
         >
-          <Menu className="h-6 w-6 text-gray-700" />
-          <User className="h-6 w-6 text-gray-700" />
+          <Menu className="h-6 w-6 text-gray-700" style={{color: "white"}}/>
+          <User className="h-6 w-6 text-gray-700" style={{color: "white"}}/>
         </button>
 
         {menuOpen && (
