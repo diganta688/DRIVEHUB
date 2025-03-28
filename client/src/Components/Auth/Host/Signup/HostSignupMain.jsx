@@ -111,7 +111,7 @@ function HostSignupMain() {
           </form>
         </div>
       </div>
-      {open && <EmailValidatorHost open={open} setOpen={setOpen} formData={formData} setIsSubmit={setIsSubmit} />}
+      {open && <EmailValidatorHost open={open} setOpen={setOpen} formData={formData} setIsSubmit={setIsSubmit} onetimepass={onetimepass}/>}
     </SignupContext.Provider>
   );
 }

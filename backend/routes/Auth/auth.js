@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
 require("dotenv").config();
-const { UserModel } = require("../models/User");
-const { generateToken } = require("../util/jwt");
-const { Protect, ProtectHost } = require("../middleware");
-const { Hostmodel } = require("../models/Host");
+const { UserModel } = require("../../models/User");
+const { generateToken } = require("../../util/jwt");
+const { Protect, ProtectHost } = require("../../middleware");
+const { Hostmodel } = require("../../models/Host");
 const cookieOptions = {
   httpOnly: true,
   secure: false,
@@ -140,7 +140,7 @@ router.post("/host/login", async (req, res) => {
     const { email, password } = req.body;
     const host = await Hostmodel.findOne({ email });
     if (!host) {
-      return res.status(401).json({ message: "Invalid credentials" });
+      return res.status(401).json({ message: "Email not registered" });
     }
     const isMatch = await host.comparePassword(password);
     if (!isMatch) {

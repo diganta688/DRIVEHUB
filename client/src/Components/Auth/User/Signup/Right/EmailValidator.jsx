@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import { motion } from "framer-motion";
 
-function EmailValidator({ open, setOpen, formdata }) {
+function EmailValidator({ open, setOpen, formdata, onetimepass }) {
   const [otp, setOtp] = React.useState("");
   const [loading, setLoading] = React.useState(false);
 
@@ -21,6 +21,15 @@ function EmailValidator({ open, setOpen, formdata }) {
     const value = e.target.value.replace(/\D/g, "");
     if (value.length <= 6) {
       setOtp(value);
+    }
+  };
+
+  const verifyotp = () => {
+    if (parseInt(otp) === onetimepass.current) {
+      toast.success("Verified");
+      signupProcess();
+    } else {
+      toast.error("Wrong OTP");
     }
   };
 
@@ -106,8 +115,7 @@ function EmailValidator({ open, setOpen, formdata }) {
           <Button
             onClick={() => {
               if (otp.length === 6) {
-                signupProcess();
-                setOpen(false);
+                verifyotp();
               }
             }}
             variant="contained"

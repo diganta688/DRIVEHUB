@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import HomeHeroNav from "../LandingPage/HomeHeroNav";
 import LeftMain from "./LeftSection/LeftMain";
 import RightMain from "./RightSection/RightMain";
 import { HostMainContext } from "../../Context/context";
@@ -29,28 +28,29 @@ function App() {
   });
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    const newCar = {
-      ...formData,
-      id: Date.now().toString(),
-    };
-    setCars([...cars, newCar]);
-    setFormData({
-      make: "",
-      model: "",
-      year: 2024,
-      price: 0,
-      address: "",
-      city: "",
-      state: "",
-      zipCode: "",
-      country: "",      fuelType: "",
-      transmission: "",
-      seats: 4,
-      mileage: 0,
-      imageUrl: "",
-      description: "",
-    });
+    // e.preventDefault();
+    // const newCar = {
+    //   ...formData,
+    //   id: Date.now().toString(),
+    // };
+    // setCars([...cars, newCar]);
+    // setFormData({
+    //   make: "",
+    //   model: "",
+    //   year: 2024,
+    //   price: 0,
+    //   address: "",
+    //   city: "",
+    //   state: "",
+    //   zipCode: "",
+    //   country: "",      fuelType: "",
+    //   transmission: "",
+    //   seats: 4,
+    //   mileage: 0,
+    //   imageUrl: "",
+    //   description: "",
+    // });
+    
   };
 
   const handleInputChange = (e) => {

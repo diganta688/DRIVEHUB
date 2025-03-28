@@ -7,7 +7,7 @@ import TextAreaField from "./TextAreaField";
 import SelectField from "./SelectField";
 
 function LeftMain({ handleSubmit }) {
-  const { formData, handleInputChange, setFormData } = useContext(HostMainContext);
+  const { formData, handleInputChange } = useContext(HostMainContext);
   const [filePreviews, setFilePreviews] = useState([]);
     
   const handleFileChange = (event) => {

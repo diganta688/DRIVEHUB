@@ -14,8 +14,7 @@ import {
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
-
-function EmailValidator({ open, setOpen, formData }) {
+function EmailValidator({ open, setOpen, formData, onetimepass }) {
   const navigate = useNavigate();
   const [otp, setOtp] = React.useState("");
   const [loading, setLoading] = React.useState(false);
@@ -26,8 +25,16 @@ function EmailValidator({ open, setOpen, formData }) {
       setOtp(value);
     }
   };
+  const verifyotp = () => {
+    if (parseInt(otp) === onetimepass.current) {
+      toast.success("Verified");
+      signupProcess();
+    } else {
+      toast.error("Wrong OTP");
+    }
+  };
+
   const signupProcess = async () => {
-    
     setLoading(true);
     try {
       const res = await axios.post(
@@ -35,7 +42,7 @@ function EmailValidator({ open, setOpen, formData }) {
         formData,
         { withCredentials: true }
       );
-      
+
       if (res.data.success) {
         toast.success(res.data.message, {
           onClose: () => {
@@ -45,12 +52,14 @@ function EmailValidator({ open, setOpen, formData }) {
       }
     } catch (error) {
       console.error("Signup failed:", error);
-      toast.error(error.response?.data?.message || "Something went wrong. Please try again.");
+      toast.error(
+        error.response?.data?.message ||
+          "Something went wrong. Please try again."
+      );
     } finally {
       setLoading(false);
     }
   };
-  
 
   return (
     <Dialog
@@ -109,8 +118,7 @@ function EmailValidator({ open, setOpen, formData }) {
           <Button
             onClick={() => {
               if (otp.length === 6) {
-                signupProcess();
-                setOpen(false);
+                verifyotp();
               }
             }}
             variant="contained"
@@ -131,7 +139,11 @@ function EmailValidator({ open, setOpen, formData }) {
             }}
             disabled={otp.length !== 6 || loading}
           >
-            {loading ? <CircularProgress size={20} sx={{ color: "#fff", mr: 1 }} /> : "Verify"}
+            {loading ? (
+              <CircularProgress size={20} sx={{ color: "#fff", mr: 1 }} />
+            ) : (
+              "Verify"
+            )}
           </Button>
         </motion.div>
       </DialogActions>

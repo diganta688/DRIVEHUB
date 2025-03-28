@@ -1,10 +1,9 @@
 const express = require("express");
 const router = express.Router();
 require("dotenv").config();
-const { UserModel } = require("../models/User");
-const { Hostmodel } = require("../models/Host");
-const nodemailer = require ("nodemailer");
-
+const { UserModel } = require("../../models/User");
+const { Hostmodel } = require("../../models/Host");
+const nodemailer = require("nodemailer");
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -12,14 +11,32 @@ const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASS,
   },
 });
-router.post("/user/email/check", async (req, res) => {
-  const { email} = req.body;
+
+router.post("/host/email", async (req, res) => {
+  const { email } = req.body;
   if (!email || email.trim() === "") {
     return res.status(400).json({ error: "No email provided" });
   }
-  const exist = await UserModel.findOne({ email });  
-  if(!exist){
-      return res.status(400).json({ message: "Email not exists" });
+  const exist = await Hostmodel.findOne({
+    $or: [{ email }],
+  });
+
+  if (exist) {
+    if (exist.email === email) {
+      return res.status(400).json({ message: "Email already exists" });
+    }
+  }
+  const existUser = await UserModel.findOne({
+    $or: [{ email }],
+  });
+  if (existUser) {
+    if (existUser.email === email) {
+      return res
+        .status(400)
+        .json({
+          message: "Email already registered as a User try with other Email",
+        });
+    }
   }
   const otp = Math.floor(100000 + Math.random() * 900000);
   const subject = "Otp for Signup on DRIVEHUB";
@@ -32,21 +49,34 @@ router.post("/user/email/check", async (req, res) => {
       subject,
       text: message,
     });
-    res.status(200).json({ message: "OTP sent successfully!", otp: otp});
+    res.status(200).json({ message: "OTP sent successfully!", otp: otp });
   } catch (error) {
     console.error("Error sending email:", error);
     res.status(500).json({ error: "Failed to send email" });
   }
 });
-
-router.post("/host/email/check", async (req, res) => {
-  const { email} = req.body;
+router.post("/user/email", async (req, res) => {
+  const { email } = req.body;
   if (!email || email.trim() === "") {
     return res.status(400).json({ error: "No email provided" });
   }
-  const exist = await Hostmodel.findOne({ email });  
-  if(!exist){
-      return res.status(400).json({ message: "Email not exists" });
+  const exist = await UserModel.findOne({
+    $or: [{ email }],
+  });
+  if (exist) {
+    if (exist.email === email) {
+      return res.status(400).json({ message: "Email already exists" });
+    }
+  }
+  const existUser = await Hostmodel.findOne({
+    $or: [{ email }],
+  });
+  if (existUser) {
+    if (existUser.email === email) {
+      return res
+        .status(400)
+        .json({ message: "This email is registered as a Host email" });
+    }
   }
   const otp = Math.floor(100000 + Math.random() * 900000);
   const subject = "Otp for Signup on DRIVEHUB";
@@ -59,7 +89,7 @@ router.post("/host/email/check", async (req, res) => {
       subject,
       text: message,
     });
-    res.status(200).json({ message: "OTP sent successfully!", otp: otp});
+    res.status(200).json({ message: "OTP sent successfully!", otp: otp });
   } catch (error) {
     console.error("Error sending email:", error);
     res.status(500).json({ error: "Failed to send email" });
