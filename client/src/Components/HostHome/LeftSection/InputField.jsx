@@ -1,17 +1,20 @@
 import React from 'react';
-  
-  function InputField({ label, name, type = "text", value, onChange }) {
-    return (    <div>
-        <label className="block text-sm font-semibold text-gray-700">{label}</label>
-        <input
-          type={type}
-          name={name}
-          value={value}
-          onChange={onChange}
-          className="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm px-4 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-400 transition-all duration-200"
-          required
-        />
-      </div>  );
-  }
-  
-  export default InputField;
+
+function InputField({ label, name, value, onChange, type = "text", error }) {
+  return (
+    <div className="mb-4">
+      <label className="block text-xs font-semibold text-gray-700 mb-1">{label}</label>
+      <input
+        type={type}
+        name={name}
+        value={value}
+        onChange={onChange}
+        className={`mt-1 block w-full px-4 py-2 rounded-lg text-sm border focus:outline-none focus:ring-2 
+          ${error ? 'border-red-500 focus:ring-red-500' : 'border-gray-300'}`}
+      />
+      {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
+    </div>
+  );
+}
+
+export default InputField;

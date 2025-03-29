@@ -53,6 +53,12 @@ const HostSchema = new Schema({
     type: String,
     required: true,
   },
+  cars: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Car",
+    },
+  ],
 }, { timestamps: true });
 
 HostSchema.pre("save", async function (next) {

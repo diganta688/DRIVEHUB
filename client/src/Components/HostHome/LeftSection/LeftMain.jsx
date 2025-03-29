@@ -5,14 +5,25 @@ import { HostMainContext } from "../../../Context/context";
 import InputField from "./InputField";
 import TextAreaField from "./TextAreaField";
 import SelectField from "./SelectField";
-import "./loader.css";
 
-function LeftMain({ handleSubmit, isLoading, isPreviewDisplay }) {
-  const { formData, handleInputChange, setFormData } =
+function LeftMain({ handleSubmit, isLoading, isPreviewDisplay, name }) {
+  const { formData, handleInputChange, setFormData, inputError } =
     useContext(HostMainContext);
   const [filePreviews, setFilePreviews] = useState([]);
   const [fileError, setFileError] = useState("");
   const maxFiles = 5;
+  const hasError =
+    inputError.brand ||
+    inputError.model ||
+    inputError.milage ||
+    inputError.year ||
+    inputError.price ||
+    inputError.seats ||
+    inputError.fuelType ||
+    inputError.transmission ||
+    inputError.mileage ||
+    inputError.imageUrl ||
+    inputError.description;
 
   const handleFileChange = (event) => {
     const selectedFiles = Array.from(event.target.files);
@@ -73,16 +84,18 @@ function LeftMain({ handleSubmit, isLoading, isPreviewDisplay }) {
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <InputField
-              label="Make"
-              name="make"
-              value={formData.make}
+              label="brand"
+              name="brand"
+              value={formData.brand}
               onChange={handleInputChange}
+              error={inputError.brand}
             />
             <InputField
               label="Model"
               name="model"
               value={formData.model}
               onChange={handleInputChange}
+              error={inputError.model}
             />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -92,6 +105,7 @@ function LeftMain({ handleSubmit, isLoading, isPreviewDisplay }) {
               type="number"
               value={formData.year}
               onChange={handleInputChange}
+              error={inputError.year}
             />
             <InputField
               label="Daily Price ($)"
@@ -99,6 +113,7 @@ function LeftMain({ handleSubmit, isLoading, isPreviewDisplay }) {
               type="number"
               value={formData.price}
               onChange={handleInputChange}
+              error={inputError.price}
             />
             <InputField
               label="Seats"
@@ -106,9 +121,11 @@ function LeftMain({ handleSubmit, isLoading, isPreviewDisplay }) {
               type="number"
               value={formData.seats}
               onChange={handleInputChange}
+              error={inputError.seats}
             />
           </div>
-          <LocationList />
+          <p style={{textDecoration:"underline", fontSize: "12px", fontWeight: "800", margin: "0"}}>Location is associated with your profile it is not changeable from here</p>
+          <LocationList disabled={true} name={name}/>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <SelectField
               label="Fuel Type"
@@ -116,6 +133,7 @@ function LeftMain({ handleSubmit, isLoading, isPreviewDisplay }) {
               value={formData.fuelType}
               onChange={handleInputChange}
               options={["Petrol", "Diesel", "Electric", "Hybrid"]}
+              error={inputError.fuelType}
             />
             <SelectField
               label="Transmission"
@@ -123,7 +141,8 @@ function LeftMain({ handleSubmit, isLoading, isPreviewDisplay }) {
               value={formData.transmission}
               onChange={handleInputChange}
               options={["Automatic", "Manual"]}
-            />
+              error={inputError.transmission}
+              />
           </div>
           <InputField
             label="Mileage (km)"
@@ -131,6 +150,7 @@ function LeftMain({ handleSubmit, isLoading, isPreviewDisplay }) {
             type="number"
             value={formData.mileage}
             onChange={handleInputChange}
+            error={inputError.mileage}
           />
 
           <InputField
@@ -139,8 +159,8 @@ function LeftMain({ handleSubmit, isLoading, isPreviewDisplay }) {
             type="url"
             value={formData.imageUrl}
             onChange={handleInputChange}
+            error={inputError.imageUrl}
           />
-
           <div>
             <label className="text-sm font-semibold text-gray-700">
               Car Images (Optional)
@@ -183,6 +203,7 @@ function LeftMain({ handleSubmit, isLoading, isPreviewDisplay }) {
             name="description"
             value={formData.description}
             onChange={handleInputChange}
+            error={inputError.description}
           />
           {isLoading ? (
             <button
@@ -195,9 +216,14 @@ function LeftMain({ handleSubmit, isLoading, isPreviewDisplay }) {
             </button>
           ) : (
             <button
-              disabled={false}
+              disabled={hasError}
               type="submit"
-              className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-300 transform hover:scale-101 active:scale-95 shadow-md flex items-center justify-center"
+              className={`w-full text-white py-3 px-4 rounded-lg font-semibold transition-all duration-300 transform shadow-md flex items-center justify-center
+      ${
+        hasError
+          ? "bg-blue-400 cursor-not-allowed opacity-50"
+          : "bg-blue-600 hover:bg-blue-700 hover:scale-101 active:scale-95"
+      }`}
               style={{ marginTop: "1rem", borderRadius: "10px" }}
             >
               List Car

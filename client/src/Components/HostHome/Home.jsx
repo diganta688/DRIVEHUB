@@ -6,18 +6,17 @@ import { HostMainContext } from "../../Context/context";
 import HostInfo from "./HostInfo";
 import HostNav from "./HostNav";
 import { toast } from "react-toastify";
-import "./Home.css"; 
 
 function App() {
   const [isLoading, setIsLoading] = useState(false);
-  const [isPreviewDisplay , setIsPreviewDisplay] = useState(true);
-  const [cars, setCars] = useState([]);
+  const [isPreviewDisplay, setIsPreviewDisplay] = useState(true);
+  const [rightLoad, setRightLoad] = useState(false);
   const [name, setName] = useState(null);
   const [formData, setFormData] = useState({
-    make: "",
+    brand: "",
     model: "",
-    year: 2024,
-    price: 0,
+    year: 2025,
+    price: 10,
     address: "",
     city: "",
     state: "",
@@ -26,13 +25,58 @@ function App() {
     fuelType: "",
     transmission: "",
     seats: 4,
-    mileage: 0,
+    mileage: 3,
     imageUrl: "",
     description: "",
-    files: [], // Add this line to store files
-});
+    files: [],
+  });
+  const [inputError, setInputError] = useState({
+    brand: false,
+    model: false,
+    mileage: false,
+    year: false,
+    price: false,
+    seats: false,
+    fuelType: false,
+    transmission: false,
+    mileage: false,
+    imageUrl: false,
+    description: false,
+  });
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    const errors = { ...inputError };
+    const currentYear = new Date().getFullYear();
+    if (name === "price") {
+      errors.price = value < 10 ? "Price cannot be less than 10" : "";
+    } else if (name === "year") {
+      errors.year =
+        value > currentYear ? `Year cannot be greater than ${currentYear}` : "";
+    } else if (name === "seats") {
+      errors.seats =
+        value > 7
+          ? "Seats cannot be more than 7"
+          : value < 1
+          ? "Seats cannot be less than 1"
+          : "";
+    } else if (name === "mileage") {
+      errors.mileage = value < 1 ? "Mileage cannot be less than 1" : "";
+    } else if (name === "brand") {
+      errors.brand = value.trim() === "" ? "brand is required" : "";
+    } else if (name === "model") {
+      errors.model = value.trim() === "" ? "Model is required" : "";
+    } else if (name === "fuelType") {
+      errors.fuelType = value.trim() === "" ? "Fuel type is required" : "";
+    } else if (name === "transmission") {
+      errors.transmission =
+        value.trim() === "" ? "Transmission is required" : "";
+    } else if (name === "imageUrl") {
+      errors.imageUrl = value.trim() === "" ? "Image URL is required" : "";
+    } else if (name === "description") {
+      errors.description = value.trim() === "" ? "Description is required" : "";
+    }
+
+    setInputError(errors);
     setFormData((prev) => ({
       ...prev,
       [name]: value,
@@ -47,50 +91,53 @@ function App() {
           withCredentials: true,
         }
       );
-
       if (response.status !== 200) {
         throw new Error("Failed to fetch user data");
       }
-
       const host = response.data.host;
       setName(host);
+      setFormData((prev) => ({
+        ...prev,
+        address: host.address,
+        city: host.city,
+        state: host.state,
+        zipCode: host.zipCode,
+        country: host.country,
+      }));
     } catch (error) {
       if (error.response?.status === 401) {
-        window.location.href = `${
-          import.meta.env.VITE_FRONTEND_URL
-        }/host/login`;
+        window.location.href = `${import.meta.env.VITE_FRONTEND_URL}/host/login`;
       }
     }
   };
+  
   useEffect(() => {
     check();
   }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-setIsLoading(true);
-const data = new FormData();
-Object.keys(formData).forEach(key => {
-  if (key === "files") {
-    formData.files.forEach(file => data.append("files", file));
-  } else {
-    data.append(key, formData[key]);
-  }
-});
+    setIsLoading(true);
+    const data = new FormData();
+    Object.keys(formData).forEach((key) => {
+      if (key === "files") {
+        formData.files.forEach((file) => data.append("files", file));
+      } else {
+        data.append(key, formData[key]);
+      }
+    });
 
-try {
-  const response = await axios.post(
-    `${import.meta.env.VITE_BACKEND_URL}/host/cars/upload`, 
-    data, 
-    {
-      headers: { "Content-Type": "multipart/form-data" },
-      withCredentials: true,
-    }
-  );
-  toast.success("Car uploaded successfully!");
-  setIsLoading(false);
-  setFormData({
-    make: "",
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/host/cars/upload/${name._id}`,
+        data,
+        { withCredentials: true }
+      );
+      toast.success("Car uploaded successfully!");
+      setRightLoad(prev => !prev);
+      setIsLoading(false);
+      setFormData({
+        brand: "",
         model: "",
         year: 2024,
         price: 0,
@@ -111,15 +158,22 @@ try {
     } catch (error) {
       setIsLoading(false);
       console.error("Failed to upload car", error);
-      toast.error("Failed to upload car.");
+      toast.error(error.response?.data?.error || "Failed to upload car");
     }
   };
 
 
   return (
-    <HostMainContext.Provider value={{ formData, handleInputChange, setFormData }}>
-      <div className="min-h-screen bg-gray-50 pb-3 moving-gradient" >
-        <HostNav/>
+    <HostMainContext.Provider
+      value={{
+        formData,
+        handleInputChange,
+        setFormData,
+        inputError,
+      }}
+    >
+      <div className="min-h-screen bg-gray-50 pb-3 moving-gradient">
+        <HostNav />
         <div
           className="p-5"
           style={{ display: "flex", justifyContent: "center" }}
@@ -136,10 +190,18 @@ try {
           />
         </div>
 
-        <div className="container mx-auto px-4 py-8" style={{backgroundColor:"rgba(255, 255, 255, 0.8)"}}>
+        <div
+          className="container mx-auto px-4 py-8"
+          style={{ backgroundColor: "rgba(255, 255, 255, 0.8)" }}
+        >
           <div className="flex flex-col lg:flex-row gap-8">
-            <LeftMain handleSubmit={handleSubmit} isLoading={isLoading} isPreviewDisplay={isPreviewDisplay}/>
-            <RightMain cars={cars} />
+            <LeftMain
+              handleSubmit={handleSubmit}
+              isLoading={isLoading}
+              isPreviewDisplay={isPreviewDisplay}
+              name={name}
+            />
+            <RightMain rightLoad={rightLoad} name={name}/>
           </div>
         </div>
       </div>
