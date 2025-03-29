@@ -13,7 +13,7 @@ function App() {
   const [rightLoad, setRightLoad] = useState(false);
   const [name, setName] = useState(null);
   const [formData, setFormData] = useState({
-    brand: "",
+    make: "",
     model: "",
     year: 2025,
     price: 10,
@@ -31,7 +31,7 @@ function App() {
     files: [],
   });
   const [inputError, setInputError] = useState({
-    brand: false,
+    make: false,
     model: false,
     mileage: false,
     year: false,
@@ -39,7 +39,6 @@ function App() {
     seats: false,
     fuelType: false,
     transmission: false,
-    mileage: false,
     imageUrl: false,
     description: false,
   });
@@ -61,8 +60,8 @@ function App() {
           : "";
     } else if (name === "mileage") {
       errors.mileage = value < 1 ? "Mileage cannot be less than 1" : "";
-    } else if (name === "brand") {
-      errors.brand = value.trim() === "" ? "brand is required" : "";
+    } else if (name === "make") {
+      errors.make = value.trim() === "" ? "make is required" : "";
     } else if (name === "model") {
       errors.model = value.trim() === "" ? "Model is required" : "";
     } else if (name === "fuelType") {
@@ -137,7 +136,7 @@ function App() {
       setRightLoad(prev => !prev);
       setIsLoading(false);
       setFormData({
-        brand: "",
+        make: "",
         model: "",
         year: 2024,
         price: 0,

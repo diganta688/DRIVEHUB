@@ -13,7 +13,7 @@ function LeftMain({ handleSubmit, isLoading, isPreviewDisplay, name }) {
   const [fileError, setFileError] = useState("");
   const maxFiles = 5;
   const hasError =
-    inputError.brand ||
+    inputError.make ||
     inputError.model ||
     inputError.milage ||
     inputError.year ||
@@ -84,11 +84,11 @@ function LeftMain({ handleSubmit, isLoading, isPreviewDisplay, name }) {
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <InputField
-              label="brand"
-              name="brand"
-              value={formData.brand}
+              label="make"
+              name="make"
+              value={formData.make}
               onChange={handleInputChange}
-              error={inputError.brand}
+              error={inputError.make}
             />
             <InputField
               label="Model"
