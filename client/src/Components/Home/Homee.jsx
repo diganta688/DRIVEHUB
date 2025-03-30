@@ -13,12 +13,12 @@ function Homee() {
     try {
       const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/car/getAllCars`);
       if (res.status === 200) {
-        setCars(res.data); // Store all cars in state
+        setCars(res.data);
       } else {
         console.error("Failed to fetch cars. Status:", res.status);
       }
     } catch (error) {
-      console.error("Error fetching cars:", error.message); // Print error message
+      console.error("Error fetching cars:", error.message);
     }
   };
   const check = async () => {

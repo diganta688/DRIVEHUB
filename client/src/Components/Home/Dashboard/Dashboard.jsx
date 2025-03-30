@@ -18,7 +18,7 @@ function Dashboard({cars, setCars}) {
   }, [searchParams, cars]);
 
   return (
-    <div className="flex flex-row pt-5" style={{ maxWidth: "1500px", margin: "0 auto" }}>
+    <div className="flex flex-row pt-5 " style={{ maxWidth: "2000px", margin: "0 auto" }}>
       <LeftFilter setSearchParams={setSearchParams} />
       <RightResult cars={filteredCars} />
     </div>

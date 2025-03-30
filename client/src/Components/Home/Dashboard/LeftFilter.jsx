@@ -20,16 +20,14 @@ function LeftFilter() {
       };
     });
   };
-
   const isSelected = (category, value) => selectedFilters[category].includes(value);
-
   const filterButtonClass = (category, value) =>
     isSelected(category, value)
       ? "border-orange-500 bg-orange-100 text-gray-800" 
       : "border-black-300 text-gray-700";
 
   return (
-    <div className="w-full md:w-72 p-4 border-r border-black-300 space-y-6 filter-left " >
+    <div className="w-full md:w-72 p-4 border-r border-black-300 space-y-6 filter-left">
       <div className="flex justify-between items-center border-b pb-3 flex-wrap mb-4">
         <h5 className="text-xl font-semibold text-gray-800 ">Filters</h5>
         <button

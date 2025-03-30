@@ -1,76 +1,85 @@
-import React from "react";
-import { FaGasPump, FaCogs, FaChair } from "react-icons/fa";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { useNavigate } from "react-router-dom";
+import React from 'react';
+import { Users, Fuel, Gauge, Calendar, Star, CarFront } from 'lucide-react';
 
-const CarCard = ({ car }) => {
-    const navigate = useNavigate();
-    return (
-    <div className="bg-white border rounded-lg shadow-sm p-4 md:p-5 flex flex-col md:flex-col md:items-center md:justify-between gap-4 ">
-      <div className="w-full md:w-40 flex justify-center md:justify-end">
-        <img
+function CarCard({car}) {
+  return (
+      <>    <div className="bg-white rounded-2xl shadow-xl overflow-hidden max-w-sm w-full">
+      <div className="relative h-48">
+        <img 
           src={car.MainImage}
-          alt={car.name}
-          className="w-32 md:w-full object-contain"
+          alt="Tesla Model 3"
+          className="w-full h-full object-cover"
         />
-      </div>
-      <div className="flex flex-col gap-1">
-        <h6 className="text-gray-500">{car.make}</h6>
-        <h6 className="font-bold ">{car.model}</h6>
-        <div className="flex gap-2 text-gray-500 text-sm items-center">
-          <FaGasPump />
-          <span>{car.fuelType}</span>
-          <FaCogs />
-          <span>{car.transmission}</span>
-          <img
-            src="https://cdn-icons-png.flaticon.com/512/1023/1023409.png"
-            alt=""
-            style={{ width: "14px" }}
-          />
-          <span>{car.seats} Seater</span>
+        <div className="absolute top-4 left-4 bg-white px-2 py-1 rounded-full">
+          <div className="flex items-center gap-1">
+            <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+            <span className="text-sm font-medium">4.9</span>
+          </div>
         </div>
-        <p className="font-bold text-lg mt-2">₹{car.price}/day</p>
-        <p className="text-red-500 text-sm">
-          Unlimited kms | Prices exclude fuel cost
-        </p>
       </div>
-
-      <div className="w-full md:w-auto flex justify-end md:justify-end">
-        <button
-        onClick={() => navigate("/car-description")}
-          className="flex items-center justify-center gap-2 text-black font-medium py-2 px-4 rounded-lg hover:scale-105 transition-all duration-300 shadow-md"
-          style={{
-            background: "radial-gradient(at left top, #F9D755, #D36A34)",
-          }}
-        >
-          Book
-          <span
-            className="text-xl"
-            style={{ position: "relative", bottom: "2px" }}
-          >
-            <ArrowForwardIosIcon fontSize="small" />
-          </span>
-        </button>
+      <div className="p-4">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-2xl font-bold text-gray-800">{car.make}{car.model}</h2>
+          <div className="flex items-center gap-1">
+            <CarFront className="w-5 h-5 text-orange-600" />
+            <span className="text-sm text-gray-600">{car.year}</span>
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-4 mb-6">
+          <div className="flex items-center gap-2">
+            <Users className="w-5 h-5 text-gray-600" />
+            <span className="text-sm text-gray-600">{car.seats} Seats</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Fuel className="w-5 h-5 text-gray-600" />
+            <span className="text-sm text-gray-600">{car.fuelType}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Gauge className="w-5 h-5 text-gray-600" />
+            <span className="text-sm text-gray-600">{car.mileage} mi range</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Calendar className="w-5 h-5 text-gray-600" />
+            <span className="text-sm text-gray-600">Available Now</span>
+          </div>
+        </div>
+        <div className="flex items-center justify-between mt-3">
+          <div>
+            <span className="text-3xl font-bold text-orange-600">${car.price}</span>
+            <span className="text-gray-600">/day</span>
+          </div>
+          <button className="bg-orange-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-orange-700 transition-colors">
+            Rent Now
+          </button>
+        </div>
       </div>
     </div>
+</>
   );
-};
+}
+
 
 const RightResult = ({ cars }) => {
   return (
-    <div className="p-4 right-result" style={{ margin: "0 auto" }}>
-      {cars.length > 0 ? 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {cars.map((car, index) => (
-          <div key={index} className="w-full md:w-auto">
-            <CarCard car={car} />
-          </div>
-        ))}
-      </div> : <h3 className="text-xl font-semibold mb-4">
-        no car available
-      </h3>}
+    <div className="p-4 " style={{width: "100%",height: "73vh", overflowY: "auto"}}>
+      {cars.length > 0 ? (
+        <div
+          className="carGrid "
+        >
+          {cars.map((car, index) => (
+            <div key={index} className="flex flex-wrap justify-start gap-4">
+              <CarCard car={car} />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <h3 className="text-xl font-semibold mb-4 text-center text-gray-700">
+          No car available
+        </h3>
+      )}
     </div>
   );
 };
+
 
 export default RightResult;

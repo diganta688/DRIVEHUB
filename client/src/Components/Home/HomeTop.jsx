@@ -1,6 +1,4 @@
 import React from 'react';
-import PersonIcon from "@mui/icons-material/Person";
-import MenuIcon from "@mui/icons-material/Menu";
 import HomeHeroNav from '../LandingPage/HomeHeroNav';
 
 

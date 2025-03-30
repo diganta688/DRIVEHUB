@@ -744,7 +744,6 @@ margin-bottom: 4rem;
 }
 
 .filter-left{
-  min-width: 300px;
   height: 73vh;
   overflow-y: auto;
 }

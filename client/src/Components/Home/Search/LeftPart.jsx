@@ -33,7 +33,6 @@ function LeftPart({ compact = false }) {
         </Select>
       </div>
 
-      {/* Start Time Section */}
       <div className="w-full md:w-auto sectionStyle">
         <div className="flex items-center gap-2">
           <div className="sectionLabel">Start Time</div>
@@ -53,7 +52,6 @@ function LeftPart({ compact = false }) {
         </LocalizationProvider>
       </div>
 
-      {/* End Time Section */}
       <div className="w-full md:w-auto sectionStyle">
         <div className="flex items-center gap-2">
           <div className="sectionLabel">End Time</div>
@@ -73,7 +71,6 @@ function LeftPart({ compact = false }) {
         </LocalizationProvider>
       </div>
 
-      {/* Modify Button */}
       <div className="w-full md:w-auto">
         <NavLink to={`/search-results`} className="buttonStyle">
           Modify Search
