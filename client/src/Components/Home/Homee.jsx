@@ -5,10 +5,24 @@ import Dashboard from "./Dashboard/Dashboard";
 import axios from "axios";
 
 function Homee() {
+    const [cars, setCars] = useState([]);
   useEffect(() => {
     check();
   }, []);
+  const fetchCars = async () => {
+    try {
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/car/getAllCars`);
+      if (res.status === 200) {
+        setCars(res.data); // Store all cars in state
+      } else {
+        console.error("Failed to fetch cars. Status:", res.status);
+      }
+    } catch (error) {
+      console.error("Error fetching cars:", error.message); // Print error message
+    }
+  };
   const check = async () => {
+    fetchCars();
     try {
       const response = await axios.get(
         `${import.meta.env.VITE_BACKEND_URL}/auth/home`,
@@ -31,7 +45,7 @@ function Homee() {
     <div className="">
       <HomeTop />
       <HomeSearch />
-      <Dashboard />
+      <Dashboard cars={cars} setCars={setCars}/>
     </div>
   );
 }

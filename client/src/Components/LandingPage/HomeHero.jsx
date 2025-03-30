@@ -58,7 +58,7 @@ function HomeHero() {
           navItemMain="nav-item-main"
           navItemUser="nav-items-user"
           Home="home"
-          img="media\Images\logo.png"
+          img="\media\Images\logo.png"
           imgClass="nav-logo"
           is={false}
         />

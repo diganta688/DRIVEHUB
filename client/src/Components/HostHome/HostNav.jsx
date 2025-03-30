@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Menu, User, LogOut } from "lucide-react";
 import axios from "axios";
 import { toast } from "react-toastify";
-
+import { Link } from "react-router-dom";
 
 function HostNav() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -38,31 +38,51 @@ function HostNav() {
       toast.error("Logout error");
     }
   };
-  
 
   return (
-    <nav className=" shadow-md p-3 flex justify-between items-center" style={{backgroundColor: "rgba(0, 0, 0)"}}>
+    <nav
+      className=" shadow-md p-3 flex justify-between items-center"
+      style={{ backgroundColor: "rgba(0, 0, 0)" }}
+    >
       <div className="flex items-center">
-        <img src="\media\Images\logo.png" alt="Logo" className="h-7 w-auto" style={{  filter: 'brightness(0) invert(1)'}}/> 
+        <Link to="/host">
+          <img
+            src="\media\Images\logo.png"
+            alt="Logo"
+            className="h-7 w-auto"
+            style={{ filter: "brightness(0) invert(1)" }}
+          />{" "}
+        </Link>
       </div>
 
       <div className="relative" ref={menuRef}>
         <button
           className="flex items-center gap-2 px-2 py-1 transition"
           onClick={() => setMenuOpen(!menuOpen)}
-          style={{borderRadius: "10px"}}
+          style={{ borderRadius: "10px" }}
         >
-          <Menu className="h-6 w-6 text-gray-700" style={{color: "white"}}/>
-          <User className="h-6 w-6 text-gray-700" style={{color: "white"}}/>
+          <Menu className="h-6 w-6 text-gray-700" style={{ color: "white" }} />
+          <User className="h-6 w-6 text-gray-700" style={{ color: "white" }} />
         </button>
 
         {menuOpen && (
-          <div className="absolute right-0 mt-2 bg-white shadow-lg rounded-lg w-48 py-2 animate-fade-in border" style={{zIndex: "1000"}}>
-            <a href="#" className="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100">
-              <User className="h-5 w-5 mr-2" /> <span className="mx-3">Profile</span>
+          <div
+            className="absolute right-0 mt-2 bg-white shadow-lg rounded-lg w-48 py-2 animate-fade-in border"
+            style={{ zIndex: "1000" }}
+          >
+            <a
+              href="#"
+              className="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100"
+            >
+              <User className="h-5 w-5 mr-2" />{" "}
+              <span className="mx-3">Profile</span>
             </a>
-            <button className="flex items-center px-4 py-3 text-red-600 hover:bg-gray-100 w-full" onClick={logout}>
-              <LogOut className="h-5 w-5 mr-2" /> <span className="mx-3">Logout</span>
+            <button
+              className="flex items-center px-4 py-3 text-red-600 hover:bg-gray-100 w-full"
+              onClick={logout}
+            >
+              <LogOut className="h-5 w-5 mr-2" />{" "}
+              <span className="mx-3">Logout</span>
             </button>
           </div>
         )}
