@@ -11,6 +11,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
+const user = require("./routes/user/GetCarDetails");
 
 const sessionoption = {
   secret: "secret key",
@@ -42,6 +43,7 @@ app.use("/validate", EmailValidatorSignup);
 app.use("/forget", forgetEmailCheck);
 app.use("/reset", resetPassword);
 app.use("/host", host);
+app.use("/user", user);
 
 
 

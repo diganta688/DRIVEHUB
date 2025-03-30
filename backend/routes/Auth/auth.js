@@ -39,6 +39,7 @@ router.post("/signup", async (req, res) => {
       message: "User signed up successfully",
       success: true,
       redirectTo: `${process.env.FRONTEND}`,
+      user: user,
     });
   } catch (error) {
     console.error("Signup error:", error);
@@ -63,6 +64,7 @@ router.post("/login", async (req, res) => {
       message: "User logged in successfully",
       success: true,
       redirectTo: `${process.env.FRONTEND}`,
+      user: user,
     });
   } catch (error) {
     console.error("Login error:", error);

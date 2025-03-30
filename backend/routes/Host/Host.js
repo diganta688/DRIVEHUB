@@ -7,13 +7,13 @@ const { Carmodel } = require("../../models/Car");
 const { Hostmodel } = require("../../models/Host");
 
 router.post("/cars/upload/:id", upload.fields([
-  { name: "MainImage", maxCount: 1 }, 
+  { name: "MainImage", maxCount: 1 },
   { name: "files", maxCount: 5 }
 ]), async (req, res) => {
   try {
     const hostId = req.params.id;
     const host = await Hostmodel.findById(hostId);
-    if (!host) return res.status(401).json({ error: "Host not found" });
+    if (!host) return res.status(404).json({ error: "Host not found" });
     const mainImagePath = req.files["MainImage"] ? req.files["MainImage"][0].path : null;
     const additionalFiles = req.files["files"] ? req.files["files"].map(file => file.path) : [];
     const newCar = new Carmodel({
@@ -27,9 +27,10 @@ router.post("/cars/upload/:id", upload.fields([
     res.status(201).json(newCar);
   } catch (error) {
     console.error(error);
-    res.status(401).json({ error: "Failed to upload car" });
+    res.status(500).json({ error: "Failed to upload car" });
   }
 });
+
 
 
 
