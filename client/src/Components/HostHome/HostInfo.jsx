@@ -13,7 +13,7 @@ const HostInfo = ({
   textAlign = "center",
   onLetterAnimationComplete,
 }) => {
-  const lines = text.split("\n"); // Split text into multiple lines
+  const lines = text.split("\n");
   const words = lines.map((line) =>
     line.split(" ").map((word) => word.split(""))
   );

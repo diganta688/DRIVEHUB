@@ -18,10 +18,8 @@ function RightMain({ rightLoad, name }) {
     } catch (error) {
       console.error("Error found", error);
     }
-
     setLoading(false);
   }
-
   useEffect(() => {
     if (name && name._id) {
       carLoad();
@@ -35,7 +33,6 @@ function RightMain({ rightLoad, name }) {
           <Car className="h-5 w-5 text-blue-600" />
           <h2 className="text-xl font-semibold m-0 mx-2">Your Listed Cars</h2>
         </div>
-
         {loading ? (
           <div className="flex justify-center items-center py-10">
             <Loader className="animate-spin h-8 w-8 text-orange-600" />
@@ -55,7 +52,7 @@ function RightMain({ rightLoad, name }) {
                   <div className="flex flex-col md:flex-row gap-4">
                     <div className="md:w-2/3">
                       <img
-                        src={car.imageUrl}
+                        src={car.MainImage}
                         alt={`${car.make} ${car.model}`}
                         className="w-full h-38 object-cover rounded-lg transition-transform duration-300 hover:scale-105"
                       />

@@ -5,13 +5,15 @@ import { HostMainContext } from "../../../Context/context";
 import InputField from "./InputField";
 import TextAreaField from "./TextAreaField";
 import SelectField from "./SelectField";
+import "./FileStyle.css";
+import FileUploadField from "./FileUploadField";
 
 function LeftMain({ handleSubmit, isLoading, isPreviewDisplay, name }) {
   const { formData, handleInputChange, setFormData, inputError } =
     useContext(HostMainContext);
-  const [filePreviews, setFilePreviews] = useState([]);
+  const [mainImagePreview, setMainImagePreview] = useState(null);
+  const [optionalImagePreviews, setOptionalImagePreviews] = useState([]);
   const [fileError, setFileError] = useState("");
-  const maxFiles = 5;
   const hasError =
     inputError.make ||
     inputError.model ||
@@ -22,22 +24,31 @@ function LeftMain({ handleSubmit, isLoading, isPreviewDisplay, name }) {
     inputError.fuelType ||
     inputError.transmission ||
     inputError.mileage ||
-    inputError.imageUrl ||
+    inputError.MainImage ||
     inputError.description;
 
-  const handleFileChange = (event) => {
-    const selectedFiles = Array.from(event.target.files);
+  const handleMainImageChange = (event) => {
+    const selectedFile = event.target.files[0];
+    if (!selectedFile) return;
+    setFileError("");
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        MainImage: selectedFile,
+      }));
 
-    if (
-      selectedFiles.length + (formData.files ? formData.files.length : 0) >
-      maxFiles
-    ) {
+      setMainImagePreview(e.target.result);
+    };
+    reader.readAsDataURL(selectedFile);
+  };
+  const handleOptionalImagesChange = (event) => {
+    const selectedFiles = Array.from(event.target.files);
+    if (selectedFiles.length > 5) {
       setFileError("Maximum 5 files allowed");
       return;
     }
-
     setFileError("");
-
     const newPreviews = selectedFiles.map((file) => {
       return new Promise((resolve) => {
         const reader = new FileReader();
@@ -45,31 +56,15 @@ function LeftMain({ handleSubmit, isLoading, isPreviewDisplay, name }) {
         reader.readAsDataURL(file);
       });
     });
-
     Promise.all(newPreviews).then((results) => {
       const newFiles = results.map((result) => result.file);
       const newFilePreviews = results.map((result) => result.preview);
-
       setFormData((prevFormData) => ({
         ...prevFormData,
-        files: prevFormData.files
-          ? [...prevFormData.files, ...newFiles]
-          : newFiles,
+        files: newFiles,
       }));
-
-      setFilePreviews((prevPreviews) => [...prevPreviews, ...newFilePreviews]);
+      setOptionalImagePreviews(newFilePreviews);
     });
-  };
-
-  const removeFile = (index) => {
-    setFormData((prevFormData) => {
-      const updatedFiles = prevFormData.files.filter((_, i) => i !== index);
-      return { ...prevFormData, files: updatedFiles };
-    });
-
-    setFilePreviews((prevPreviews) =>
-      prevPreviews.filter((_, i) => i !== index)
-    );
   };
 
   return (
@@ -124,8 +119,18 @@ function LeftMain({ handleSubmit, isLoading, isPreviewDisplay, name }) {
               error={inputError.seats}
             />
           </div>
-          <p style={{textDecoration:"underline", fontSize: "12px", fontWeight: "800", margin: "0"}}>Location is associated with your profile it is not changeable from here</p>
-          <LocationList disabled={true} name={name}/>
+          <p
+            style={{
+              textDecoration: "underline",
+              fontSize: "12px",
+              fontWeight: "800",
+              margin: "0",
+            }}
+          >
+            Location is associated with your profile it is not changeable from
+            here
+          </p>
+          <LocationList disabled={true} name={name} />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <SelectField
               label="Fuel Type"
@@ -142,7 +147,7 @@ function LeftMain({ handleSubmit, isLoading, isPreviewDisplay, name }) {
               onChange={handleInputChange}
               options={["Automatic", "Manual"]}
               error={inputError.transmission}
-              />
+            />
           </div>
           <InputField
             label="Mileage (km)"
@@ -152,52 +157,13 @@ function LeftMain({ handleSubmit, isLoading, isPreviewDisplay, name }) {
             onChange={handleInputChange}
             error={inputError.mileage}
           />
-
-          <InputField
-            label="Car Image URL (Primary)"
-            name="imageUrl"
-            type="url"
-            value={formData.imageUrl}
-            onChange={handleInputChange}
-            error={inputError.imageUrl}
+          <FileUploadField
+            handleMainImageChange={handleMainImageChange}
+            handleOptionalImagesChange={handleOptionalImagesChange}
+            mainImagePreview={mainImagePreview}
+            optionalImagePreviews={optionalImagePreviews}
+            fileError={fileError}
           />
-          <div>
-            <label className="text-sm font-semibold text-gray-700">
-              Car Images (Optional)
-            </label>
-            <input
-              type="file"
-              accept="image/*"
-              multiple
-              onChange={handleFileChange}
-              className="mt-1 block w-full rounded-lg px-4 py-2"
-              style={fileError ? { border: " 2px solid #ff00009e" } : {}}
-            />
-
-            {fileError && (
-              <p className="text-red-500 text-sm mt-1">{fileError}</p>
-            )}
-            {isPreviewDisplay && (
-              <div className="grid grid-cols-4 gap-3 mt-3">
-                {filePreviews.map((preview, index) => (
-                  <div key={index} className="relative w-24 h-24">
-                    <img
-                      src={preview}
-                      alt="Car Preview"
-                      className="w-full h-full object-cover rounded-lg shadow-md"
-                    />
-                    <button
-                      onClick={() => removeFile(index)}
-                      className="absolute top-2 right-2 bg-red-600 text-white p-1 rounded-full hover:bg-red-700"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
           <TextAreaField
             label="Description"
             name="description"

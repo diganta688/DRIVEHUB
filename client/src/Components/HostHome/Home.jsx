@@ -26,7 +26,7 @@ function App() {
     transmission: "",
     seats: 4,
     mileage: 3,
-    imageUrl: "",
+    MainImage: "",
     description: "",
     files: [],
   });
@@ -39,7 +39,7 @@ function App() {
     seats: false,
     fuelType: false,
     transmission: false,
-    imageUrl: false,
+    MainImage: false,
     description: false,
   });
   const handleInputChange = (e) => {
@@ -69,19 +69,17 @@ function App() {
     } else if (name === "transmission") {
       errors.transmission =
         value.trim() === "" ? "Transmission is required" : "";
-    } else if (name === "imageUrl") {
-      errors.imageUrl = value.trim() === "" ? "Image URL is required" : "";
+    } else if (name === "MainImage") {
+      errors.MainImage = value.trim() === "" ? "Image URL is required" : "";
     } else if (name === "description") {
       errors.description = value.trim() === "" ? "Description is required" : "";
     }
-
     setInputError(errors);
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
   };
-
   const check = async () => {
     try {
       const response = await axios.get(
@@ -105,41 +103,49 @@ function App() {
       }));
     } catch (error) {
       if (error.response?.status === 401) {
-        window.location.href = `${import.meta.env.VITE_FRONTEND_URL}/host/login`;
+        window.location.href = `${
+          import.meta.env.VITE_FRONTEND_URL
+        }/host/login`;
       }
     }
   };
-  
   useEffect(() => {
     check();
   }, []);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     const data = new FormData();
     Object.keys(formData).forEach((key) => {
-      if (key === "files") {
-        formData.files.forEach((file) => data.append("files", file));
-      } else {
+      if (key !== "MainImage" && key !== "files") {
         data.append(key, formData[key]);
       }
     });
-
+    if (formData.MainImage && formData.MainImage instanceof File) {
+      data.append("MainImage", formData.MainImage);
+    }
+    if (formData.files && formData.files.length > 0) {
+      formData.files.forEach((file) => {
+        if (file instanceof File) data.append("files", file);
+      });
+    }
     try {
-      const response = await axios.post(
+      await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/host/cars/upload/${name._id}`,
         data,
-        { withCredentials: true }
+        {
+          withCredentials: true,
+          headers: { "Content-Type": "multipart/form-data" },
+        }
       );
       toast.success("Car uploaded successfully!");
-      setRightLoad(prev => !prev);
       setIsLoading(false);
+      setRightLoad((prev) => !prev);
       setFormData({
         make: "",
         model: "",
-        year: 2024,
-        price: 0,
+        year: 2025,
+        price: 10,
         address: "",
         city: "",
         state: "",
@@ -148,20 +154,16 @@ function App() {
         fuelType: "",
         transmission: "",
         seats: 4,
-        mileage: 0,
-        imageUrl: "",
+        mileage: 3,
+        MainImage: "",
         description: "",
         files: [],
       });
-      setIsPreviewDisplay(false);
     } catch (error) {
       setIsLoading(false);
-      console.error("Failed to upload car", error);
       toast.error(error.response?.data?.error || "Failed to upload car");
     }
   };
-
-
   return (
     <HostMainContext.Provider
       value={{
@@ -188,7 +190,6 @@ function App() {
             rootMargin="-50px"
           />
         </div>
-
         <div
           className="container mx-auto px-4 py-8"
           style={{ backgroundColor: "rgba(255, 255, 255, 0.8)" }}
@@ -200,7 +201,7 @@ function App() {
               isPreviewDisplay={isPreviewDisplay}
               name={name}
             />
-            <RightMain rightLoad={rightLoad} name={name}/>
+            <RightMain rightLoad={rightLoad} name={name} />
           </div>
         </div>
       </div>

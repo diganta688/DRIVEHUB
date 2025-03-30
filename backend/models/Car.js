@@ -69,7 +69,7 @@ const carSchema = new mongoose.Schema(
       required: true,
       min: 0,
     },
-    imageUrl: {
+    MainImage: {
       type: String,
       required: true,
     },
