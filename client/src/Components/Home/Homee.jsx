@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import HomeSearch from "./Search/HomeSearch";
-import HomeTop from "./HomeTop";
 import Dashboard from "./Dashboard/Dashboard";
 import axios from "axios";
 import { UserHomeContext } from "../../Context/context";
+import HomeHeroNav from "../LandingPage/HomeHeroNav";
 
 function Homee() {
   const [cars, setCars] = useState([]);
@@ -63,7 +63,16 @@ function Homee() {
       }}
     >
       <div className="">
-        <HomeTop />
+        <HomeHeroNav
+      display={true}
+      mainclass="nav-main-list"
+      navItemMain="nav-item-main-list"
+      navItemUser="nav-items-user-list"
+      Home="homee"
+      img="\media\Images\logo.png"
+      imgClass="nav-logo-list"
+      is={true}
+    />
         <HomeSearch />
         <Dashboard />
       </div>

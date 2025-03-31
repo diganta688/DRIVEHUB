@@ -4,13 +4,13 @@ import UserLoginRight from "./Components/Auth/User/Login/right/UserLoginRight";
 import UserSignupRight from "./Components/Auth/User/Signup/Right/UserSignup";
 import Work from "./Components/HowWork/Work";
 import Homee from "./Components/Home/Homee";
-import ModifySearch from "./Components/Home/Search/ModifySearch";
 import CarDescription from "./Components/Home/Description/CarDescription";
 import { ToastContainer, Slide } from "react-toastify";
 import ListYourCar from "./Components/Host/ListYourCar";
 import HostLogin from "./Components/Auth/Host/HostLogin";
 import HostSignupMain from "./Components/Auth/Host/Signup/HostSignupMain";
 import Home from "./Components/HostHome/Home"
+import LeftPart from "./Components/Home/Search/LeftPart";
 
 function App() {
   return (
@@ -35,7 +35,7 @@ function App() {
           <Route path="/sign-up" element={<UserSignupRight />} />
           <Route path="/how-it-work" element={<Work />} />
           <Route path="/home" element={<Homee />} />
-          <Route path="/modify-search" element={<ModifySearch />} />
+          <Route path="/modify-search" element={<LeftPart />} />
           <Route path="/car-description" element={<CarDescription />} />
           <Route path="/host" element={<ListYourCar />} />
           <Route path="/host/login" element={<HostLogin />} />
