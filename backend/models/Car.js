@@ -111,7 +111,7 @@ const carSchema = new mongoose.Schema(
       },
     ],
     startDate: {
-      type: Date,
+      type: String,
       required: true,
     },
     startTime: {
@@ -119,7 +119,7 @@ const carSchema = new mongoose.Schema(
       required: true,
     },
     endDate: {
-      type: Date,
+      type: String,
       required: true,
     },
     endTime: {

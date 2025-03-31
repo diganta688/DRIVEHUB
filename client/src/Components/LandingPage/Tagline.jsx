@@ -4,7 +4,7 @@ import TextPressure from "./TextPressure";
 
 function Tagline() {
   return (
-    <div className="tagline" style={{position: "relative", bottom: "2%", marginBottom: "4rem"}}>
+    <div className="tagline" style={{position: "relative", marginBottom: "4rem"}}>
       <div style={{ position: "relative", height: "auto", cursor: "pointer"}} >
         <TextPressure
           text="DriveHUB"

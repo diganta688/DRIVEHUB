@@ -47,13 +47,12 @@ a{
 
 .search-container {
   position: relative;
-  bottom: 7%;
   display: flex;
+  flex-direction: column;
+  padding: 15px;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: center;
   background: white;
-  padding: 10px;
   border-radius: 30px;
   max-width: 900px;
   margin: 20px auto;
@@ -100,13 +99,6 @@ a{
 }
 
 @media screen and (max-width: 768px) {
-  .search-container {
-    flex-direction: column;
-    border-radius: 15px;
-    padding: 15px;
-    position: relative;
-    bottom: 7%;
-  }
 
   .search-input {
     width: 100%;
@@ -559,9 +551,6 @@ margin-bottom: 4rem;
   .background-video{
     height: 10%;
   }
-  .search-container{
-    bottom: 5.5%;
-  }
   .image-galary{
     width: 99%;
   }
@@ -593,9 +582,6 @@ margin-bottom: 4rem;
   }
   .background-video{
     height: 5%;
-  }
-  .search-container{
-    bottom: 0%;
   }
   .tagline{
     position: relative;
