@@ -8,11 +8,9 @@ import SelectField from "./SelectField";
 import "./FileStyle.css";
 import FileUploadField from "./FileUploadField";
 
-function LeftMain({ handleSubmit, isLoading, isPreviewDisplay, name }) {
-  const { formData, handleInputChange, setFormData, inputError } =
+function LeftMain({ handleSubmit, isLoading, name }) {
+  const { formData, handleInputChange, setFormData, inputError,optionalImagePreviews, setOptionalImagePreviews, setMainImagePreview, mainImagePreview, } =
     useContext(HostMainContext);
-  const [mainImagePreview, setMainImagePreview] = useState(null);
-  const [optionalImagePreviews, setOptionalImagePreviews] = useState([]);
   const [fileError, setFileError] = useState("");
   const hasError =
     inputError.make ||
@@ -69,7 +67,7 @@ function LeftMain({ handleSubmit, isLoading, isPreviewDisplay, name }) {
 
   return (
     <div className="lg:w-1/2 animate-slide-in">
-      <div className="bg-gradient-to-br p-3 rounded-xl transition-all duration-300">
+      <div className="bg-gradient-to-br p-3 rounded-xl transition-all duration-300" style={{height: "62vh", overflowY: "auto"}}>
         <div className="flex items-center space-x-3 mb-6">
           <PlusCircle className="h-6 w-6 text-blue-600" />
           <h2 className="text-2xl font-extrabold text-gray-800 m-0 mx-2">

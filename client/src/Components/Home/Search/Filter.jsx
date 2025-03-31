@@ -10,19 +10,19 @@ const Filter = () => {
     setSelectedBodyType((prev) =>
       prev.includes(type)
         ? prev.filter((item) => item !== type)
-        : [...prev, type] 
+        : [...prev, type]
     );
   };
 
   const buttonStyle = (isSelected) =>
-    `rounded cursor-pointer text-xs transition-all duration-200 px-2 py-1
+    `rounded cursor-pointer text-xs transition-all duration-200 px-1 py-0.5
      ${isSelected ? "border border-blue-500 bg-blue-100 text-blue-700" : "border border-gray-300 bg-gray-100 text-gray-700"}`;
 
   return (
-    <div className="p-2 space-y-4 text-sm">
-      <div>
-        <h4 className="text-gray-600 font-medium mb-1">Seats</h4>
-        <div className="flex gap-2 flex-wrap">
+    <div className="p-1 space-y-2 text-xs">
+      <div className="mb-2">
+        <h4 className="text-gray-600 mb-1" style={{fontSize:"13px", fontWeight: "700"}}>Seats</h4>
+        <div className="flex gap-1 flex-wrap">
           {["5 seats", "7 seats"].map((seat) => (
             <button
               key={seat}
@@ -37,9 +37,9 @@ const Filter = () => {
         </div>
       </div>
 
-      <div>
-        <h4 className="text-gray-600 font-medium mb-1">Transmission</h4>
-        <div className="flex gap-2 flex-wrap">
+      <div className="mb-2">
+        <h4 className="text-gray-600 mb-1" style={{fontSize:"13px", fontWeight: "700"}}>Transmission</h4>
+        <div className="flex gap-1 flex-wrap">
           {["Automatic", "Manual"].map((transmission) => (
             <button
               key={transmission}
@@ -55,8 +55,8 @@ const Filter = () => {
       </div>
 
       <div>
-        <h4 className="text-gray-600 font-medium mb-1">Body type</h4>
-        <div className="flex gap-2 flex-wrap">
+        <h4 className="text-gray-600 mb-1" style={{fontSize:"13px", fontWeight: "700"}}>Body type</h4>
+        <div className="flex gap-1 flex-wrap">
           {["Hatchback", "Sedan", "SUV", "MUV"].map((bodyType) => (
             <button
               key={bodyType}

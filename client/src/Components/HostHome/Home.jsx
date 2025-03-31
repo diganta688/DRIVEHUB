@@ -9,7 +9,8 @@ import { toast } from "react-toastify";
 
 function App() {
   const [isLoading, setIsLoading] = useState(false);
-  const [isPreviewDisplay, setIsPreviewDisplay] = useState(true);
+    const [mainImagePreview, setMainImagePreview] = useState(null);
+    const [optionalImagePreviews, setOptionalImagePreviews] = useState([]);
   const [rightLoad, setRightLoad] = useState(false);
   const [name, setName] = useState(null);
   const [formData, setFormData] = useState({
@@ -139,6 +140,8 @@ function App() {
         }
       );
       toast.success("Car uploaded successfully!");
+      setOptionalImagePreviews([]);
+      setMainImagePreview(null);
       setIsLoading(false);
       setRightLoad((prev) => !prev);
       setFormData({
@@ -171,9 +174,13 @@ function App() {
         handleInputChange,
         setFormData,
         inputError,
+        optionalImagePreviews,
+        setOptionalImagePreviews,
+        setMainImagePreview,
+        mainImagePreview,
       }}
     >
-      <div className="min-h-screen bg-gray-50 pb-3 moving-gradient">
+      <div className="h-screen bg-gray-50 moving-gradient ">
         <HostNav />
         <div
           className="p-5"
@@ -198,7 +205,6 @@ function App() {
             <LeftMain
               handleSubmit={handleSubmit}
               isLoading={isLoading}
-              isPreviewDisplay={isPreviewDisplay}
               name={name}
             />
             <RightMain rightLoad={rightLoad} name={name} />

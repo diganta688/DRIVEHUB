@@ -68,12 +68,12 @@ router.post("/login", async (req, res) => {
     });
   } catch (error) {
     console.error("Login error:", error);
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message});
   }
 });
 
 router.get("/home", Protect, (req, res) => {
-  res.status(200).json({ message: "Welcome to the Home Page" });
+  res.status(200).json({ message: "Welcome to the Home Page", user: req.user });
 });
 router.get("/logout", (req, res) => {
   res.clearCookie("jwtUser", cookieOptions);

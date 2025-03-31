@@ -67,7 +67,9 @@ const RightResult = ({ cars }) => {
           className="carGrid "
         >
           {cars.map((car, index) => (
-            <div key={index} className="flex flex-wrap justify-start gap-4">
+            <div key={index} className="flex flex-wrap justify-center gap-4">
+              <CarCard car={car} />
+              <CarCard car={car} />
               <CarCard car={car} />
             </div>
           ))}
