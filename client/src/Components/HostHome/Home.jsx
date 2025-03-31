@@ -9,8 +9,8 @@ import { toast } from "react-toastify";
 
 function App() {
   const [isLoading, setIsLoading] = useState(false);
-    const [mainImagePreview, setMainImagePreview] = useState(null);
-    const [optionalImagePreviews, setOptionalImagePreviews] = useState([]);
+  const [mainImagePreview, setMainImagePreview] = useState(null);
+  const [optionalImagePreviews, setOptionalImagePreviews] = useState([]);
   const [rightLoad, setRightLoad] = useState(false);
   const [name, setName] = useState(null);
   const [formData, setFormData] = useState({
@@ -25,11 +25,19 @@ function App() {
     country: "",
     fuelType: "",
     transmission: "",
+    segment: "",
     seats: 4,
     mileage: 3,
     MainImage: "",
     description: "",
     files: [],
+    startDate: null,
+    startTime: null,
+    endDate: null,
+    endTime: null,
+    rcBook: "",
+    insuranceDocument: "",
+    pollutionCertificate: "",
   });
   const [inputError, setInputError] = useState({
     make: false,
@@ -42,6 +50,13 @@ function App() {
     transmission: false,
     MainImage: false,
     description: false,
+    startDate: false,
+    startTime: false,
+    endDate: false,
+    endTime: false,
+    rcBook: false,
+    insuranceDocument: false,
+    pollutionCertificate: false,
   });
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -51,15 +66,18 @@ function App() {
       errors.price = value < 10 ? "Price cannot be less than 10" : "";
     } else if (name === "year") {
       errors.year =
-        value > currentYear ? `Year cannot be greater than ${currentYear}` : "";
-    } else if (name === "seats") {
-      errors.seats =
-        value > 7
-          ? "Seats cannot be more than 7"
-          : value < 1
-          ? "Seats cannot be less than 1"
+        value > currentYear
+          ? `Year cannot be greater than ${currentYear}`
+          : value < 1886
+          ? "Year cannot be less than 1886"
           : "";
-    } else if (name === "mileage") {
+    } else if (name === "seats") {
+      const allowedSeats = [2, 4, 5, 6, 7, 8, 9, 10];
+      errors.seats = allowedSeats.includes(Number(value))
+        ? ""
+        : "Seats must be one of the following: 2, 4, 5, 6, 7, 8, 9, 10";
+    }
+     else if (name === "mileage") {
       errors.mileage = value < 1 ? "Mileage cannot be less than 1" : "";
     } else if (name === "make") {
       errors.make = value.trim() === "" ? "make is required" : "";
@@ -174,6 +192,7 @@ function App() {
         handleInputChange,
         setFormData,
         inputError,
+        setInputError,
         optionalImagePreviews,
         setOptionalImagePreviews,
         setMainImagePreview,

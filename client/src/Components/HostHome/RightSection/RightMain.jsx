@@ -46,7 +46,7 @@ function RightMain({ rightLoad, name }) {
               cars.map((car, index) => (
                 <div 
                   key={car.id || index}
-                  className="bg-gray-50 rounded-lg p-4 shadow-sm transition-all duration-300 hover:shadow-md hover:bg-gray-100 animate-slide-in"
+                  className="bg-gray-50 rounded-lg p-4 shadow-sm transition-all duration-300 hover:shadow-md hover:bg-gray-100 animate-slide-in mb-3"
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
                   <div className="flex flex-col md:flex-row gap-4">
@@ -55,6 +55,7 @@ function RightMain({ rightLoad, name }) {
                         src={car.MainImage}
                         alt={`${car.make} ${car.model}`}
                         className="w-full h-38 object-cover rounded-lg transition-transform duration-300 hover:scale-105"
+                        style={{height: "200px"}}
                       />
                     </div>
                     <div className="md:w-2/3">

@@ -7,10 +7,20 @@ import TextAreaField from "./TextAreaField";
 import SelectField from "./SelectField";
 import "./FileStyle.css";
 import FileUploadField from "./FileUploadField";
+import Timing from "./Timing";
+import LigalDoc from "./LigalDoc";
 
 function LeftMain({ handleSubmit, isLoading, name }) {
-  const { formData, handleInputChange, setFormData, inputError,optionalImagePreviews, setOptionalImagePreviews, setMainImagePreview, mainImagePreview, } =
-    useContext(HostMainContext);
+  const {
+    formData,
+    handleInputChange,
+    setFormData,
+    inputError,
+    optionalImagePreviews,
+    setOptionalImagePreviews,
+    setMainImagePreview,
+    mainImagePreview,
+  } = useContext(HostMainContext);
   const [fileError, setFileError] = useState("");
   const hasError =
     inputError.make ||
@@ -23,7 +33,14 @@ function LeftMain({ handleSubmit, isLoading, name }) {
     inputError.transmission ||
     inputError.mileage ||
     inputError.MainImage ||
-    inputError.description;
+    inputError.description ||
+    inputError.startDate ||
+    inputError.startTime ||
+    inputError.endDate ||
+    inputError.endTime ||
+    inputError.rcBook ||
+    inputError.insuranceDocument ||
+    inputError.pollutionCertificate ;
 
   const handleMainImageChange = (event) => {
     const selectedFile = event.target.files[0];
@@ -67,7 +84,10 @@ function LeftMain({ handleSubmit, isLoading, name }) {
 
   return (
     <div className="lg:w-1/2 animate-slide-in">
-      <div className="bg-gradient-to-br p-3 rounded-xl transition-all duration-300" style={{height: "62vh", overflowY: "auto"}}>
+      <div
+        className="bg-gradient-to-br p-3 rounded-xl transition-all duration-300"
+        style={{ height: "62vh", overflowY: "auto" }}
+      >
         <div className="flex items-center space-x-3 mb-6">
           <PlusCircle className="h-6 w-6 text-blue-600" />
           <h2 className="text-2xl font-extrabold text-gray-800 m-0 mx-2">
@@ -147,6 +167,37 @@ function LeftMain({ handleSubmit, isLoading, name }) {
               error={inputError.transmission}
             />
           </div>
+          <SelectField
+            label="segment"
+            name="segment"
+            value={formData.segment}
+            onChange={handleInputChange}
+            options={[
+              "Hatchback",
+              "Sedan",
+              "SUV",
+              "Crossover",
+              "Convertible",
+              "Coupe",
+              "Pickup Truck",
+              "Minivan",
+              "Microcar",
+              "Roadster",
+              "Luxury Car",
+              "Sportscar",
+              "MPV (Multi-Purpose Vehicle)",
+              "Estate/Wagon",
+              "Compact",
+              "Subcompact",
+              "Full-size",
+              "Off-Road",
+              "Van",
+              "Electric",
+              "Hybrid",
+              "CNG",
+            ]}
+            error={inputError.segment}
+          />
           <InputField
             label="Mileage (km)"
             name="mileage"
@@ -169,6 +220,8 @@ function LeftMain({ handleSubmit, isLoading, name }) {
             onChange={handleInputChange}
             error={inputError.description}
           />
+          <Timing />
+          <LigalDoc/>
           {isLoading ? (
             <button
               disabled={true}

@@ -58,6 +58,34 @@ const carSchema = new mongoose.Schema(
       required: true,
       enum: ["Manual", "Automatic"],
     },
+    segment: { 
+      type: String,
+      required: true,
+      enum: [
+        "Hatchback",
+        "Sedan",
+        "SUV",
+        "Crossover",
+        "Convertible",
+        "Coupe",
+        "Pickup Truck",
+        "Minivan",
+        "Microcar",
+        "Roadster",
+        "Luxury Car",
+        "Sportscar",
+        "MPV (Multi-Purpose Vehicle)",
+        "Estate/Wagon",
+        "Compact",
+        "Subcompact",
+        "Full-size",
+        "Off-Road",
+        "Van",
+        "Electric",
+        "Hybrid",
+        "CNG",
+      ],
+    },
     seats: {
       type: Number,
       required: true,
@@ -82,6 +110,34 @@ const carSchema = new mongoose.Schema(
         type: String,
       },
     ],
+    startDate: {
+      type: Date,
+      required: true,
+    },
+    startTime: {
+      type: String,
+      required: true,
+    },
+    endDate: {
+      type: Date,
+      required: true,
+    },
+    endTime: {
+      type: String,
+      required: true,
+    },
+    rcBook: {
+      type: String,
+      required: true,
+    },
+    insuranceDocument: {
+      type: String,
+      required: true,
+    },
+    pollutionCertificate: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true }
 );

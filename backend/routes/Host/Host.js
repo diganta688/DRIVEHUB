@@ -8,7 +8,10 @@ const { Hostmodel } = require("../../models/Host");
 
 router.post("/cars/upload/:id", upload.fields([
   { name: "MainImage", maxCount: 1 },
-  { name: "files", maxCount: 5 }
+  { name: "files", maxCount: 5 },
+  { name: "insuranceDocument", maxCount: 1 },
+  { name: "pollutionCertificate", maxCount: 1 },
+  { name: "rcBook", maxCount: 1 }
 ]), async (req, res) => {
   try {
     const hostId = req.params.id;
@@ -16,9 +19,15 @@ router.post("/cars/upload/:id", upload.fields([
     if (!host) return res.status(404).json({ error: "Host not found" });
     const mainImagePath = req.files["MainImage"] ? req.files["MainImage"][0].path : null;
     const additionalFiles = req.files["files"] ? req.files["files"].map(file => file.path) : [];
+    const insuranceDocumentPath = req.files["insuranceDocument"] ? req.files["insuranceDocument"][0].path : null;
+    const pollutionCertificatePath = req.files["pollutionCertificate"] ? req.files["pollutionCertificate"][0].path : null;
+    const rcBookPath = req.files["rcBook"] ? req.files["rcBook"][0].path : null;
     const newCar = new Carmodel({
       ...req.body,
       MainImage: mainImagePath,
+      insuranceDocument: insuranceDocumentPath,
+      pollutionCertificate: pollutionCertificatePath,
+      rcBook: rcBookPath,
       files: additionalFiles
     });
     await newCar.save();
