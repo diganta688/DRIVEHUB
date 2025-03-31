@@ -3,17 +3,26 @@ import HomeSearch from "./Search/HomeSearch";
 import HomeTop from "./HomeTop";
 import Dashboard from "./Dashboard/Dashboard";
 import axios from "axios";
+import { UserHomeContext } from "../../Context/context";
 
 function Homee() {
   const [cars, setCars] = useState([]);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState({});
+  const [selectedFilters, setSelectedFilters] = useState({
+    segment: [],
+    make: [],
+    fuelType: [],
+    transmission: [],
+    seats: [],
+  });
   useEffect(() => {
     check();
   }, []);
-
   const fetchCars = async () => {
     try {
-      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/car/getAllCars`);
+      const res = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/user/car/getAllCars`
+      );
       if (res.status === 200) {
         setCars(res.data);
       } else {
@@ -23,34 +32,42 @@ function Homee() {
       console.error("Error fetching cars:", error.message);
     }
   };
-
   const check = async () => {
+    fetchCars();
     try {
       const response = await axios.get(
         `${import.meta.env.VITE_BACKEND_URL}/auth/home`,
-        { withCredentials: true }
+        {
+          withCredentials: true,
+        }
       );
-      if (response.status === 200) {
-        setUser(response.data.user);
-        fetchCars();
-      } else {
+      if (response.status !== 200) {
         throw new Error("Failed to fetch user data");
       }
+      setUser(response.data.user);
     } catch (error) {
       if (error.response?.status === 401) {
         window.location.href = `${import.meta.env.VITE_FRONTEND_URL}/log-in`;
-      } else {
-        console.error("Error fetching user data:", error.message);
       }
     }
   };
-
   return (
-    <div className="">
-      <HomeTop />
-      <HomeSearch user={user} />
-      <Dashboard cars={cars} setCars={setCars} />
-    </div>
+    <UserHomeContext.Provider
+      value={{
+        user,
+        setUser,
+        cars,
+        setCars,
+        selectedFilters,
+        setSelectedFilters,
+      }}
+    >
+      <div className="">
+        <HomeTop />
+        <HomeSearch />
+        <Dashboard />
+      </div>
+    </UserHomeContext.Provider>
   );
 }
 

@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import LeftPart from "./LeftPart";
-import FilterAltIcon from "@mui/icons-material/FilterAlt";
-import FilterAltOffIcon from "@mui/icons-material/FilterAltOff";
 import { Link } from "react-router-dom";
 import Filter from "./Filter";
 import BlurText from "../BlueText";
+import { useContext } from "react";
+import { UserHomeContext } from "../../../Context/context";
 
 function HomeSearch({
-  user,
   location = "Goa",
   startDate = "7 Mar",
   startTime = "10:00 pm, Sat",
@@ -16,6 +15,7 @@ function HomeSearch({
   duration = "6 days, 14 hrs",
   onOpenFilters,
 }) {
+  const { user } = useContext(UserHomeContext);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [showFilter, setShowFilter] = useState(false);
 
@@ -29,6 +29,16 @@ function HomeSearch({
 
   return (
     <div className="responsive-container px-3">
+      <div className="flex justify-center pt-3">
+        {user && user.name && (
+          <BlurText
+            text={`Hey ${user.name}! welcome back`}
+            animateBy="words"
+            delay={150}
+            className="text-2xl mb-8"
+          />
+        )}
+      </div>
       {!isMobile ? (
         <div className="flex justify-between px-5">
           <LeftPart user={user} />
@@ -36,16 +46,6 @@ function HomeSearch({
       ) : (
         <>
           <div className="flex flex-col gap-2 align-items-center w-full md:w-auto justify-center">
-            <div className="">
-              {user && user.name && (
-                <BlurText
-                  text={`Hey ${user.name}! welcome back`}
-                  animateBy="words"
-                  delay={150}
-                  className="text-2xl mb-8"
-                />
-              )}
-            </div>{" "}
             <div
               className="flex flex-wrap items-center justify-between gap-1 p-1 bg-white shadow-sm border rounded-lg w-full overflow-hidden"
               style={{ maxHeight: "120px" }}
@@ -87,9 +87,14 @@ function HomeSearch({
           </div>
           <div className="flex flex-col gap-1 mt-3 px-4">
             <button
-              className="border-2 border-black rounded-lg flex items-center justify-center transition-all duration-300 hover:bg-black hover:text-white p-1"
+              className="border-2 border-black rounded-lg flex items-center justify-center transition-all duration-300 p-1"
               onClick={() => setShowFilter(!showFilter)}
-              style={{ height: "32px", width: "36px", padding: "0", borderRadius: "8px"}}
+              style={{
+                height: "32px",
+                width: "36px",
+                padding: "0",
+                borderRadius: "8px",
+              }}
             >
               <img
                 src="\media\Images\filter.png"

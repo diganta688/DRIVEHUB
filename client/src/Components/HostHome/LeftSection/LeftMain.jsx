@@ -155,7 +155,7 @@ function LeftMain({ handleSubmit, isLoading, name }) {
               name="fuelType"
               value={formData.fuelType}
               onChange={handleInputChange}
-              options={["Petrol", "Diesel", "Electric", "Hybrid"]}
+              options={["Petrol", "Diesel", "Electric", "CNG"]}
               error={inputError.fuelType}
             />
             <SelectField

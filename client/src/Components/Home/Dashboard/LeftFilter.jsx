@@ -1,14 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { UserHomeContext } from "../../../Context/context";
+import { useContext } from "react";
 
 function LeftFilter() {
-  const [selectedFilters, setSelectedFilters] = useState({
-    segment: [],
-    brand: [],
-    fuelType: [],
-    transmissionType: [],
-    seatingCapacity: [],
-  });
-
+    const { selectedFilters, setSelectedFilters } = useContext(UserHomeContext);
   const toggleFilter = (category, value) => {
     setSelectedFilters((prev) => {
       const isSelected = prev[category].includes(value);
@@ -20,18 +16,21 @@ function LeftFilter() {
       };
     });
   };
-  const isSelected = (category, value) => selectedFilters[category].includes(value);
+
+  const isSelected = (category, value) =>
+    selectedFilters[category].includes(value);
+
   const filterButtonClass = (category, value) =>
     isSelected(category, value)
-      ? "border-orange-500 bg-orange-100 text-gray-800" 
-      : "border-black-300 text-gray-700";
+      ? "border border-blue-500 bg-blue-100 text-blue-700"
+      : "border border-gray-300 text-gray-700";
 
   return (
-    <div className="w-full md:w-72 p-4 border-r border-black-300 space-y-6 filter-left">
-      <div className="flex justify-between items-center border-b pb-3 flex-wrap mb-4">
-        <h5 className="text-xl font-semibold text-gray-800 ">Filters</h5>
+    <div className="w-full md:w-64 p-3 border-r border-gray-300 space-y-4 filter-left pb-5">
+      <div className="flex justify-between items-center border-b border-gray-300 pb-2 mb-3">
+        <h5 className="text-lg font-semibold text-gray-800">Filters</h5>
         <button
-          className="text-red-500 text-sm hover:underline"
+          className="text-red-500 text-xs"
           onClick={() =>
             setSelectedFilters({
               segment: [],
@@ -46,37 +45,64 @@ function LeftFilter() {
         </button>
       </div>
 
-      {renderFilterSection('Segment', 'segment', ["Hatchback", "Sedan", "SUV", "MUV"])}
-      {renderFilterSection('Brand', 'brand', ["Maruti", "Hyundai", "Toyota", "Mahindra", "Kia", "Ford"])}
-      {renderFilterSection('Fuel Type', 'fuelType', ["Diesel", "Petrol"])}
-      {renderFilterSection('Transmission Type', 'transmissionType', ["Automatic", "Manual"])}
-      {renderFilterSection('Seating Capacity', 'seatingCapacity', ["5 seats", "7 seats"])}
-
+      {renderFilterSection("Brand", "make", [
+        "Maruti",
+        "Hyundai",
+        "Tata",
+        "Mahindra",
+        "Kia",
+      ])}
+      {renderFilterSection("Fuel Type", "fuelType", [
+        "Diesel",
+        "Petrol",
+        "Electric",
+        "CNG",
+      ])}
+      {renderFilterSection("Transmission", "transmission", [
+        "Automatic",
+        "Manual",
+      ])}
+      {renderFilterSection("Seats", "seats", [
+        "2",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+      ])}
     </div>
   );
 
   function renderFilterSection(title, category, options) {
     return (
-      <div className="space-y-2 mb-5">
-        <h5 className="font-medium text-gray-800">{title}</h5>
-        <div className="flex flex-wrap gap-2">
+      <motion.div
+        className="space-y-1 mb-3"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.2 }}
+      >
+        <h5 className="" style={{ fontWeight: "700", fontSize: "17px" }}>
+          {title}
+        </h5>
+        <div className="flex flex-wrap gap-1 mt-1">
           {options.map((item) => (
-            <button
-            
+            <motion.button
               key={item}
               onClick={() => toggleFilter(category, item)}
-              className={`flex items-center gap-2 px-3 py-1 border rounded-lg ${filterButtonClass(category, item)}`}
+              className={`px-2 py-1 rounded text-xs transition-all duration-300 ${filterButtonClass(
+                category,
+                item
+              )}`}
+              whileTap={{ scale: 0.95 }}
+              style={{ width: "90px", objectFit: "contain" }}
             >
-              {isSelected(category, item) && (
-                <span className="inline-flex items-center justify-center w-2 h-2 rounded-full bg-orange-500">
-                  <i className="fa-solid fa-check text-black text-xs"></i>
-                </span>
-              )}
-              {item}
-            </button>
+              <p className="m-0" style={{ fontSize: "14px" }}>
+                {item}
+              </p>
+            </motion.button>
           ))}
         </div>
-      </div>
+      </motion.div>
     );
   }
 }

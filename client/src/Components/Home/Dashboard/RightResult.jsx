@@ -1,5 +1,5 @@
 import React from 'react';
-import { Users, Fuel, Gauge, Calendar, Star, CarFront } from 'lucide-react';
+import { Users, Fuel, Gauge, Calendar, Star, CarFront, RotateCcw  } from 'lucide-react';
 
 function CarCard({car}) {
   return (
@@ -59,25 +59,29 @@ function CarCard({car}) {
 }
 
 
-const RightResult = ({ cars }) => {
+const RightResult = ({ cars, loading }) => {
   return (
     <div className="p-4 " style={{width: "100%",height: "73vh", overflowY: "auto"}}>
-      {cars.length > 0 ? (
-        <div
-          className="carGrid "
-        >
-          {cars.map((car, index) => (
-            <div key={index} className="flex flex-wrap justify-center gap-4">
-              <CarCard car={car} />
-              <CarCard car={car} />
-              <CarCard car={car} />
-            </div>
-          ))}
+      {loading ? (
+        <div className="flex justify-center items-center h-full">
+          <div className="animate-spin text-orange-600">
+            <RotateCcw size={48} />
+          </div>
         </div>
       ) : (
-        <h3 className="text-xl font-semibold mb-4 text-center text-gray-700">
-          No car available
-        </h3>
+        <>
+          {cars.length > 0 ? (
+            <div className="flex flex-wrap justify-center gap-4">
+              {cars.map((car, index) => (
+                <CarCard key={index} car={car} />
+              ))}
+            </div>
+          ) : (
+            <h3 className="text-xl font-semibold mb-4 text-center text-gray-700">
+              No car available
+            </h3>
+          )}
+        </>
       )}
     </div>
   );
