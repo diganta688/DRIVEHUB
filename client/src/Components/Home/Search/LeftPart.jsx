@@ -24,14 +24,12 @@ function LeftPart({ compact = false, user }) {
     const startTimeParam = searchParams.get("startTime") || null;
     const endDateParam = searchParams.get("endDate") || null;
     const endTimeParam = searchParams.get("endTime") || null;
-
     setCity(cityParam);
     setStartDate(startDateParam);
     setStartTime(startTimeParam);
     setEndDate(endDateParam);
     setEndTime(endTimeParam);
   }, [searchParams]);
-
   const generateTimeOptions = () => {
     const times = [];
     let hour = 0;
@@ -209,7 +207,6 @@ function LeftPart({ compact = false, user }) {
           >
             Modify Search
           </NavLink>
-
           <p
             className="px-2"
             style={{
@@ -228,5 +225,4 @@ function LeftPart({ compact = false, user }) {
     </div>
   );
 }
-
 export default LeftPart;

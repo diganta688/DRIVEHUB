@@ -41,9 +41,7 @@ function HomeHero() {
       video.currentTime = 0;
       video.play();
     };
-
     video.addEventListener("ended", handleEnded);
-
     return () => {
       video.removeEventListener("ended", handleEnded);
     };

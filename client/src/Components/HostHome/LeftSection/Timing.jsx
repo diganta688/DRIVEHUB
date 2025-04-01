@@ -9,11 +9,9 @@ import dayjs from "dayjs";
 function Timing() {
   const { formData, setFormData, inputError, setInputError } =
     useContext(HostMainContext);
-
   const handleDateChange = (name, value) => {
     const errors = { ...inputError };
     const tomorrow = dayjs().add(1, "day").startOf("day");
-
     if (name === "startDate") {
       if (!value || dayjs(value).isBefore(tomorrow)) {
         errors.startDate = "Start Date must be tomorrow or later.";
@@ -22,16 +20,15 @@ function Timing() {
       }
       setFormData((prev) => ({
         ...prev,
-        [name]: value ? dayjs(value).format("YYYY-MM-DD") : null, // Store date as "YYYY-MM-DD"
+        [name]: value ? dayjs(value).format("YYYY-MM-DD") : null,
       }));
     } else if (name === "startTime") {
       setFormData((prev) => ({
         ...prev,
-        [name]: value || null, // Store time as string "HH:mm"
+        [name]: value || null,
       }));
     } else if (name === "endDate") {
       const minEndDate = dayjs(formData.startDate).add(2, "day").startOf("day");
-
       if (!value || !formData.startDate || dayjs(value).isBefore(minEndDate)) {
         errors.endDate = `End Date must be at least ${minEndDate.format(
           "MMMM D, YYYY"
@@ -41,7 +38,7 @@ function Timing() {
       }
       setFormData((prev) => ({
         ...prev,
-        [name]: value ? dayjs(value).format("YYYY-MM-DD") : null, // Store date as "YYYY-MM-DD"
+        [name]: value ? dayjs(value).format("YYYY-MM-DD") : null,
       }));
     } else if (name === "endTime") {
       setFormData((prev) => ({
@@ -49,11 +46,8 @@ function Timing() {
         [name]: value || null,
       }));
     }
-
     setInputError(errors);
   };
-
-  // Generate time options (every 30 minutes from 00:00 to 23:30)
   const generateTimeOptions = () => {
     const times = [];
     let hour = 0;
@@ -63,7 +57,7 @@ function Timing() {
         minute
       ).padStart(2, "0")}`;
       times.push(timeString);
-      minute += 30; // Increase by 30 minutes
+      minute += 30;
       if (minute === 60) {
         minute = 0;
         hour++;
@@ -85,7 +79,7 @@ function Timing() {
           <DemoContainer components={["DatePicker"]}>
             <DatePicker
               label="Pick Start Date"
-              value={formData.startDate ? dayjs(formData.startDate) : null} // Convert ISO string to Dayjs object
+              value={formData.startDate ? dayjs(formData.startDate) : null}
               onChange={(newValue) => handleDateChange("startDate", newValue)}
               fullWidth
               required
@@ -122,7 +116,6 @@ function Timing() {
           )}
         </div>
       </div>
-
       <div>
         <p
           className="block text-xs font-semibold text-gray-700 mb-1"
@@ -134,7 +127,7 @@ function Timing() {
           <DemoContainer components={["DatePicker"]}>
             <DatePicker
               label="Pick End Date"
-              value={formData.endDate ? dayjs(formData.endDate) : null} // Convert ISO string to Dayjs object
+              value={formData.endDate ? dayjs(formData.endDate) : null}
               onChange={(newValue) => handleDateChange("endDate", newValue)}
               fullWidth
               required
@@ -174,5 +167,4 @@ function Timing() {
     </LocalizationProvider>
   );
 }
-
 export default Timing;

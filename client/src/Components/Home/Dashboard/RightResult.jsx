@@ -1,10 +1,9 @@
 import React from 'react';
 import { Users, Fuel, Gauge, Calendar, Star, CarFront, RotateCcw  } from 'lucide-react';
 
-function CarCard({car, warningMSG}) {
+function CarCard({car}) {
   return (
       <>
-      {warningMSG && <p>{warningMSG}</p>}    
       <div className="bg-white rounded-2xl shadow-xl overflow-hidden max-w-sm w-full">
       <div className="relative h-48">
         <img 
@@ -59,7 +58,6 @@ function CarCard({car, warningMSG}) {
 </>
   );
 }
-
 
 const RightResult = ({ cars, loading, errorMessage, warningMSG }) => {
   return (

@@ -10,9 +10,9 @@ import { useNavigate } from "react-router-dom";
 
 function HomeHeroDatePicker() {
   const [city, setCity] = useState("");
-  const [startDate, setStartDate] = useState(null); // This will hold the start date as a string in YYYY-MM-DD format
+  const [startDate, setStartDate] = useState(null); 
   const [startTime, setStartTime] = useState(null);
-  const [endDate, setEndDate] = useState(null); // This will hold the end date as a string in YYYY-MM-DD format
+  const [endDate, setEndDate] = useState(null);
   const [endTime, setEndTime] = useState(null);
 
   const navigate = useNavigate();
@@ -21,14 +21,12 @@ function HomeHeroDatePicker() {
     const params = new URLSearchParams();
 
     if (city) params.append("city", city);
-    if (startDate) params.append("startDate", startDate); // Send startDate as string in YYYY-MM-DD
-    if (startTime) params.append("startTime", startTime); // Send startTime as string HH:mm
-    if (endDate) params.append("endDate", endDate); // Send endDate as string in YYYY-MM-DD
-    if (endTime) params.append("endTime", endTime); // Send endTime as string HH:mm
-
+    if (startDate) params.append("startDate", startDate);
+    if (startTime) params.append("startTime", startTime); 
+    if (endDate) params.append("endDate", endDate); 
+    if (endTime) params.append("endTime", endTime);
     navigate(`/home?${params.toString()}`);
   };
-
   const generateTimeOptions = () => {
     const times = [];
     let hour = 0;
@@ -44,7 +42,6 @@ function HomeHeroDatePicker() {
     }
     return times;
   };
-
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className="search-container flex md:flex-row items-center justify-center p-6 bg-transparent rounded-xl shadow-lg gap-4">
@@ -60,8 +57,8 @@ function HomeHeroDatePicker() {
         <div className="w-full md:mb-0 flex gap-2">
           <DatePicker
             label="Start Date"
-            value={startDate ? dayjs(startDate) : null} // Convert stored string to Dayjs for display
-            onChange={(newValue) => setStartDate(newValue ? newValue.format("YYYY-MM-DD") : null)} // Store as string in YYYY-MM-DD format
+            value={startDate ? dayjs(startDate) : null} 
+            onChange={(newValue) => setStartDate(newValue ? newValue.format("YYYY-MM-DD") : null)} 
             renderInput={(params) => (
               <TextField {...params} fullWidth sx={{ backgroundColor: "white", borderRadius: "4px" }} />
             )}
@@ -88,8 +85,8 @@ function HomeHeroDatePicker() {
         <div className="w-full md:mb-0 flex gap-2">
           <DatePicker
             label="End Date"
-            value={endDate ? dayjs(endDate) : null} // Convert stored string to Dayjs for display
-            onChange={(newValue) => setEndDate(newValue ? newValue.format("YYYY-MM-DD") : null)} // Store as string in YYYY-MM-DD format
+            value={endDate ? dayjs(endDate) : null}
+            onChange={(newValue) => setEndDate(newValue ? newValue.format("YYYY-MM-DD") : null)} 
             renderInput={(params) => (
               <TextField {...params} fullWidth sx={{ backgroundColor: "white", borderRadius: "4px" }} />
             )}
