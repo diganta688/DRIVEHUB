@@ -105,12 +105,12 @@ function LeftPart({ compact = false, user }) {
               {startDateTime ? (
                 <div className="my-2">
                   <select
-                    id="endTime"
-                    value={endTime || ""}
-                    onChange={(e) => setEndTime(e.target.value)}
+                    id="startTime"
+                    value={startTime || ""}
+                    onChange={(e) => setStartTime(e.target.value)} 
                     className="w-full px-4 py-2 text-lg border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent shadow-sm transition-all"
                   >
-                    <option value="">Select End Time</option>
+                    <option value="">Select Start Time</option>
                     {generateTimeOptions().map((time) => (
                       <option key={time} value={time}>
                         {time}
@@ -121,12 +121,12 @@ function LeftPart({ compact = false, user }) {
               ) : (
                 <DatePicker
                   label="Start Date"
-                  value={startDate ? dayjs(startDate) : null} // Convert stored string to Dayjs for display
+                  value={startDate ? dayjs(startDate) : null}
                   onChange={(newValue) =>
                     setStartDate(
                       newValue ? newValue.format("YYYY-MM-DD") : null
                     )
-                  } // Store as string in YYYY-MM-DD format
+                  }
                   renderInput={(params) => (
                     <TextField
                       {...params}
@@ -168,12 +168,12 @@ function LeftPart({ compact = false, user }) {
               {endDateTime ? (
                 <div className="my-2">
                   <select
-                    id="startTime"
-                    value={startTime || ""}
-                    onChange={(e) => setStartTime(e.target.value)}
+                    id="endTime"
+                    value={endTime || ""}
+                    onChange={(e) => setEndTime(e.target.value)}
                     className="w-full px-4 py-2 text-lg border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent shadow-sm transition-all"
                   >
-                    <option value="">Select Start Time</option>
+                    <option value="">Select End Time</option>
                     {generateTimeOptions().map((time) => (
                       <option key={time} value={time}>
                         {time}
@@ -184,10 +184,10 @@ function LeftPart({ compact = false, user }) {
               ) : (
                 <DatePicker
                   label="End Date"
-                  value={endDate ? dayjs(endDate) : null} // Convert stored string to Dayjs for display
+                  value={endDate ? dayjs(endDate) : null}
                   onChange={(newValue) =>
                     setEndDate(newValue ? newValue.format("YYYY-MM-DD") : null)
-                  } // Store as string in YYYY-MM-DD format
+                  }
                   renderInput={(params) => (
                     <TextField
                       {...params}

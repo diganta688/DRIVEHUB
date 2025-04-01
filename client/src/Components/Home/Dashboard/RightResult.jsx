@@ -1,9 +1,11 @@
 import React from 'react';
 import { Users, Fuel, Gauge, Calendar, Star, CarFront, RotateCcw  } from 'lucide-react';
 
-function CarCard({car}) {
+function CarCard({car, warningMSG}) {
   return (
-      <>    <div className="bg-white rounded-2xl shadow-xl overflow-hidden max-w-sm w-full">
+      <>
+      {warningMSG && <p>{warningMSG}</p>}    
+      <div className="bg-white rounded-2xl shadow-xl overflow-hidden max-w-sm w-full">
       <div className="relative h-48">
         <img 
           src={car.MainImage}
@@ -59,9 +61,9 @@ function CarCard({car}) {
 }
 
 
-const RightResult = ({ cars, loading }) => {
+const RightResult = ({ cars, loading, errorMessage, warningMSG }) => {
   return (
-    <div className="p-4 " style={{width: "100%",height: "73vh", overflowY: "auto"}}>
+    <div className="p-4" style={{ width: "100%", height: "73vh", overflowY: "auto" }}>
       {loading ? (
         <div className="flex justify-center items-center h-full">
           <div className="animate-spin text-orange-600">
@@ -70,6 +72,16 @@ const RightResult = ({ cars, loading }) => {
         </div>
       ) : (
         <>
+          {errorMessage && (
+            <p className="text-l font-semibold mb-4 text-center text-red-600">
+              {errorMessage}
+            </p>
+          )}
+          {warningMSG && (
+            <p className="text-l font-semibold mb-4 text-center text-yellow-600">
+              {warningMSG}
+            </p>
+          )}
           {cars.length > 0 ? (
             <div className="flex flex-wrap justify-center gap-4">
               {cars.map((car, index) => (
@@ -77,15 +89,13 @@ const RightResult = ({ cars, loading }) => {
               ))}
             </div>
           ) : (
-            <h3 className="text-xl font-semibold mb-4 text-center text-gray-700">
+            <p className="text-xl font-semibold mb-4 text-center text-red-600">
               No car available
-            </h3>
+            </p>
           )}
         </>
       )}
     </div>
   );
 };
-
-
 export default RightResult;
