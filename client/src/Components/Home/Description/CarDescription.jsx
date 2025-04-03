@@ -16,7 +16,7 @@ import {
   Wrench,
 } from "lucide-react";
 import HomeHeroNav from "../../LandingPage/HomeHeroNav";
-import "./CarDescription.css"
+import "./CarDescription.css";
 
 const carDetails = {
   id: "CAR-2024-001",
@@ -73,7 +73,10 @@ function CarDescription() {
       />
       <main className="max-w-7xl mx-auto px-4 py-8">
         <div className="grid grid-cols-12 gap-6">
-          <div className="col-span-12 lg:col-span-4" style={{padding: "2rem 0"}}>
+          <div
+            className="col-span-12 lg:col-span-4"
+            style={{ padding: "2rem 0" }}
+          >
             <div className="bg-white rounded-xl overflow-hidden">
               <div className="aspect-[4/3] relative group">
                 <img
@@ -109,10 +112,9 @@ function CarDescription() {
             </div>
           </div>
           <div
-  className="col-span-12 lg:col-span-8 space-y-6 custom-scrollbar"
-  style={{ height: "92vh", overflowY: "auto", padding: "2rem 0" }}
->
-
+            className="col-span-12 lg:col-span-8 space-y-6 custom-scrollbar"
+            style={{ height: "92vh", overflowY: "auto", padding: "2rem 0" }}
+          >
             <div className="bg-white rounded-xl p-6">
               <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
                 <Calendar className="h-5 w-5 text-blue-500" />
