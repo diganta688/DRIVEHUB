@@ -36,7 +36,7 @@ function App() {
           <Route path="/how-it-work" element={<Work />} />
           <Route path="/home" element={<Homee />} />
           <Route path="/modify-search" element={<LeftPart />} />
-          <Route path="/car-description" element={<CarDescription />} />
+          <Route path="/car-description/:id" element={<CarDescription />} />
           <Route path="/host" element={<ListYourCar />} />
           <Route path="/host/login" element={<HostLogin />} />
           <Route path="/host/signup" element={<HostSignupMain />} />

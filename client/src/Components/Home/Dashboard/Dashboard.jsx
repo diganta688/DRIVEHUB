@@ -21,9 +21,18 @@ function Dashboard() {
       const startTime = searchParams.get("startTime");
       const endDate = searchParams.get("endDate");
       const endTime = searchParams.get("endTime");
+      const dateTimeFields = [startDate, startTime, endDate, endTime];
+      const isAnyFieldProvided = dateTimeFields.some(Boolean);
+      const isAllFieldsProvided = dateTimeFields.every(Boolean);
       if (!city) {
         setFilteredCars([]);
         setErrorMessage("City is required to filter cars.");
+        setLoading(false);
+        return;
+      }
+      if (isAnyFieldProvided && !isAllFieldsProvided) {
+        setFilteredCars([]);
+        setErrorMessage("All date and time fields are required if one is provided.");
         setLoading(false);
         return;
       }
@@ -31,7 +40,7 @@ function Dashboard() {
       filtered = filtered.filter(
         (car) => car.city.toLowerCase() === city.toLowerCase()
       );
-      if (startDate && endDate && startTime && endTime) {
+      if (isAllFieldsProvided) {
         const userStart = new Date(`${startDate}T${startTime}:00`);
         const userEnd = new Date(`${endDate}T${endTime}:00`);
         const validCars = filtered.filter((car) => {
@@ -41,7 +50,7 @@ function Dashboard() {
         });
         if (validCars.length === 0) {
           setWarningMSG(
-            "These are the cars are available in the city, but the time range doesn't match."
+            "These are the cars available in the city, but the time range doesn't match."
           );
         } else {
           setWarningMSG("");
