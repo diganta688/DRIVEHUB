@@ -1,7 +1,9 @@
 import React from "react";
 import { Star } from "lucide-react";
 
+
 function CarImageCard({ carDetails }) {
+
   return (
     <>
       <div className="col-span-12 lg:col-span-4" style={{ padding: "2rem 0" }}>

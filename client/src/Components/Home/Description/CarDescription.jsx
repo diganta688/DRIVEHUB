@@ -7,6 +7,9 @@ import KeyFeatures from "./KeyFeatures";
 import MaintenanceStatus from "./MaintenanceStatus";
 import ImportantInformation from "./ImportantInformation";
 import CarImageCard from "./CarImageCard";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import { Link } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
 const carDetails = {
   id: "CAR-2024-001",
@@ -46,7 +49,13 @@ const carDetails = {
   },
 };
 
-function CarDescription() {
+function CarDescription({previousURL}) {
+  const [searchParams] = useSearchParams();
+  const city = searchParams.get("city");
+  const startDate = searchParams.get("startDate");
+  const startTime = searchParams.get("startTime");
+  const endDate = searchParams.get("endDate");
+  const endTime = searchParams.get("endTime");
   return (
     <div className="min-h-screen bg-[#f8fafc]">
       <HomeHeroNav
@@ -59,7 +68,12 @@ function CarDescription() {
         imgClass="nav-logo-list"
         is={true}
       />
-      <main className="max-w-7xl mx-auto px-4 py-8">
+      <main className="max-w-7xl mx-auto px-4 py-8 mt-2">
+        <Link
+          to={previousURL}
+        >
+          <ArrowBackIosNewIcon />
+        </Link>
         <div className="grid grid-cols-12 gap-6">
           <CarImageCard carDetails={carDetails} />
           <div

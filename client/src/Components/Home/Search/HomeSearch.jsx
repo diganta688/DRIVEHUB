@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import LeftPart from "./LeftPart";
 import { Link, useLocation } from "react-router-dom";
 import Filter from "./Filter";
-import BlurText from "../BlueText";
 import { useContext } from "react";
 import { UserHomeContext } from "../../../Context/context";
 
@@ -22,16 +21,7 @@ function HomeSearch() {
   }, []);
   return (
     <div className="responsive-container px-3">
-      <div className="flex justify-center pt-3">
-        {user && user.name && (
-          <BlurText
-            text={`Hey ${user.name}! welcome back`}
-            animateBy="words"
-            delay={150}
-            className="text-2xl mb-8"
-          />
-        )}
-      </div>
+      
       {!isMobile ? (
         <div className="flex justify-between px-5">
           <LeftPart user={user} />

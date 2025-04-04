@@ -4,6 +4,7 @@ import Dashboard from "./Dashboard/Dashboard";
 import axios from "axios";
 import { UserHomeContext } from "../../Context/context";
 import HomeHeroNav from "../LandingPage/HomeHeroNav";
+import BlurText from "./BlueText";
 
 function Homee() {
   const [cars, setCars] = useState([]);
@@ -64,15 +65,25 @@ function Homee() {
     >
       <div className="">
         <HomeHeroNav
-      display={true}
-      mainclass="nav-main-list"
-      navItemMain="nav-item-main-list"
-      navItemUser="nav-items-user-list"
-      Home="homee"
-      img="\media\Images\logo.png"
-      imgClass="nav-logo-list"
-      is={true}
-    />
+          display={true}
+          mainclass="nav-main-list"
+          navItemMain="nav-item-main-list"
+          navItemUser="nav-items-user-list"
+          Home="homee"
+          img="\media\Images\logo.png"
+          imgClass="nav-logo-list"
+          is={true}
+        />
+        <div className="flex justify-center pt-3">
+          {user && user.name && (
+            <BlurText
+              text={`Hey ${user.name}! welcome back`}
+              animateBy="words"
+              delay={150}
+              className="text-2xl mb-8"
+            />
+          )}
+        </div>
         <HomeSearch />
         <Dashboard />
       </div>
