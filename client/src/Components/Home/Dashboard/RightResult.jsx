@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Users, Fuel, Gauge, Calendar, Star, CarFront, RotateCcw  } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -50,7 +50,7 @@ function CarCard({car}) {
             <span className="text-3xl font-bold text-orange-600">${car.price}</span>
             <span className="text-gray-600">/day</span>
           </div>
-          <Link to={`/car-description/${car._id}`}>
+          <Link to={`/car-description/${car._id}/?city=${car.city}&startDate=${car.startDate}&startTime=${car.startTime}&endDate=${car.endDate}&endTime=${car.endTime}`}>
           <button className="bg-orange-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-orange-700 transition-colors">
             Rent Now
           </button></Link>

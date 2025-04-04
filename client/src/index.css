@@ -943,3 +943,66 @@ margin-bottom: 4rem;
 .MuiFormControl-root{
   width: 100% !important;
 }
+
+.MuiStack-root{
+  padding: 0 !important;
+}
+
+.MuiInputBase-root{
+  border-radius: 7px !important;
+  height: 100% !important;
+}
+
+.checkcontainer {
+  display: flex;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+  padding-left: 1.75rem;
+}
+
+.checkcontainer input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.checkmark {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 20px;
+  width: 20px;
+  background-color: #fff;
+  border: 2px solid #492fdba6;
+  border-radius: 5px;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.checkcontainer input:checked + .checkmark {
+  background-color: blue;
+  border-color: blue;
+  transform: scale(1.1);
+}
+
+.checkcontainer input:checked + .checkmark:before {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 3px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.checkcontainer:hover .checkmark {
+  border-color: blue;
+}
+
+.checkcontainer span {
+  margin-left: 0.5rem;
+}
+

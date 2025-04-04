@@ -38,11 +38,21 @@ function App() {
     rcBook: "",
     insuranceDocument: "",
     pollutionCertificate: "",
-    UsageLimits:0,
-    ExtraCharges:0,
+    UsageLimits: 0,
+    ExtraCharges: 0,
     Acceleration: 1,
     TopSpeed: 100,
     PeakPower: 1,
+    color: "",
+    upcomingService: null,
+    lastService: null,
+    features: {
+      airbags: false,
+      abs: false,
+      tractionControl: false,
+      parkingSensors: false,
+      blindSpotMonitoring: false,
+    },
   });
   const [inputError, setInputError] = useState({
     make: false,
@@ -87,8 +97,7 @@ function App() {
       errors.seats = allowedSeats.includes(Number(value))
         ? ""
         : "Seats must be one of the following: 2, 4, 5, 6, 7, 8, 9, 10";
-    }
-     else if (name === "mileage") {
+    } else if (name === "mileage") {
       errors.mileage = value < 1 ? "Mileage cannot be less than 1" : "";
     } else if (name === "make") {
       errors.make = value.trim() === "" ? "make is required" : "";
@@ -103,18 +112,23 @@ function App() {
       errors.MainImage = value.trim() === "" ? "Image URL is required" : "";
     } else if (name === "description") {
       errors.description = value.trim() === "" ? "Description is required" : "";
-    }else if (name === "UsageLimits") {
+    } else if (name === "UsageLimits") {
       errors.UsageLimits = value.trim() === "" ? "UsageLimits is required" : "";
     } else if (name === "ExtraCharges") {
-      errors.ExtraCharges = value.trim() === "" ? "ExtraCharges is required" : "";
+      errors.ExtraCharges =
+        value.trim() === "" ? "ExtraCharges is required" : "";
     } else if (name === "segment") {
       errors.segment = value.trim() === "" ? "Segment is required" : "";
     } else if (name === "Acceleration") {
-      errors.Acceleration = value < 1 ? "value should be greater than 1sec" : "";
+      errors.Acceleration =
+        value < 1 ? "value should be greater than 1sec" : "";
     } else if (name === "TopSpeed") {
-      errors.TopSpeed = value < 100 ? "value should be greater than 100km/h" : "";
+      errors.TopSpeed =
+        value < 100 ? "value should be greater than 100km/h" : "";
     } else if (name === "PeakPower") {
       errors.PeakPower = value < 1 ? "value should be greater than 1" : "";
+    } else if (name === "color") {
+      errors.color = value.trim() === "" ? "color is required" : "";
     }
     setInputError(errors);
     setFormData((prev) => ({

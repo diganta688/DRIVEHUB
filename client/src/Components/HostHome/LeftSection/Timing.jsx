@@ -1,9 +1,14 @@
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { HostMainContext } from "../../../Context/context";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+
 import dayjs from "dayjs";
 
 function Timing() {
@@ -68,14 +73,14 @@ function Timing() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <div className="my-3">
         <p
           className="block text-xs font-semibold text-gray-700 mb-1"
-          style={{ fontSize: "12px", fontWeight: "700" }}
+          style={{ fontSize: "12px", fontWeight: "700", marginTop: "20px" }}
         >
-          Start Date & Time
+          End Date & Time
         </p>
-        <div className="flex flex-col gap-2">
+      <div className="flex flex-col md:flex-row gap-4 my-3">
+        <div className="w-full md:w-1/2">
           <DemoContainer components={["DatePicker"]}>
             <DatePicker
               label="Pick Start Date"
@@ -86,36 +91,32 @@ function Timing() {
             />
           </DemoContainer>
           {inputError.startDate && (
-            <p className="text-red-500 text-sm m-0">{inputError.startDate}</p>
+            <p className="text-red-500 text-sm mt-1">{inputError.startDate}</p>
           )}
-
-          <div className="my-2">
-            <label
-              htmlFor="startTime"
-              className="block text-sm font-semibold text-gray-700 mb-2"
-            >
-              Select Start Time:
-            </label>
-            <select
+        </div>
+        <div className="w-full md:w-1/2">
+          <FormControl fullWidth>
+            <InputLabel id="startTime-label">Select Start Time</InputLabel>
+            <Select
+              labelId="startTime-label"
               id="startTime"
               value={formData.startTime || ""}
+              label="Select Start Time"
               onChange={(e) => handleDateChange("startTime", e.target.value)}
-              required
-              className="w-full px-4 py-2 text-lg border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent shadow-sm transition-all"
             >
-              <option value="">Select Start Time</option>
               {generateTimeOptions().map((time) => (
-                <option key={time} value={time}>
+                <MenuItem key={time} value={time}>
                   {time}
-                </option>
+                </MenuItem>
               ))}
-            </select>
-          </div>
+            </Select>
+          </FormControl>
           {inputError.startTime && (
-            <p className="text-red-500 text-sm m-0">{inputError.startTime}</p>
+            <p className="text-red-500 text-sm mt-1">{inputError.startTime}</p>
           )}
         </div>
       </div>
+
       <div>
         <p
           className="block text-xs font-semibold text-gray-700 mb-1"
@@ -123,45 +124,42 @@ function Timing() {
         >
           End Date & Time
         </p>
-        <div className="flex flex-col gap-2">
-          <DemoContainer components={["DatePicker"]}>
-            <DatePicker
-              label="Pick End Date"
-              value={formData.endDate ? dayjs(formData.endDate) : null}
-              onChange={(newValue) => handleDateChange("endDate", newValue)}
-              fullWidth
-              required
-            />
-          </DemoContainer>
-          {inputError.endDate && (
-            <p className="text-red-500 text-sm m-0">{inputError.endDate}</p>
-          )}
-
-          <div className="my-2">
-            <label
-              htmlFor="endTime"
-              className="block text-sm font-semibold text-gray-700 mb-2"
-            >
-              Select End Time:
-            </label>
-            <select
-              required
-              id="endTime"
-              value={formData.endTime || ""}
-              onChange={(e) => handleDateChange("endTime", e.target.value)}
-              className="w-full px-4 py-2 text-lg border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent shadow-sm transition-all"
-            >
-              <option value="">Select End Time</option>
-              {generateTimeOptions().map((time) => (
-                <option key={time} value={time}>
-                  {time}
-                </option>
-              ))}
-            </select>
+        <div className="flex flex-col md:flex-row gap-4">
+          <div className="w-full md:w-1/2">
+            <DemoContainer components={["DatePicker"]}>
+              <DatePicker
+                label="Pick End Date"
+                value={formData.endDate ? dayjs(formData.endDate) : null}
+                onChange={(newValue) => handleDateChange("endDate", newValue)}
+                fullWidth
+                required
+              />
+            </DemoContainer>
+            {inputError.endDate && (
+              <p className="text-red-500 text-sm mt-1">{inputError.endDate}</p>
+            )}
           </div>
-          {inputError.endTime && (
-            <p className="text-red-500 text-sm m-0">{inputError.endTime}</p>
-          )}
+          <div className="w-full md:w-1/2">
+            <FormControl fullWidth>
+              <InputLabel id="endTime-label">Select End Time</InputLabel>
+              <Select
+                labelId="endTime-label"
+                id="endTime"
+                value={formData.endTime || ""}
+                label="Select End Time"
+                onChange={(e) => handleDateChange("endTime", e.target.value)}
+              >
+                {generateTimeOptions().map((time) => (
+                  <MenuItem key={time} value={time}>
+                    {time}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            {inputError.endTime && (
+              <p className="text-red-500 text-sm mt-1">{inputError.endTime}</p>
+            )}
+          </div>
         </div>
       </div>
     </LocalizationProvider>

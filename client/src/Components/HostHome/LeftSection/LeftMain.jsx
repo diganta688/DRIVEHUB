@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import LocationList from "./LocationList";
-import { PlusCircle, Trash2 } from "lucide-react";
+import { PlusCircle } from "lucide-react";
 import { HostMainContext } from "../../../Context/context";
 import InputField from "./InputField";
 import TextAreaField from "./TextAreaField";
@@ -9,8 +9,25 @@ import "./FileStyle.css";
 import FileUploadField from "./FileUploadField";
 import Timing from "./Timing";
 import LigalDoc from "./LigalDoc";
+import { toast } from "react-toastify";
+import { MuiColorInput } from "mui-color-input";
+import KeyFeatures from "./KeyFeatures";
+import AllFeatureRender from "./AllFeatureRender";
+import Service from "./Service";
 
 function LeftMain({ handleSubmit, isLoading, name }) {
+  const [hasShownToast, setHasShownToast] = useState(false);
+  const handleChange = (e) => {
+    handleInputChange(e);
+
+    if (!hasShownToast) {
+      toast.warn(
+        "If electric, enter value based on single charge. If petrol/diesel, enter value based on per litre of fuel",
+        { toastId: "mileage-warning", autoClose: 7000 }
+      );
+      setHasShownToast(true);
+    }
+  };
   const {
     formData,
     handleInputChange,
@@ -25,7 +42,6 @@ function LeftMain({ handleSubmit, isLoading, name }) {
   const hasError =
     inputError.make ||
     inputError.model ||
-    inputError.milage ||
     inputError.year ||
     inputError.price ||
     inputError.seats ||
@@ -41,12 +57,13 @@ function LeftMain({ handleSubmit, isLoading, name }) {
     inputError.segment ||
     inputError.rcBook ||
     inputError.insuranceDocument ||
-    inputError.pollutionCertificate||
+    inputError.pollutionCertificate ||
     inputError.UsageLimits ||
     inputError.ExtraCharges ||
     inputError.Acceleration ||
     inputError.TopSpeed ||
-    inputError.PeakPower ;
+    inputError.PeakPower ||
+    inputError.color;
 
   const handleMainImageChange = (event) => {
     const selectedFile = event.target.files[0];
@@ -101,7 +118,7 @@ function LeftMain({ handleSubmit, isLoading, name }) {
           </h2>
         </div>
         <form onSubmit={handleSubmit} className="space-y-5">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <InputField
               label="make"
               name="make"
@@ -115,6 +132,14 @@ function LeftMain({ handleSubmit, isLoading, name }) {
               value={formData.model}
               onChange={handleInputChange}
               error={inputError.model}
+            />
+            <InputField
+              label="Mileage (km)"
+              name="mileage"
+              type="number"
+              value={formData.mileage}
+              onChange={handleChange}
+              error={inputError.mileage}
             />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -143,7 +168,7 @@ function LeftMain({ handleSubmit, isLoading, name }) {
               error={inputError.seats}
             />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <InputField
               label="Usage Limits"
               name="UsageLimits"
@@ -158,6 +183,25 @@ function LeftMain({ handleSubmit, isLoading, name }) {
               onChange={handleInputChange}
               error={inputError.ExtraCharges}
             />
+            <div className="mb-4">
+              <label
+                htmlFor="colorInput"
+                className="block text-sm font-semibold text-gray-700 mb-1"
+              >
+                Primary color of your car
+              </label>
+              <MuiColorInput
+                id="colorInput"
+                format="hex"
+                value={formData.color}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    color: e,
+                  }))
+                }
+              />
+            </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <InputField
@@ -186,40 +230,38 @@ function LeftMain({ handleSubmit, isLoading, name }) {
               placeholder="e.g., 4 or 4.99"
             />
             <SelectField
-            label="segment"
-            name="segment"
-            value={formData.segment}
-            onChange={handleInputChange}
-            options={[
-              "Hatchback",
-              "Sedan",
-              "SUV",
-              "Crossover",
-              "Convertible",
-              "Coupe",
-              "Pickup Truck",
-              "Minivan",
-              "Microcar",
-              "Roadster",
-              "Luxury Car",
-              "Sportscar",
-              "MPV (Multi-Purpose Vehicle)",
-              "Estate/Wagon",
-              "Compact",
-              "Subcompact",
-              "Full-size",
-              "Off-Road",
-              "Van",
-              "Electric",
-              "Hybrid",
-              "CNG",
-            ]}
-            error={inputError.segment}
-          />
+              label="segment"
+              name="segment"
+              value={formData.segment}
+              onChange={handleInputChange}
+              options={[
+                "Hatchback",
+                "Sedan",
+                "SUV",
+                "Crossover",
+                "Convertible",
+                "Coupe",
+                "Pickup Truck",
+                "Minivan",
+                "Microcar",
+                "Roadster",
+                "Luxury Car",
+                "Sportscar",
+                "MPV (Multi-Purpose Vehicle)",
+                "Estate/Wagon",
+                "Compact",
+                "Subcompact",
+                "Full-size",
+                "Off-Road",
+                "Van",
+                "Electric",
+                "Hybrid",
+                "CNG",
+              ]}
+              error={inputError.segment}
+            />
           </div>
-          <p
-            className="text-lg font-semibold m-0 mt-4 "
-          >
+          <p className="text-lg font-semibold m-0 mt-4 ">
             Location is associated with your profile it is not changeable from
             here
           </p>
@@ -242,15 +284,8 @@ function LeftMain({ handleSubmit, isLoading, name }) {
               error={inputError.transmission}
             />
           </div>
-          
-          <InputField
-            label="Mileage (km)"
-            name="mileage"
-            type="number"
-            value={formData.mileage}
-            onChange={handleInputChange}
-            error={inputError.mileage}
-          />
+              <Service/>
+
           <FileUploadField
             handleMainImageChange={handleMainImageChange}
             handleOptionalImagesChange={handleOptionalImagesChange}
@@ -266,6 +301,7 @@ function LeftMain({ handleSubmit, isLoading, name }) {
             error={inputError.description}
           />
           <Timing />
+         <AllFeatureRender/>
           <LigalDoc />
           {isLoading ? (
             <button

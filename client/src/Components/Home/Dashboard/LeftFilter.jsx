@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 import { UserHomeContext } from "../../../Context/context";
 import { useContext } from "react";
 
 function LeftFilter() {
-    const { selectedFilters, setSelectedFilters } = useContext(UserHomeContext);
+  const { selectedFilters, setSelectedFilters } = useContext(UserHomeContext);
   const toggleFilter = (category, value) => {
     setSelectedFilters((prev) => {
       const isSelected = prev[category].includes(value);
@@ -33,11 +33,10 @@ function LeftFilter() {
           className="text-red-500 text-xs"
           onClick={() =>
             setSelectedFilters({
-              segment: [],
-              brand: [],
+              make: [],
               fuelType: [],
-              transmissionType: [],
-              seatingCapacity: [],
+              transmission: [],
+              seats: [],
             })
           }
         >
@@ -45,7 +44,7 @@ function LeftFilter() {
         </button>
       </div>
 
-      {renderFilterSection("Brand", "make", [
+      {renderFilterSection("Make", "make", [
         "Maruti",
         "Hyundai",
         "Tata",
@@ -62,14 +61,7 @@ function LeftFilter() {
         "Automatic",
         "Manual",
       ])}
-      {renderFilterSection("Seats", "seats", [
-        "2",
-        "4",
-        "5",
-        "6",
-        "7",
-        "8",
-      ])}
+      {renderFilterSection("Seats", "seats", ["2", "4", "5", "6", "7", "8"])}
     </div>
   );
 

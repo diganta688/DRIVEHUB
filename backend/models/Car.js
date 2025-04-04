@@ -92,6 +92,10 @@ const carSchema = new mongoose.Schema(
       min: 1,
       max: 7,
     },
+    color:{
+      type: String,
+      required: true,
+    },
     mileage: {
       type: Number,
       required: true,
@@ -126,6 +130,15 @@ const carSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    upcomingService: {
+      type: String,
+      required: true,
+    },
+    lastService: {
+      type: String,
+      required: true,
+    },
+
     rcBook: {
       type: String,
       required: true,
@@ -137,6 +150,48 @@ const carSchema = new mongoose.Schema(
     pollutionCertificate: {
       type: String,
       required: true,
+    },
+    UsageLimits: {
+      type: Number,
+      required: true,
+    },
+    ExtraCharges: {
+      type: Number,
+      required: true,
+    },
+    Acceleration: {
+      type: Number,
+      required: true,
+    },
+    TopSpeed: {
+      type: Number,
+      required: true,
+    },
+    PeakPower: {
+      type: Number,
+      required: true,
+    },
+    features: {
+      airbags: {
+        type: Boolean,
+        default: false,
+      },
+      abs: {
+        type: Boolean,
+        default: false,
+      },
+      tractionControl: {
+        type: Boolean,
+        default: false,
+      },
+      parkingSensors: {
+        type: Boolean,
+        default: false,
+      },
+      blindSpotMonitoring: {
+        type: Boolean,
+        default: false,
+      },
     },
   },
   { timestamps: true }

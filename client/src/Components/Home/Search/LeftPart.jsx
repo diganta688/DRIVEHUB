@@ -7,6 +7,12 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { NavLink, useSearchParams } from "react-router-dom";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
+import Box from '@mui/material/Box';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+
 
 function LeftPart({ compact = false, user }) {
   const navigate = useNavigate();
@@ -101,21 +107,25 @@ function LeftPart({ compact = false, user }) {
               components={[startDateTime ? "TimePicker" : "DatePicker"]}
             >
               {startDateTime ? (
-                <div className="my-2">
-                  <select
+                <Box sx={{ minWidth: 230 }}>
+                <FormControl fullWidth>
+                  <InputLabel id="startTime-label">Select Start Time</InputLabel>
+                  <Select
+                    labelId="startTime-label"
                     id="startTime"
                     value={startTime || ""}
+                    label="Select Start Time"
                     onChange={(e) => setStartTime(e.target.value)} 
-                    className="w-full px-4 py-2 text-lg border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent shadow-sm transition-all"
+
                   >
-                    <option value="">Select Start Time</option>
                     {generateTimeOptions().map((time) => (
-                      <option key={time} value={time}>
+                      <MenuItem key={time} value={time}>
                         {time}
-                      </option>
+                      </MenuItem>
                     ))}
-                  </select>
-                </div>
+                  </Select>
+                </FormControl>
+              </Box>
               ) : (
                 <DatePicker
                   label="Start Date"
@@ -164,21 +174,25 @@ function LeftPart({ compact = false, user }) {
               components={[endDateTime ? "TimePicker" : "DatePicker"]}
             >
               {endDateTime ? (
-                <div className="my-2">
-                  <select
-                    id="endTime"
+                <Box sx={{ minWidth: 230 }}>
+                <FormControl fullWidth>
+                  <InputLabel id="startTime-label">Select End Time</InputLabel>
+                  <Select
+                    labelId="startTime-label"
+                    id="startTime"
                     value={endTime || ""}
+                    label="Select Start Time"
                     onChange={(e) => setEndTime(e.target.value)}
-                    className="w-full px-4 py-2 text-lg border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent shadow-sm transition-all"
+
                   >
-                    <option value="">Select End Time</option>
                     {generateTimeOptions().map((time) => (
-                      <option key={time} value={time}>
+                      <MenuItem key={time} value={time}>
                         {time}
-                      </option>
+                      </MenuItem>
                     ))}
-                  </select>
-                </div>
+                  </Select>
+                </FormControl>
+              </Box>
               ) : (
                 <DatePicker
                   label="End Date"
