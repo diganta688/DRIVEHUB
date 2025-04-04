@@ -285,7 +285,14 @@ function LeftMain({ handleSubmit, isLoading, name }) {
             />
           </div>
               <Service/>
-
+              <SelectField
+              label="tiresCondition"
+              name="tiresCondition"
+              value={formData.tiresCondition}
+              onChange={handleInputChange}
+              options={["Excellent", "Good", "Fair", "Poor"]}
+              error={inputError.tiresCondition}
+            />
           <FileUploadField
             handleMainImageChange={handleMainImageChange}
             handleOptionalImagesChange={handleOptionalImagesChange}

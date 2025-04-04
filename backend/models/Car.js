@@ -138,7 +138,11 @@ const carSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-
+    tiresCondition: {
+      type: String,
+      required: true,
+      enum: ["Excellent", "Good", "Fair", "Poor"],
+    },
     rcBook: {
       type: String,
       required: true,

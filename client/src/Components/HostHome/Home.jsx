@@ -53,6 +53,7 @@ function App() {
       parkingSensors: false,
       blindSpotMonitoring: false,
     },
+    tiresCondition: "",
   });
   const [inputError, setInputError] = useState({
     make: false,
