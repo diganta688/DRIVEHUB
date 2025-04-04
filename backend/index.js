@@ -11,7 +11,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
-const user = require("./routes/user/GetCarDetails");
+const user = require("./routes/User/CarDetails");
 
 const sessionoption = {
   secret: "secret key",

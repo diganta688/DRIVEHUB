@@ -47,7 +47,7 @@ function PricingAndAvailability({ carDetails }) {
               <div>
                 <p className="font-medium m-0">Available Locations</p>
                 <p className="text-gray-600">
-                  {carDetails.availableLocations.join(", ")}
+                  {carDetails.availableLocations}
                 </p>
               </div>
             </div>

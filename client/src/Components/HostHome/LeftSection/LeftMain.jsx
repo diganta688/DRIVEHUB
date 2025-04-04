@@ -63,7 +63,10 @@ function LeftMain({ handleSubmit, isLoading, name }) {
     inputError.Acceleration ||
     inputError.TopSpeed ||
     inputError.PeakPower ||
-    inputError.color;
+    inputError.color ||
+    inputError.tiresCondition ||
+    inputError.crouseControl ||
+    inputError.Bluetooth ;
 
   const handleMainImageChange = (event) => {
     const selectedFile = event.target.files[0];
@@ -170,7 +173,7 @@ function LeftMain({ handleSubmit, isLoading, name }) {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <InputField
-              label="Usage Limits"
+              label="Usage Limits (/km)"
               name="UsageLimits"
               value={formData.UsageLimits}
               onChange={handleInputChange}

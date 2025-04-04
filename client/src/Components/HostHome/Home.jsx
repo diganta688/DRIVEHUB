@@ -49,7 +49,10 @@ function App() {
     features: {
       airbags: false,
       abs: false,
-      tractionControl: false,
+      Bluetooth: false,
+      GPS: false,
+      sunRoof: false,
+      crouseControl: false,
       parkingSensors: false,
       blindSpotMonitoring: false,
     },
@@ -178,6 +181,11 @@ function App() {
         data.append(key, formData[key]);
       }
     });
+    Object.keys(formData.features).forEach((featureKey) => {
+      const value = formData.features[featureKey];
+      data.append(`features[${featureKey}]`, value ? "true" : "false");
+    });
+    
     if (formData.MainImage && formData.MainImage instanceof File) {
       data.append("MainImage", formData.MainImage);
     }
@@ -236,10 +244,14 @@ function App() {
         features: {
           airbags: false,
           abs: false,
-          tractionControl: false,
+          Bluetooth: false,
+          GPS: false,
+          sunRoof: false,
+          crouseControl: false,
           parkingSensors: false,
           blindSpotMonitoring: false,
         },
+        tiresCondition: "",
       });
     } catch (error) {
       setIsLoading(false);

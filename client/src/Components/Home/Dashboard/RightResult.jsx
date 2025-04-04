@@ -51,7 +51,8 @@ function CarCard({car}) {
             <span className="text-gray-600">/day</span>
           </div>
           <Link to={`/car-description/${car._id}/?city=${car.city}&startDate=${car.startDate}&startTime=${car.startTime}&endDate=${car.endDate}&endTime=${car.endTime}`}>
-          <button className="bg-orange-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-orange-700 transition-colors">
+          <button className="bg-orange-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-orange-700 transition-colors" onClick={() => {console.log(car);
+          }}>
             Rent Now
           </button></Link>
         </div>

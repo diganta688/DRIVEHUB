@@ -11,11 +11,12 @@ function Service() {
 
   const handleDateChange = (name, value) => {
     const errors = { ...inputError };
-    const tomorrow = dayjs().add(1, "day").startOf("day");
+    const today = dayjs().startOf("day");
+    const tomorrow = today.add(1, "day");
 
     if (name === "lastService") {
-      if (!value) {
-        errors.lastService = "Please select a valid Last Service date.";
+      if (!value || !dayjs(value).isBefore(today)) {
+        errors.lastService = "Last Service date must be before today.";
       } else {
         errors.lastService = "";
       }
@@ -25,8 +26,8 @@ function Service() {
       }));
     } 
     else if (name === "upcomingService") {
-      if (!value || dayjs(value).isBefore(tomorrow)) {
-        errors.upcomingService = "Upcoming Service must be tomorrow or later.";
+      if (!value || !dayjs(value).isAfter(today)) {
+        errors.upcomingService = "Upcoming Service must be a future date.";
       } else {
         errors.upcomingService = "";
       }
@@ -48,6 +49,7 @@ function Service() {
             label="Select Last Service Date"
             value={formData.lastService ? dayjs(formData.lastService) : null}
             onChange={(newValue) => handleDateChange("lastService", newValue)}
+            maxDate={dayjs().subtract(1, "day")}
             fullWidth
             required
           />
@@ -64,6 +66,7 @@ function Service() {
             label="Select Upcoming Service Date"
             value={formData.upcomingService ? dayjs(formData.upcomingService) : null}
             onChange={(newValue) => handleDateChange("upcomingService", newValue)}
+            minDate={dayjs().add(1, "day")}
             fullWidth
             required
           />
