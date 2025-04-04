@@ -52,7 +52,7 @@ function LegalDoc() {
             required
           />
           {inputError.rcBook && (
-            <p className="text-red-500 text-sm">{inputError.rcBook}</p>
+            <p className="text-red-500 text-sm m-0">{inputError.rcBook}</p>
           )}
         </div>
         <div>
@@ -70,7 +70,7 @@ function LegalDoc() {
             required
           />
           {inputError.insuranceDocument && (
-            <p className="text-red-500 text-sm">
+            <p className="text-red-500 text-sm m-0">
               {inputError.insuranceDocument}
             </p>
           )}
@@ -90,7 +90,7 @@ function LegalDoc() {
             required
           />
           {inputError.pollutionCertificate && (
-            <p className="text-red-500 text-sm">
+            <p className="text-red-500 text-sm m-0">
               {inputError.pollutionCertificate}
             </p>
           )}

@@ -38,6 +38,11 @@ function App() {
     rcBook: "",
     insuranceDocument: "",
     pollutionCertificate: "",
+    UsageLimits:0,
+    ExtraCharges:0,
+    Acceleration: 1,
+    TopSpeed: 100,
+    PeakPower: 1,
   });
   const [inputError, setInputError] = useState({
     make: false,
@@ -57,6 +62,12 @@ function App() {
     rcBook: false,
     insuranceDocument: false,
     pollutionCertificate: false,
+    UsageLimits: false,
+    ExtraCharges: false,
+    segment: false,
+    Acceleration: false,
+    TopSpeed: false,
+    PeakPower: false,
   });
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -92,6 +103,18 @@ function App() {
       errors.MainImage = value.trim() === "" ? "Image URL is required" : "";
     } else if (name === "description") {
       errors.description = value.trim() === "" ? "Description is required" : "";
+    }else if (name === "UsageLimits") {
+      errors.UsageLimits = value.trim() === "" ? "UsageLimits is required" : "";
+    } else if (name === "ExtraCharges") {
+      errors.ExtraCharges = value.trim() === "" ? "ExtraCharges is required" : "";
+    } else if (name === "segment") {
+      errors.segment = value.trim() === "" ? "Segment is required" : "";
+    } else if (name === "Acceleration") {
+      errors.Acceleration = value < 1 ? "value should be greater than 1sec" : "";
+    } else if (name === "TopSpeed") {
+      errors.TopSpeed = value < 100 ? "value should be greater than 100km/h" : "";
+    } else if (name === "PeakPower") {
+      errors.PeakPower = value < 1 ? "value should be greater than 1" : "";
     }
     setInputError(errors);
     setFormData((prev) => ({

@@ -86,7 +86,7 @@ function Timing() {
             />
           </DemoContainer>
           {inputError.startDate && (
-            <p className="text-red-500 text-sm">{inputError.startDate}</p>
+            <p className="text-red-500 text-sm m-0">{inputError.startDate}</p>
           )}
 
           <div className="my-2">
@@ -112,7 +112,7 @@ function Timing() {
             </select>
           </div>
           {inputError.startTime && (
-            <p className="text-red-500 text-sm">{inputError.startTime}</p>
+            <p className="text-red-500 text-sm m-0">{inputError.startTime}</p>
           )}
         </div>
       </div>
@@ -134,7 +134,7 @@ function Timing() {
             />
           </DemoContainer>
           {inputError.endDate && (
-            <p className="text-red-500 text-sm">{inputError.endDate}</p>
+            <p className="text-red-500 text-sm m-0">{inputError.endDate}</p>
           )}
 
           <div className="my-2">
@@ -160,7 +160,7 @@ function Timing() {
             </select>
           </div>
           {inputError.endTime && (
-            <p className="text-red-500 text-sm">{inputError.endTime}</p>
+            <p className="text-red-500 text-sm m-0">{inputError.endTime}</p>
           )}
         </div>
       </div>

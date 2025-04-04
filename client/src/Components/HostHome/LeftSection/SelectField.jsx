@@ -2,7 +2,7 @@ import React from 'react';
 
 function SelectField({ label, name, value, onChange, options, error }) {
   return (
-    <div className="mb-4">
+    <div className="">
       <label className="block text-xs font-semibold text-gray-700 mb-1">{label}</label>
       <select
       required
@@ -17,7 +17,7 @@ function SelectField({ label, name, value, onChange, options, error }) {
           <option key={option} value={option}>{option}</option>
         ))}
       </select>
-      {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
+      {error && <p className="text-red-500 text-xs m-0 mt-1">{error}</p>}
     </div>
   );
 }

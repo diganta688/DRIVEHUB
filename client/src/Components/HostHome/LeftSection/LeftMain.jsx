@@ -38,9 +38,15 @@ function LeftMain({ handleSubmit, isLoading, name }) {
     inputError.startTime ||
     inputError.endDate ||
     inputError.endTime ||
+    inputError.segment ||
     inputError.rcBook ||
     inputError.insuranceDocument ||
-    inputError.pollutionCertificate ;
+    inputError.pollutionCertificate||
+    inputError.UsageLimits ||
+    inputError.ExtraCharges ||
+    inputError.Acceleration ||
+    inputError.TopSpeed ||
+    inputError.PeakPower ;
 
   const handleMainImageChange = (event) => {
     const selectedFile = event.target.files[0];
@@ -137,37 +143,49 @@ function LeftMain({ handleSubmit, isLoading, name }) {
               error={inputError.seats}
             />
           </div>
-          <p
-            style={{
-              textDecoration: "underline",
-              fontSize: "12px",
-              fontWeight: "800",
-              margin: "0",
-            }}
-          >
-            Location is associated with your profile it is not changeable from
-            here
-          </p>
-          <LocationList disabled={true} name={name} />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <SelectField
-              label="Fuel Type"
-              name="fuelType"
-              value={formData.fuelType}
+            <InputField
+              label="Usage Limits"
+              name="UsageLimits"
+              value={formData.UsageLimits}
               onChange={handleInputChange}
-              options={["Petrol", "Diesel", "Electric", "CNG"]}
-              error={inputError.fuelType}
+              error={inputError.UsageLimits}
             />
-            <SelectField
-              label="Transmission"
-              name="transmission"
-              value={formData.transmission}
+            <InputField
+              label="Extra Charges (/km)"
+              name="ExtraCharges"
+              value={formData.ExtraCharges}
               onChange={handleInputChange}
-              options={["Automatic", "Manual"]}
-              error={inputError.transmission}
+              error={inputError.ExtraCharges}
             />
           </div>
-          <SelectField
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <InputField
+              label="Acceleration (0-60 mph) in seconds"
+              name="Acceleration"
+              value={formData.Acceleration}
+              onChange={handleInputChange}
+              error={inputError.Acceleration}
+              placeholder="e.g., 4 or 4.99"
+            />
+            <InputField
+              label="Top Speed (mph)"
+              name="TopSpeed"
+              value={formData.TopSpeed}
+              onChange={handleInputChange}
+              error={inputError.TopSpeed}
+            />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <InputField
+              label="Peak Power (hp)"
+              name="PeakPower"
+              value={formData.PeakPower}
+              onChange={handleInputChange}
+              error={inputError.PeakPower}
+              placeholder="e.g., 4 or 4.99"
+            />
+            <SelectField
             label="segment"
             name="segment"
             value={formData.segment}
@@ -198,6 +216,33 @@ function LeftMain({ handleSubmit, isLoading, name }) {
             ]}
             error={inputError.segment}
           />
+          </div>
+          <p
+            className="text-lg font-semibold m-0 mt-4 "
+          >
+            Location is associated with your profile it is not changeable from
+            here
+          </p>
+          <LocationList disabled={true} name={name} />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <SelectField
+              label="Fuel Type"
+              name="fuelType"
+              value={formData.fuelType}
+              onChange={handleInputChange}
+              options={["Petrol", "Diesel", "Electric", "CNG"]}
+              error={inputError.fuelType}
+            />
+            <SelectField
+              label="Transmission"
+              name="transmission"
+              value={formData.transmission}
+              onChange={handleInputChange}
+              options={["Automatic", "Manual"]}
+              error={inputError.transmission}
+            />
+          </div>
+          
           <InputField
             label="Mileage (km)"
             name="mileage"
@@ -221,7 +266,7 @@ function LeftMain({ handleSubmit, isLoading, name }) {
             error={inputError.description}
           />
           <Timing />
-          <LigalDoc/>
+          <LigalDoc />
           {isLoading ? (
             <button
               disabled={true}
