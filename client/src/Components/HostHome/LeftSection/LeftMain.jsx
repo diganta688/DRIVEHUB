@@ -188,7 +188,7 @@ function LeftMain({ handleSubmit, isLoading, name }) {
                 htmlFor="colorInput"
                 className="block text-sm font-semibold text-gray-700 mb-1"
               >
-                Primary color of your car
+                Primary color
               </label>
               <MuiColorInput
                 id="colorInput"
