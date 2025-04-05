@@ -28,6 +28,8 @@ function HostSignupMain() {
     businessName: "",
     experience: "",
     description: "",
+    lng: 0,
+    lat:0
   });
     const onetimepass = useRef(0);
   const [isSubmit, setIsSubmit] = useState(false);

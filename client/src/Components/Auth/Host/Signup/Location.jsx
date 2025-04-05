@@ -1,11 +1,15 @@
-import React, { useState, useContext  } from "react";
+import React, { useState, useContext, useRef, useEffect } from "react";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import { MapPin, Building, Globe, Navigation } from "lucide-react";
 import { SignupContext } from "../../../../Context/context";
-
+import mapboxgl from "mapbox-gl";
+import "mapbox-gl/dist/mapbox-gl.css";
 
 function Location({ setFormData }) {
+  const defaultCoordinates = { lat: 22.5726, lng: 88.3639 };
+  const [coordinates, setCoordinates] = useState(defaultCoordinates);
+  const mapContainerRef = useRef(null);
   const { formData, handleInputChange } = useContext(SignupContext);
   const accessToken = import.meta.env.VITE_MAP_TOKEN;
   const [suggestions, setSuggestions] = useState([]);
@@ -14,9 +18,7 @@ function Location({ setFormData }) {
       setSuggestions([]);
       return;
     }
-
     const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${input}.json?access_token=${accessToken}&autocomplete=true&limit=5`;
-
     try {
       const response = await fetch(url);
       const data = await response.json();
@@ -27,24 +29,19 @@ function Location({ setFormData }) {
   };
   const handleSelect = (place) => {
     const placeName = place.place_name;
+    const [lng, lat] = place.center;
+    setCoordinates({ lat, lng });
     const context = place.context || [];
-    let city = "";
-    let state = "";
-    let zipCode = "";
-    let country = "";
-
+    let city = "",
+      state = "",
+      zipCode = "",
+      country = "";
     context.forEach((item) => {
-      if (item.id.includes("place")) {
-        city = item.text;
-      } else if (item.id.includes("region")) {
-        state = item.text;
-      } else if (item.id.includes("postcode")) {
-        zipCode = item.text;
-      } else if (item.id.includes("country")) {
-        country = item.text;
-      }
+      if (item.id.includes("place")) city = item.text;
+      else if (item.id.includes("region")) state = item.text;
+      else if (item.id.includes("postcode")) zipCode = item.text;
+      else if (item.id.includes("country")) country = item.text;
     });
-
     setFormData((prev) => ({
       ...prev,
       address: placeName,
@@ -52,10 +49,68 @@ function Location({ setFormData }) {
       state,
       zipCode,
       country,
+      lat,
+      lng,
     }));
 
     setSuggestions([]);
   };
+  useEffect(() => {
+    mapboxgl.accessToken = accessToken;
+    const map = new mapboxgl.Map({
+      container: mapContainerRef.current,
+      style: "mapbox://styles/mapbox/streets-v11",
+      center: [coordinates.lng, coordinates.lat],
+      zoom: 13,
+    });
+    const marker = new mapboxgl.Marker()
+      .setLngLat([coordinates.lng, coordinates.lat])
+      .addTo(map);
+    let holdTimeout;
+    map.on("mousedown", (e) => {
+      holdTimeout = setTimeout(async () => {
+        const { lng, lat } = e.lngLat;
+        marker.setLngLat([lng, lat]);
+        setCoordinates({ lng, lat });
+        const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?access_token=${accessToken}`;
+        try {
+          const response = await fetch(url);
+          const data = await response.json();
+          const place = data.features[0];
+          if (place) {
+            const placeName = place.place_name;
+            const context = place.context || [];
+            let city = "",
+              state = "",
+              zipCode = "",
+              country = "";
+            context.forEach((item) => {
+              if (item.id.includes("place")) city = item.text;
+              else if (item.id.includes("region")) state = item.text;
+              else if (item.id.includes("postcode")) zipCode = item.text;
+              else if (item.id.includes("country")) country = item.text;
+            });
+            setFormData((prev) => ({
+              ...prev,
+              address: placeName,
+              city,
+              state,
+              zipCode,
+              country,
+              lat,
+              lng,
+            }));
+          }
+        } catch (err) {
+          console.error("Reverse geocoding failed", err);
+        }
+      }, 300);
+    });
+    map.on("mouseup", () => {
+      clearTimeout(holdTimeout);
+    });
+    return () => map.remove();
+  }, [coordinates]);
   return (
     <div className="space-y-4 pt-4">
       <h4 className="text-md font-medium text-gray-700 border-b">
@@ -183,7 +238,6 @@ function Location({ setFormData }) {
           </div>
         </div>
       </div>
-
       <div className="space-y-2">
         <label className="block text-sm font-medium text-gray-700">
           Service Area Radius
@@ -199,6 +253,13 @@ function Location({ setFormData }) {
             placeholder="e.g., Within 50 miles of city center"
           />
         </div>
+      </div>
+      <div className="mt-4">
+        <h4 className="text-sm font-medium text-gray-700 mb-2">Map Preview</h4>
+        <div
+          ref={mapContainerRef}
+          className="w-full h-64 rounded-lg border border-gray-300 shadow"
+        />
       </div>
     </div>
   );
