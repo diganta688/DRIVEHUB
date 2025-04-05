@@ -53,6 +53,14 @@ const HostSchema = new Schema({
     type: String,
     required: true,
   },
+  lat:{
+    type: Number,
+    required: true
+  },
+  lng: {
+    type: Number,
+    required: true
+  },
   cars: [
     {
       type: Schema.Types.ObjectId,

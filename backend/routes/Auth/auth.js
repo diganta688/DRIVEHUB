@@ -96,6 +96,8 @@ router.post("/host/signup", async (req, res) => {
       businessName,
       experience,
       description,
+      lat,
+      lng
     } = req.body;
     const existingHost = await Hostmodel.findOne({
       $or: [{ email }, { phone }],
@@ -122,6 +124,8 @@ router.post("/host/signup", async (req, res) => {
       businessName,
       experience,
       description,
+      lat,
+      lng
     });
     const token = generateToken(host._id);
     res.cookie("jwtHost", token, cookieOptions);
