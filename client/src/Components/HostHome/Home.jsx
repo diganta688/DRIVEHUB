@@ -125,12 +125,12 @@ function App() {
       errors.segment = value.trim() === "" ? "Segment is required" : "";
     } else if (name === "Acceleration") {
       errors.Acceleration =
-        value < 1 ? "value should be greater than 1sec" : "";
+        value <= 0 ? "value should be greater than 0sec" : "";
     } else if (name === "TopSpeed") {
       errors.TopSpeed =
         value < 100 ? "value should be greater than 100km/h" : "";
     } else if (name === "PeakPower") {
-      errors.PeakPower = value < 1 ? "value should be greater than 1" : "";
+      errors.PeakPower = value < 100 ? "value should be greater than 100" : "";
     } else if (name === "color") {
       errors.color = value.trim() === "" ? "color is required" : "";
     }

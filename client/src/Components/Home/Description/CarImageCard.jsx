@@ -1,8 +1,7 @@
 import React from "react";
 import { Star } from "lucide-react";
 
-
-function CarImageCard({ carDetails }) {
+function CarImageCard({ carDetails, bookButtonRef }) {
 
   return (
     <>
@@ -39,6 +38,15 @@ function CarImageCard({ carDetails }) {
                 </div>
               ))}
           </div>
+        </div>
+        <div className="w-full">
+          <button
+            ref={bookButtonRef}
+            className="border w-full mt-2 py-3 bg-orange-500"
+            style={{ borderRadius: "10px", fontWeight: "700", color: "white" }}
+          >
+            Book Now
+          </button>
         </div>
       </div>
     </>

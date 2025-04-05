@@ -1,7 +1,22 @@
-import React from "react";
-import { Calendar, MapPin, Clock } from "lucide-react";
+import React, { useState } from "react";
+import { Calendar } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import TimeSection from "./TimeSection";
 
 function PricingAndAvailability({ carDetails }) {
+  const [currentImage, setCurrentImage] = useState(0);
+  const [showModal, setShowModal] = useState(false);
+  const handlePrev = () => {
+    setCurrentImage((prev) =>
+      prev === 0 ? carDetails.files.length - 1 : prev - 1
+    );
+  };
+  const handleNext = () => {
+    setCurrentImage((prev) =>
+      prev === carDetails.files.length - 1 ? 0 : prev + 1
+    );
+  };
+
   return (
     <>
       <div className="bg-white rounded-xl p-4 mb-4">
@@ -41,29 +56,53 @@ function PricingAndAvailability({ carDetails }) {
               </span>
             </div>
           </div>
-          <div className="space-y-4">
-            <div className="flex items-start gap-3">
-              <MapPin className="h-5 w-5 text-blue-500 flex-shrink-0" />
-              <div>
-                <p className="font-medium m-0">Available Locations</p>
-                <p className="text-gray-600">
-                  {carDetails.availableLocations}
-                </p>
-              </div>
+          {carDetails.files.length > 0 ? (
+            <div className="relative w-full h-72 md:h-96 rounded-lg overflow-hidden group">
+              <img
+                style={{ cursor: "zoom-in" }}
+                key={currentImage}
+                src={carDetails.files[currentImage]?.img}
+                alt={`car-img-${currentImage}`}
+                onClick={() => setShowModal(true)}
+                className="w-full h-full object-cover rounded-lg transition-all duration-500 ease-in-out scale-100 group-hover:scale-105"
+              />
+              <button
+                onClick={handlePrev}
+                className="absolute top-1/2 left-3 transform -translate-y-1/2 bg-white/30 backdrop-blur-md hover:bg-white/50 text-gray-800 hover:text-black border border-white/40 rounded-full p-2 shadow-lg transition-all duration-300 hover:scale-105"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </button>
+
+              <button
+                onClick={handleNext}
+                className="absolute top-1/2 right-3 transform -translate-y-1/2 bg-white/30 backdrop-blur-md hover:bg-white/50 text-gray-800 hover:text-black border border-white/40 rounded-full p-2 shadow-lg transition-all duration-300 hover:scale-105"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </button>
             </div>
-            <div className="flex items-start gap-3">
-              <Clock className="h-5 w-5 text-blue-500 flex-shrink-0" />
-              <div>
-                <p className="font-medium m-0">Usage Limits</p>
-                <p className="text-gray-600 m-0">Limit: {carDetails.kmLimit}</p>
-                <p className="text-gray-600">
-                  Extra charges: {carDetails.extraKmCharge}
-                </p>
-              </div>
-            </div>
-          </div>
+          ) : (
+            <TimeSection carDetails={carDetails} />
+          )}
         </div>
       </div>
+      {carDetails.files.length > 0 && <TimeSection carDetails={carDetails} />}
+      {showModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/10 backdrop-blur-sm"
+          onClick={() => setShowModal(false)}
+        >
+          <div
+            className="bg-white/80 p-3 rounded-xl shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <img
+              src={carDetails.files[currentImage]?.img}
+              alt={`zoomed-img-${currentImage}`}
+              className="max-w-[90vw] max-h-[80vh] rounded-lg object-contain transition-all duration-300"
+            />
+          </div>
+        </div>
+      )}
     </>
   );
 }

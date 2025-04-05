@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Users, Fuel, Gauge, Calendar, Star, CarFront, RotateCcw  } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import LoadingScreen from '../../LoadingScreen';
 
 function CarCard({car}) {
   return (
@@ -64,13 +65,9 @@ function CarCard({car}) {
 
 const RightResult = ({ cars, loading, errorMessage, warningMSG }) => {
   return (
-    <div className="p-4" style={{ width: "100%", height: "73vh", overflowY: "auto" }}>
+    <div className="" style={{ width: "100%", height: "73vh", overflowY: "auto", padding: "1rem 1rem 9rem 1rem" }}>
       {loading ? (
-        <div className="flex justify-center items-center h-full">
-          <div className="animate-spin text-orange-600">
-            <RotateCcw size={48} />
-          </div>
-        </div>
+        <LoadingScreen/>
       ) : (
         <>
           {errorMessage && (

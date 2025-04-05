@@ -15,7 +15,7 @@ function TechnicalSpecifications({ carDetails }) {
               <p className="text-gray-500 capitalize m-0">
                 {key.replace(/([A-Z])/g, " $1").trim()}
               </p>
-              <p className="font-medium group-hover:text-blue-600 transition-colors">
+              <p className="font-medium group-hover:text-blue-600 transition-colors" >
                 {value}
               </p>
             </div>
