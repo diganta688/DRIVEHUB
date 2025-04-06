@@ -258,6 +258,9 @@ function App() {
       toast.error(error.response?.data?.error || "Failed to upload car");
     }
   };
+
+  if(!name) return null;
+  
   return (
     <HostMainContext.Provider
       value={{

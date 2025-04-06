@@ -8,7 +8,7 @@ import BlurText from "./BlueText";
 
 function Homee() {
   const [cars, setCars] = useState([]);
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState(null);
   const [selectedFilters, setSelectedFilters] = useState({
     segment: [],
     make: [],
@@ -16,9 +16,30 @@ function Homee() {
     transmission: [],
     seats: [],
   });
+
   useEffect(() => {
+    const check = async () => {
+      await fetchCars();
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/auth/home`,
+          { withCredentials: true }
+        );
+        if (response.status === 200) {
+          setUser(response.data.user);
+        }
+      } catch (error) {
+        if (error.response?.status === 401) {
+          window.location.href = `${import.meta.env.VITE_FRONTEND_URL}/log-in`;
+        } else {
+          console.error("Error fetching user:", error.message);
+        }
+      }
+    };
+
     check();
   }, []);
+
   const fetchCars = async () => {
     try {
       const res = await axios.get(
@@ -33,25 +54,9 @@ function Homee() {
       console.error("Error fetching cars:", error.message);
     }
   };
-  const check = async () => {
-    fetchCars();
-    try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/auth/home`,
-        {
-          withCredentials: true,
-        }
-      );
-      if (response.status !== 200) {
-        throw new Error("Failed to fetch user data");
-      }
-      setUser(response.data.user);
-    } catch (error) {
-      if (error.response?.status === 401) {
-        window.location.href = `${import.meta.env.VITE_FRONTEND_URL}/log-in`;
-      }
-    }
-  };
+
+  if (!user) return null; // or a loading spinner
+
   return (
     <UserHomeContext.Provider
       value={{
@@ -63,19 +68,19 @@ function Homee() {
         setSelectedFilters,
       }}
     >
-      <div className="">
+      <div>
         <HomeHeroNav
           display={true}
           mainclass="nav-main-list"
           navItemMain="nav-item-main-list"
           navItemUser="nav-items-user-list"
           Home="homee"
-          img="\media\Images\logo.png"
+          img="/media/Images/logo.png"
           imgClass="nav-logo-list"
           is={true}
         />
         <div className="flex justify-center pt-3">
-          {user && user.name && (
+          {user?.name && (
             <BlurText
               text={`Hey ${user.name}! welcome back`}
               animateBy="words"

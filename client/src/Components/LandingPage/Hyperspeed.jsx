@@ -1092,7 +1092,6 @@ const Hyperspeed = ({ effectOptions = {
       const myApp = new App(container, effectOptions);
       myApp.loadAssets().then(myApp.init);
     })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
     const canvases = document.querySelectorAll('#lights canvas');

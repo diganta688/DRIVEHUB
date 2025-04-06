@@ -1,9 +1,8 @@
 import React from "react";
-import { useRef, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import HomeHeroDatePicker from "./HomeHeroDatePicker";
 import HomeHeroNav from "./HomeHeroNav";
 import Tagline from "./Tagline";
-import ImageGalary from "./ImageGalary";
 import ImageGalaryText from "./ImageGalaryText";
 import WhyUs from "./WhyUs";
 import Questions from "./Questions";
@@ -13,8 +12,14 @@ import CircularGallery from "./CircularGallery";
 import axios from "axios";
 import Hyperspeed from "./Hyperspeed";
 import { hyperspeedPresets } from "./presets";
+import RollingGallery from "./RollingGallery";
 
 function HomeHero() {
+  const [isMouse, setIsMouse] = useState(false);
+  useEffect(() => {
+    const hasMouse = window.matchMedia("(pointer: fine)").matches;
+    setIsMouse(hasMouse);
+  });
   const [display, setDisplay] = useState(true);
   useEffect(() => {
     check();
@@ -35,20 +40,6 @@ function HomeHero() {
         }
       });
   };
-  const videoRef = useRef(null);
-  // useEffect(() => {
-  //   const video = videoRef.current;
-
-  //   const handleEnded = () => {
-  //     video.currentTime = 0;
-  //     video.play();
-  //   };
-  //   video.addEventListener("ended", handleEnded);
-  //   return () => {
-  //     video.removeEventListener("ended", handleEnded);
-  //   };
-  // }, []);
-
   return (
     <div className="main-home-hero">
       <div className="HomeHeroVideo">
@@ -62,8 +53,9 @@ function HomeHero() {
           imgClass="nav-logo"
           is={false}
         />
+        {isMouse && <p className="chakra-text css-1gyytsn">Click Me</p>}
         <div
-        className="background-video"
+          className="background-video"
           style={{
             width: "100%",
             backgroundColor: "black",
@@ -77,7 +69,7 @@ function HomeHero() {
         <Tagline />
         <div className="image-galary-main">
           <div className="image-galary">
-            <ImageGalary />
+          <RollingGallery autoplay={true} pauseOnHover={true} />
           </div>
           <div
             className="image-text"
