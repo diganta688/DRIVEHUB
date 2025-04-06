@@ -4,7 +4,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 
-function HostNav() {
+function HostNav({who}) {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
 
@@ -23,7 +23,7 @@ function HostNav() {
   const logout = async () => {
     try {
       const res = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/auth/host/logout`,
+        `${import.meta.env.VITE_BACKEND_URL}/auth/${who}/logout`,
         { withCredentials: true }
       );
       if (res.status === 200) {

@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import LeftFilter from "./LeftFilter";
 import RightResult from "./RightResult";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { UserHomeContext } from "../../../Context/context";
+import { UserHomeContext } from "../../Context/context";
 function Dashboard() {
   const { cars, selectedFilters } = useContext(UserHomeContext);
   const [searchParams] = useSearchParams();

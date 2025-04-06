@@ -13,6 +13,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import LoadingScreen from "../../LoadingScreen";
 import { useInView } from "react-intersection-observer";
+import HostNav from "../../HostHome/HostNav";
 
 function CarDescription({ previousURL }) {
   const { ref: bookButtonRef, inView } = useInView({
@@ -95,16 +96,7 @@ function CarDescription({ previousURL }) {
 
   return (
     <div className="min-h-screen bg-[#f8fafc]">
-      <HomeHeroNav
-        display={true}
-        mainclass="nav-main-list"
-        navItemMain="nav-item-main-list"
-        navItemUser="nav-items-user-list"
-        Home="homee"
-        img="\media\Images\logo.png"
-        imgClass="nav-logo-list"
-        is={true}
-      />
+      <HostNav who="user"/>
       <main
         className="max-w-7xl mx-auto px-4 py-8 mt-2"
         style={{ paddingBottom: "5rem" }}

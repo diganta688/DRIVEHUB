@@ -75,7 +75,7 @@ router.post("/login", async (req, res) => {
 router.get("/home", Protect, (req, res) => {
   res.status(200).json({ message: "Welcome to the Home Page", user: req.user });
 });
-router.get("/logout", (req, res) => {
+router.get("/user/logout", (req, res) => {
   res.clearCookie("jwtUser", cookieOptions);
   res.status(200).json({ success: true, message: "Logged out successfully" });
 });

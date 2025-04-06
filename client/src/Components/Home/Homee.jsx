@@ -5,6 +5,7 @@ import axios from "axios";
 import { UserHomeContext } from "../../Context/context";
 import HomeHeroNav from "../LandingPage/HomeHeroNav";
 import BlurText from "./BlueText";
+import HostNav from "../HostHome/HostNav";
 
 function Homee() {
   const [cars, setCars] = useState([]);
@@ -55,7 +56,7 @@ function Homee() {
     }
   };
 
-  if (!user) return null; // or a loading spinner
+  if (!user) return null;
 
   return (
     <UserHomeContext.Provider
@@ -69,16 +70,7 @@ function Homee() {
       }}
     >
       <div>
-        <HomeHeroNav
-          display={true}
-          mainclass="nav-main-list"
-          navItemMain="nav-item-main-list"
-          navItemUser="nav-items-user-list"
-          Home="homee"
-          img="/media/Images/logo.png"
-          imgClass="nav-logo-list"
-          is={true}
-        />
+        <HostNav who="user"/>
         <div className="flex justify-center pt-3">
           {user?.name && (
             <BlurText
