@@ -52,7 +52,8 @@ const carSchema = new mongoose.Schema(
       GPS: { type: Boolean, default: false },
       sunRoof: { type: Boolean, default: false },
       crouseControl: { type: Boolean, default: false },
-    },    
+    },
+    host: { type: mongoose.Schema.Types.ObjectId, ref: "Host", required: true }, // Added host reference
   },
   { timestamps: true }
 );

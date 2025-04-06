@@ -13,6 +13,7 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@fortawesome/fontawesome-free": "^6.7.2",
+    "@mapbox/mapbox-sdk": "^0.16.1",
     "@mui/icons-material": "^6.4.5",
     "@mui/lab": "^6.0.0-beta.30",
     "@mui/material": "^6.4.7",

@@ -28,7 +28,8 @@ router.post("/cars/upload/:id", upload.fields([
       insuranceDocument: insuranceDocumentPath,
       pollutionCertificate: pollutionCertificatePath,
       rcBook: rcBookPath,
-      files: additionalFiles
+      files: additionalFiles,
+      host: host._id
     });
     await newCar.save();
     host.cars.push(newCar._id);

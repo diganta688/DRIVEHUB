@@ -17,7 +17,7 @@ router.get("/car/getCarDetails/:id", async (req, res) => {
     return res.status(400).json({ message: "Car ID is required" });
   }
   try {
-    const car = await Carmodel.findById(carId);
+    const car = await Carmodel.findById(carId).populate("host");
     if (!car) {
       return res.status(404).json({ message: "Car not found" });
     }

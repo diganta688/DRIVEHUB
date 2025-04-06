@@ -58,8 +58,11 @@ function CarDescription({ previousURL }) {
           nextService: data.upcomingService,
         },
         files: [],
+        hostLat: data.host.lat,
+        hostLng: data.host.lng,
+        hostCity: data.host.city,
+        hostServiceArea: data.host.serviceArea, 
       };
-
       const features = data.features || {};
       const files = data.files || {};
       const featureList = [];

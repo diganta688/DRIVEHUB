@@ -1,7 +1,9 @@
-import React from "react";
+import React, {useState} from "react";
 import { Star } from "lucide-react";
+import UserLocation from "./UserLocation";
 
 function CarImageCard({ carDetails, bookButtonRef }) {
+  const [FullScreenMapOpen, setFullScreenMapOpen] = useState(false);
 
   return (
     <>
@@ -41,6 +43,7 @@ function CarImageCard({ carDetails, bookButtonRef }) {
         </div>
         <div className="w-full">
           <button
+          onClick={()=>setFullScreenMapOpen((p)=>!p)}
             ref={bookButtonRef}
             className="border w-full mt-2 py-3 bg-orange-500"
             style={{ borderRadius: "10px", fontWeight: "700", color: "white" }}
@@ -49,6 +52,7 @@ function CarImageCard({ carDetails, bookButtonRef }) {
           </button>
         </div>
       </div>
+      <UserLocation FullScreenMapOpen={FullScreenMapOpen} setFullScreenMapOpen={setFullScreenMapOpen} carDetails={carDetails}/>
     </>
   );
 }

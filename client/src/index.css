@@ -1077,8 +1077,13 @@ a {
   position: absolute;
   font-weight: 900;
   top: 8rem;
-  left: 50%; /* center horizontally */
-  transform: translateX(-50%); /* shift back by half its width */
+  left: 50%;
+  transform: translateX(-50%);
   font-size: 4rem;
   z-index: 100;
+}
+
+.custom-distance-box {
+  pointer-events: none;
+  background-color: rgba(255, 255, 255, 0.9);
 }

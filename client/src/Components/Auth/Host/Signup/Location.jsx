@@ -61,7 +61,7 @@ function Location({ setFormData }) {
       container: mapContainerRef.current,
       style: "mapbox://styles/mapbox/streets-v11",
       center: [coordinates.lng, coordinates.lat],
-      zoom: 13,
+      zoom: 15,
     });
     const marker = new mapboxgl.Marker()
       .setLngLat([coordinates.lng, coordinates.lat])
@@ -104,7 +104,7 @@ function Location({ setFormData }) {
         } catch (err) {
           console.error("Reverse geocoding failed", err);
         }
-      }, 300);
+      }, 900);
     });
     map.on("mouseup", () => {
       clearTimeout(holdTimeout);
@@ -258,7 +258,7 @@ function Location({ setFormData }) {
         <h4 className="text-sm font-medium text-gray-700 mb-2">Map Preview</h4>
         <div
           ref={mapContainerRef}
-          className="w-full h-64 rounded-lg border border-gray-300 shadow"
+          className="w-full h-64 rounded-lg border border-gray-300 shadow cursor-pointer"
         />
       </div>
     </div>
