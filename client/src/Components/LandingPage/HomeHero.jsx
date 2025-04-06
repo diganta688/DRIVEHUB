@@ -11,6 +11,8 @@ import BookCarImage from "./BookCarImage";
 import Footer from "./Footer";
 import CircularGallery from "./CircularGallery";
 import axios from "axios";
+import Hyperspeed from "./Hyperspeed";
+import { hyperspeedPresets } from "./presets";
 
 function HomeHero() {
   const [display, setDisplay] = useState(true);
@@ -34,18 +36,18 @@ function HomeHero() {
       });
   };
   const videoRef = useRef(null);
-  useEffect(() => {
-    const video = videoRef.current;
+  // useEffect(() => {
+  //   const video = videoRef.current;
 
-    const handleEnded = () => {
-      video.currentTime = 0;
-      video.play();
-    };
-    video.addEventListener("ended", handleEnded);
-    return () => {
-      video.removeEventListener("ended", handleEnded);
-    };
-  }, []);
+  //   const handleEnded = () => {
+  //     video.currentTime = 0;
+  //     video.play();
+  //   };
+  //   video.addEventListener("ended", handleEnded);
+  //   return () => {
+  //     video.removeEventListener("ended", handleEnded);
+  //   };
+  // }, []);
 
   return (
     <div className="main-home-hero">
@@ -60,14 +62,17 @@ function HomeHero() {
           imgClass="nav-logo"
           is={false}
         />
-        <video
-          className="background-video"
-          ref={videoRef}
-          src="/media/hommee.mp4"
-          autoPlay
-          muted
-          loop
-        />
+        <div
+        className="background-video"
+          style={{
+            width: "100%",
+            backgroundColor: "black",
+            position: "relative",
+            overflow: "hidden",
+          }}
+        >
+          <Hyperspeed effectOptions={hyperspeedPresets.four} />
+        </div>
         <HomeHeroDatePicker />
         <Tagline />
         <div className="image-galary-main">
