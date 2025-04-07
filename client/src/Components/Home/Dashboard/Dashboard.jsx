@@ -24,8 +24,7 @@ function Dashboard() {
       const isAnyFieldProvided = dateTimeFields.some(Boolean);
       const isAllFieldsProvided = dateTimeFields.every(Boolean);
       if (!city) {
-        setFilteredCars([]);
-        setErrorMessage("City is required to filter cars.");
+        setFilteredCars(cars);
         setLoading(false);
         return;
       }

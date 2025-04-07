@@ -2,8 +2,7 @@ import React, {useState} from "react";
 import { Star } from "lucide-react";
 import UserLocation from "./UserLocation";
 
-function CarImageCard({ carDetails, bookButtonRef }) {
-  const [FullScreenMapOpen, setFullScreenMapOpen] = useState(false);
+function CarImageCard({ carDetails, bookButtonRef, setFullScreenMapOpen, FullScreenMapOpen }) {
 
   return (
     <>

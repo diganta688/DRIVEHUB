@@ -41,8 +41,21 @@ function UserLocation({ FullScreenMapOpen, setFullScreenMapOpen, carDetails }) {
   const mapRef = useRef(null);
   const markerRef = useRef(null);
   const routeLayerId = "route-line";
+  useEffect(() => {
+    if (
+      address.street.length === 0 ||
+      address.city.length === 0 ||
+      address.zipCode.length === 0 ||
+      address.country.length === 0
+    ) {
+      setServiceAreaError("All fields are required");
+    } else {
+      setServiceAreaError(""); 
+    }
+  }, [address]);
+  
+  
 
-  // 1️⃣ Map Initialization
   useEffect(() => {
     if (
       !FullScreenMapOpen ||
@@ -227,7 +240,16 @@ function UserLocation({ FullScreenMapOpen, setFullScreenMapOpen, carDetails }) {
   const handleClose = () => {
     setFullScreenMapOpen(false);
     setServiceAreaError("");
+    setAddress((p) => ({
+      ...p,
+      street: "",
+      city: "",
+      state: "",
+      zipCode: "",
+      country: "",
+    }));
   };
+  
 
   const handleStreetChange = async (e) => {
     const value = e.target.value;

@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef } from "react";
-import HomeHeroNav from "../../LandingPage/HomeHeroNav";
 import "./CarDescription.css";
 import PricingAndAvailability from "./PricingAndAvailability";
 import TechnicalSpecifications from "./TechnicalSpecifications";
@@ -16,6 +15,7 @@ import { useInView } from "react-intersection-observer";
 import HostNav from "../../HostHome/HostNav";
 
 function CarDescription({ previousURL }) {
+  const [FullScreenMapOpen, setFullScreenMapOpen] = useState(false);
   const { ref: bookButtonRef, inView } = useInView({
     threshold: 0,
   });
@@ -62,7 +62,7 @@ function CarDescription({ previousURL }) {
         hostLat: data.host.lat,
         hostLng: data.host.lng,
         hostCity: data.host.city,
-        hostServiceArea: data.host.serviceArea, 
+        hostServiceArea: data.host.serviceArea,
       };
       const features = data.features || {};
       const files = data.files || {};
@@ -96,7 +96,7 @@ function CarDescription({ previousURL }) {
 
   return (
     <div className="min-h-screen bg-[#f8fafc]">
-      <HostNav who="user"/>
+      <HostNav who="user" />
       <main
         className="max-w-7xl mx-auto px-4 py-8 mt-2"
         style={{ paddingBottom: "5rem" }}
@@ -105,7 +105,7 @@ function CarDescription({ previousURL }) {
           <ArrowBackIosNewIcon />
         </Link>
         <div className="grid grid-cols-12 gap-6">
-          <CarImageCard carDetails={carDetails} bookButtonRef={bookButtonRef} />
+          <CarImageCard carDetails={carDetails} bookButtonRef={bookButtonRef} FullScreenMapOpen={FullScreenMapOpen} setFullScreenMapOpen={setFullScreenMapOpen}/>
           <div
             className="col-span-12 lg:col-span-8 space-y-6 custom-scrollbar"
             style={{ padding: "2rem 0" }}
@@ -125,9 +125,10 @@ function CarDescription({ previousURL }) {
         <div className="fixed bottom-0 left-0 w-full z-50 px-4 pb-4 bg-white shadow-md">
           <button
             className="w-full px-8 py-3 bg-orange-500 text-white font-bold rounded-xl shadow-lg"
-            onClick={() =>
-              bookButtonRef?.current?.scrollIntoView({ behavior: "smooth" })
-            }
+            onClick={() => {
+              bookButtonRef?.current?.scrollIntoView({ behavior: "smooth" });
+              setFullScreenMapOpen((p) => !p);
+            }}
             style={{ borderRadius: "10px", fontWeight: "700" }}
           >
             Book Now
