@@ -12,6 +12,8 @@ const bodyParser = require("body-parser");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const user = require("./routes/User/CarDetails");
+const payment = require("./routes/Payment/orderPayment")
+
 
 const sessionoption = {
   secret: "secret key",
@@ -44,7 +46,7 @@ app.use("/forget", forgetEmailCheck);
 app.use("/reset", resetPassword);
 app.use("/host", host);
 app.use("/user", user);
-
+app.use("/pay", payment);
 
 
 
