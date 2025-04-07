@@ -6,6 +6,8 @@ import axios from "axios";
 import ConfirmTop from "./ConfirmTop";
 import PickupINFO from "./PickupINFO";
 import PriceBreakup from "./PriceBreakup";
+import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
+
 function ConfirmBookingMain() {
   const { id } = useParams();
   const [accepted, setAccepted] = useState(false);
@@ -14,6 +16,28 @@ function ConfirmBookingMain() {
   const [homeDelivery, setHomeDelivery] = useState(false);
   const [distanceHome, setDistanceHome] = useState(0);
   const [makePaymentLoading, setMakePaymentLoading] = useState(false);
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    const check = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/auth/home`,
+          { withCredentials: true }
+        );
+        if (response.status === 200) {
+          setUser(response.data.user);
+        }
+      } catch (error) {
+        if (error.response?.status === 401) {
+          window.location.href = `${import.meta.env.VITE_FRONTEND_URL}/log-in`;
+        } else {
+          console.error("Error fetching user:", error.message);
+        }
+      }
+    };
+
+    check();
+  }, []);
   const handleCheckboxChange = (e) => {
     setAccepted(e.target.checked);
   };
@@ -109,12 +133,23 @@ function ConfirmBookingMain() {
       console.error(err);
     }
   };
-
+  if (!user) return null;
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 pb-3">
       <div className="max-w-4xl mx-auto">
         <div className="md:col-span-2 p-4">
-          <div className="bg-white shadow-lg rounded-lg overflow-hidden p-4">
+          <div className="bg-white shadow-lg rounded-lg overflow-hidden p-4 relative">
+            <button
+              onClick={() => window.history.back()}
+              className="absolute top-4 left-4 text-gray-600 hover:text-gray-900 transition"
+            >
+              <NavigateBeforeIcon fontSize="large" />
+            </button>
+
+            <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">
+              Checkout Page
+            </h1>
+
             <ConfirmTop carInfo={carInfo} />
             <PickupINFO
               carInfo={carInfo}
@@ -127,9 +162,9 @@ function ConfirmBookingMain() {
               totalAmmount={totalAmmount}
               distanceHome={distanceHome}
             />
+
             <div className="px-6 py-4">
               <div
-                className=""
                 style={{
                   height: "15rem",
                   overflowY: "auto",

@@ -1,4 +1,7 @@
 import React from "react";
+import InfoIcon from "@mui/icons-material/Info";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
 
 function PriceBreakup({ carInfo, homeDelivery, distanceHome }) {
   const baseFare = Number(carInfo?.basePrice || 0);
@@ -7,7 +10,13 @@ function PriceBreakup({ carInfo, homeDelivery, distanceHome }) {
   const deliveryCharge = homeDelivery ? 500 : 0;
 
   const gst = 0.18 * (baseFare + platformFee);
-  const totalAmount = (baseFare + platformFee + gst + securityDeposit + deliveryCharge).toFixed(2);
+  const totalAmount = (
+    baseFare +
+    platformFee +
+    gst +
+    securityDeposit +
+    deliveryCharge
+  ).toFixed(2);
 
   return (
     <div className="px-6 py-4 border-b">
@@ -20,7 +29,15 @@ function PriceBreakup({ carInfo, homeDelivery, distanceHome }) {
           <span>₹{baseFare.toFixed(2)}</span>
         </div>
         <div className="flex justify-between">
-          <span>Security Deposit</span>
+          <span>
+            Security Deposit{" "}
+            <Tooltip title="This amount will be refunded to your account after you return the car">
+              <IconButton size="small">
+                <InfoIcon fontSize="small" />
+              </IconButton>
+            </Tooltip>
+          </span>
+
           <span>₹{securityDeposit.toFixed(2)}</span>
         </div>
         {homeDelivery && (

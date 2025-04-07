@@ -2,9 +2,7 @@ import React from 'react';
 import { Car } from "lucide-react";
 
 function ConfirmTop({carInfo}) {
-    return ( <><h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">
-        Checkout Page
-      </h1>
+    return ( <>
       <div className="px-6 py-6 border-b">
         <div className="flex items-center gap-4 mb-4">
           <Car className="h-6 w-6 text-gray-500" />

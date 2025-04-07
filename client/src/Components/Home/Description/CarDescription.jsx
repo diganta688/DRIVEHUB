@@ -23,10 +23,30 @@ function CarDescription() {
   const { ref: bookButtonRef, inView } = useInView({
     threshold: 0,
   });
-
   const { id } = useParams();
   const [carDetails, setCarDetails] = useState(null);
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    const check = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/auth/home`,
+          { withCredentials: true }
+        );
+        if (response.status === 200) {
+          setUser(response.data.user);
+        }
+      } catch (error) {
+        if (error.response?.status === 401) {
+          window.location.href = `${import.meta.env.VITE_FRONTEND_URL}/log-in`;
+        } else {
+          console.error("Error fetching user:", error.message);
+        }
+      }
+    };
 
+    check();
+  }, []);
   const fetchCarDetails = async () => {
     try {
       const res = await axios.get(
@@ -100,66 +120,72 @@ function CarDescription() {
   const navigateToHome = () => {
     navigate(searchParams ? `/home${searchParams}` : "/home");
   };
-
+  if (!user) return null;
   if (!carDetails) return <LoadingScreen />;
   return (
     <carDetailsContext.Provider
-    value={{
-      carDetails,
-      setCarDetails
-    }}
+      value={{
+        carDetails,
+        setCarDetails,
+      }}
     >
       <div className="min-h-screen bg-[#f8fafc]">
-      <HostNav who="user" />
-      <main
-        className="max-w-7xl mx-auto px-4 py-8 mt-2"
-        style={{ paddingBottom: "5rem" }}
-      >
-        <ArrowBackIosNewIcon onClick={navigateToHome} />
+        <HostNav who="user" />
+        <main
+          className="max-w-7xl mx-auto px-4 py-8 mt-2"
+          style={{ paddingBottom: "5rem" }}
+        >
+          <ArrowBackIosNewIcon onClick={navigateToHome} />
 
-        <div className="grid grid-cols-12 gap-6">
-          <CarImageCard
-            bookButtonRef={bookButtonRef}
-            FullScreenMapOpen={FullScreenMapOpen}
-            setFullScreenMapOpen={setFullScreenMapOpen}
-          />
-          <div
-            className="col-span-12 lg:col-span-8 space-y-6 custom-scrollbar"
-            style={{ padding: "2rem 0" }}
-          >
-            <PricingAndAvailability />
-            <TechnicalSpecifications carDetails={carDetails} />
+          <div className="grid grid-cols-12 gap-6">
+            <CarImageCard
+              bookButtonRef={bookButtonRef}
+              FullScreenMapOpen={FullScreenMapOpen}
+              setFullScreenMapOpen={setFullScreenMapOpen}
+            />
+            <div
+              className="col-span-12 lg:col-span-8 space-y-6 custom-scrollbar"
+              style={{ padding: "2rem 0" }}
+            >
+              <PricingAndAvailability />
+              <TechnicalSpecifications carDetails={carDetails} />
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <KeyFeatures carDetails={carDetails} />
-              <MaintenanceStatus carDetails={carDetails} />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <KeyFeatures carDetails={carDetails} />
+                <MaintenanceStatus carDetails={carDetails} />
+              </div>
+              <ImportantInformation carDetails={carDetails} />
             </div>
-            <ImportantInformation carDetails={carDetails} />
           </div>
-        </div>
-      </main>
-      {!inView && (
-        <div className="fixed bottom-0 left-0 w-full z-50 px-4 pb-4 bg-white shadow-md">
-          <button
-            className="w-full px-8 py-3 bg-orange-500 text-white font-bold rounded-xl shadow-lg"
-            onClick={() => {
-              bookButtonRef?.current?.scrollIntoView({ behavior: "smooth" });
-              if (carDetails.doorstepDelivery === 500) {
-                setFullScreenMapOpen((p) => !p);
-              } else {
-                navigate(
-                  `/confirm-booking/${carDetails.id}?startDate=${carDetails.StartDate}&startTime=${carDetails.StartTime}&endDate=${carDetails.EndDate}&endTime=${carDetails.EndTime}`,
-                  { state: { display: true, carDetails: carDetails, homeDelivery: false } }
-                );
-              }
-            }}
-            style={{ borderRadius: "10px", fontWeight: "700" }}
-          >
-            Book Now
-          </button>
-        </div>
-      )}
-    </div>
+        </main>
+        {!inView && (
+          <div className="fixed bottom-0 left-0 w-full z-50 px-4 pb-4 bg-white shadow-md">
+            <button
+              className="w-full px-8 py-3 bg-orange-500 text-white font-bold rounded-xl shadow-lg"
+              onClick={() => {
+                bookButtonRef?.current?.scrollIntoView({ behavior: "smooth" });
+                if (carDetails.doorstepDelivery === 500) {
+                  setFullScreenMapOpen((p) => !p);
+                } else {
+                  navigate(
+                    `/confirm-booking/${carDetails.id}?startDate=${carDetails.StartDate}&startTime=${carDetails.StartTime}&endDate=${carDetails.EndDate}&endTime=${carDetails.EndTime}`,
+                    {
+                      state: {
+                        display: true,
+                        carDetails: carDetails,
+                        homeDelivery: false,
+                      },
+                    }
+                  );
+                }
+              }}
+              style={{ borderRadius: "10px", fontWeight: "700" }}
+            >
+              Book Now
+            </button>
+          </div>
+        )}
+      </div>
     </carDetailsContext.Provider>
   );
 }

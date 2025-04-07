@@ -1,6 +1,6 @@
-import React, { useRef, useEffect } from "react";
+import React from "react";
 import HomeHero from "./Components/LandingPage/HomeHero";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import UserLoginRight from "./Components/Auth/User/Login/right/UserLoginRight";
 import UserSignupRight from "./Components/Auth/User/Signup/Right/UserSignup";
 import Work from "./Components/HowWork/Work";
@@ -23,11 +23,6 @@ function App() {
   );
 }
 function MainApp() {
-  const location = useLocation();
-  const previousURL = useRef(null);
-  useEffect(() => {
-    previousURL.current = location.pathname + location.search;     
-  }, [location]);
   return (
     <>
       <ToastContainer
@@ -50,12 +45,12 @@ function MainApp() {
         <Route path="/how-it-work" element={<Work />} />
         <Route path="/home" element={<Homee />} />
         <Route path="/modify-search" element={<LeftPart />} />
-        <Route path="/car-description/:id" element={<CarDescription previousURL={previousURL.current} />} />
+        <Route path="/car-description/:id" element={<CarDescription />} />
+        <Route path="/confirm-booking/:id" element={<ComfirmBookingMain />} />
         <Route path="/host" element={<ListYourCar />} />
         <Route path="/host/login" element={<HostLogin />} />
         <Route path="/host/signup" element={<HostSignupMain />} />
         <Route path="/host/home" element={<Home />} />
-        <Route path="/confirm-booking/:id" element={<ComfirmBookingMain />} />
       </Routes>
     </>
   );

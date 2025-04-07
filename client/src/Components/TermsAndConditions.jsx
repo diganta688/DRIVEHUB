@@ -92,7 +92,7 @@ function TermsAndConditions() {
       <section className="mb-6">
         <h6 className="text-xl font-semibold mb-2">11. Contact Us</h6>
         <p>
-          Email: <a href="mailto:support@yourwebsite.com" className="text-blue-700 underline">support@yourwebsite.com</a><br />
+          Email: <a href="mailto:support@yourwebsite.com" className="text-blue-700 underline">digantachakraborty629793.com</a><br />
           Phone: +91-629XXXX052
         </p>
       </section>
