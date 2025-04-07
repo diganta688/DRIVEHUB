@@ -1,11 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Calendar } from "lucide-react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import TimeSection from "./TimeSection";
+import InfoIcon from "@mui/icons-material/Info";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
+import { carDetailsContext } from "../../../Context/context";
 
-function PricingAndAvailability({ carDetails }) {
+function PricingAndAvailability() {
+  const { carDetails, setCarDetails } = useContext(carDetailsContext);
   const [currentImage, setCurrentImage] = useState(0);
+  const [doorstepEnabled, setDoorstepEnabled] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [originalValue, setOriginalValue] = useState(carDetails.doorstepDelivery);
   const handlePrev = () => {
     setCurrentImage((prev) =>
       prev === 0 ? carDetails.files.length - 1 : prev - 1
@@ -16,7 +23,9 @@ function PricingAndAvailability({ carDetails }) {
       prev === carDetails.files.length - 1 ? 0 : prev + 1
     );
   };
-
+  const doorstepAmount = doorstepEnabled ? carDetails.doorstepDelivery : 0;
+  const totalAmount =
+    carDetails.basePrice + doorstepAmount + carDetails.securityDeposit;
   return (
     <>
       <div className="bg-white rounded-xl p-4 mb-4">
@@ -30,29 +39,62 @@ function PricingAndAvailability({ carDetails }) {
               { label: "Base Fare", value: `₹${carDetails.basePrice}` },
               {
                 label: "Doorstep Delivery",
-                value: `₹${carDetails.doorstepDelivery}`,
+                value: `₹${doorstepAmount}`,
+                isSwitch: true,
               },
               { label: "Insurance", value: carDetails.insurance },
               {
                 label: "Security Deposit",
                 value: `₹${carDetails.securityDeposit}`,
+                tooltip: true,
               },
             ].map((item, index) => (
               <div
                 key={index}
                 className="flex justify-between items-center py-2 border-b border-gray-100"
               >
-                <span className="text-gray-600">{item.label}</span>
+                <span className="text-gray-600 flex items-center gap-2">
+                  {item.label}
+                  {item.tooltip && (
+                    <Tooltip title="This amount will be refunded to your account after you return the car">
+                      <IconButton size="small">
+                        <InfoIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                  )}
+                  {item.isSwitch && (
+                    <label className="form-check form-switch ml-3">
+                      <input
+                        type="checkbox"
+                        className="form-check-input"
+                        role="switch"
+                        checked={doorstepEnabled}
+                        onChange={(e) => {
+                          const isChecked = e.target.checked;
+                          setDoorstepEnabled(isChecked);
+                          if (!isChecked) {
+                            setCarDetails((prev) => ({
+                              ...prev,
+                              doorstepDelivery: 0
+                            }));
+                          } else {
+                            setCarDetails((prev) => ({
+                              ...prev,
+                              doorstepDelivery: originalValue 
+                            }));
+                          }
+                        }}
+                      />
+                    </label>
+                  )}
+                </span>
                 <span className="font-medium">{item.value}</span>
               </div>
             ))}
             <div className="flex justify-between items-center pt-4">
               <span className="text-lg font-semibold">Total</span>
               <span className="text-xl font-bold text-blue-600">
-                ₹
-                {carDetails.basePrice +
-                  carDetails.doorstepDelivery +
-                  carDetails.securityDeposit}
+                ₹{totalAmount}
               </span>
             </div>
           </div>

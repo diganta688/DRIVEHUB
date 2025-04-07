@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import "./CarDescription.css";
 import PricingAndAvailability from "./PricingAndAvailability";
 import TechnicalSpecifications from "./TechnicalSpecifications";
@@ -7,14 +7,18 @@ import MaintenanceStatus from "./MaintenanceStatus";
 import ImportantInformation from "./ImportantInformation";
 import CarImageCard from "./CarImageCard";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
-import { Link, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import LoadingScreen from "../../LoadingScreen";
 import { useInView } from "react-intersection-observer";
 import HostNav from "../../HostHome/HostNav";
+import { useLocation } from "react-router-dom";
+import { carDetailsContext } from "../../../Context/context";
 
-function CarDescription({ previousURL }) {
+function CarDescription() {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [FullScreenMapOpen, setFullScreenMapOpen] = useState(false);
   const { ref: bookButtonRef, inView } = useInView({
     threshold: 0,
@@ -87,30 +91,43 @@ function CarDescription({ previousURL }) {
       toast.error(error.response?.data?.message || "Something went wrong");
     }
   };
-
+  const [searchParams, setSearchParams] = useState(null);
   useEffect(() => {
     fetchCarDetails();
+    setSearchParams(location.state?.fromSearch);
   }, [id]);
 
-  if (!carDetails) return <LoadingScreen />;
+  const navigateToHome = () => {
+    navigate(searchParams ? `/home${searchParams}` : "/home");
+  };
 
+  if (!carDetails) return <LoadingScreen />;
   return (
-    <div className="min-h-screen bg-[#f8fafc]">
+    <carDetailsContext.Provider
+    value={{
+      carDetails,
+      setCarDetails
+    }}
+    >
+      <div className="min-h-screen bg-[#f8fafc]">
       <HostNav who="user" />
       <main
         className="max-w-7xl mx-auto px-4 py-8 mt-2"
         style={{ paddingBottom: "5rem" }}
       >
-        <Link to={previousURL || "/home"}>
-          <ArrowBackIosNewIcon />
-        </Link>
+        <ArrowBackIosNewIcon onClick={navigateToHome} />
+
         <div className="grid grid-cols-12 gap-6">
-          <CarImageCard carDetails={carDetails} bookButtonRef={bookButtonRef} FullScreenMapOpen={FullScreenMapOpen} setFullScreenMapOpen={setFullScreenMapOpen}/>
+          <CarImageCard
+            bookButtonRef={bookButtonRef}
+            FullScreenMapOpen={FullScreenMapOpen}
+            setFullScreenMapOpen={setFullScreenMapOpen}
+          />
           <div
             className="col-span-12 lg:col-span-8 space-y-6 custom-scrollbar"
             style={{ padding: "2rem 0" }}
           >
-            <PricingAndAvailability carDetails={carDetails} />
+            <PricingAndAvailability />
             <TechnicalSpecifications carDetails={carDetails} />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -127,7 +144,14 @@ function CarDescription({ previousURL }) {
             className="w-full px-8 py-3 bg-orange-500 text-white font-bold rounded-xl shadow-lg"
             onClick={() => {
               bookButtonRef?.current?.scrollIntoView({ behavior: "smooth" });
-              setFullScreenMapOpen((p) => !p);
+              if (carDetails.doorstepDelivery === 500) {
+                setFullScreenMapOpen((p) => !p);
+              } else {
+                navigate(
+                  `/confirm-booking/${carDetails.id}?startDate=${carDetails.StartDate}&startTime=${carDetails.StartTime}&endDate=${carDetails.EndDate}&endTime=${carDetails.EndTime}`,
+                  { state: { display: true, carDetails: carDetails, homeDelivery: false } }
+                );
+              }
             }}
             style={{ borderRadius: "10px", fontWeight: "700" }}
           >
@@ -136,6 +160,7 @@ function CarDescription({ previousURL }) {
         </div>
       )}
     </div>
+    </carDetailsContext.Provider>
   );
 }
 

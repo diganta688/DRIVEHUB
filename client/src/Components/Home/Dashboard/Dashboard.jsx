@@ -14,7 +14,8 @@ function Dashboard() {
 
   useEffect(() => {
     const filterCars = () => {
-      let filtered = cars;
+      let filtered = [...cars]; // copy the array to avoid mutation
+
       const city = searchParams.get("city");
       const startDate = searchParams.get("startDate");
       const startTime = searchParams.get("startTime");
@@ -23,30 +24,32 @@ function Dashboard() {
       const dateTimeFields = [startDate, startTime, endDate, endTime];
       const isAnyFieldProvided = dateTimeFields.some(Boolean);
       const isAllFieldsProvided = dateTimeFields.every(Boolean);
-      if (!city) {
-        setFilteredCars(cars);
-        setLoading(false);
-        return;
-      }
       if (isAnyFieldProvided && !isAllFieldsProvided) {
         setFilteredCars([]);
-        setErrorMessage("All date and time fields are required if one is provided.");
+        setErrorMessage(
+          "All date and time fields are required if one is provided."
+        );
+        setWarningMSG("");
         setLoading(false);
         return;
       }
       setErrorMessage("");
-      filtered = filtered.filter(
-        (car) => car.city.toLowerCase() === city.toLowerCase()
-      );
+      if (city) {
+        filtered = filtered.filter(
+          (car) => car.city.toLowerCase() === city.toLowerCase()
+        );
+      }
       if (isAllFieldsProvided) {
         const userStart = new Date(`${startDate}T${startTime}:00`);
         const userEnd = new Date(`${endDate}T${endTime}:00`);
+
         const validCars = filtered.filter((car) => {
           const carStart = new Date(`${car.startDate}T${car.startTime}:00`);
           const carEnd = new Date(`${car.endDate}T${car.endTime}:00`);
           return userStart >= carStart && userEnd <= carEnd;
         });
-        if (validCars.length === 0) {
+
+        if (validCars.length === 0 && city) {
           setWarningMSG(
             "These are the cars available in the city, but the time range doesn't match."
           );
@@ -57,24 +60,30 @@ function Dashboard() {
       } else {
         setWarningMSG("");
       }
-      Object.keys(selectedFilters).forEach((key) => {
-        if (selectedFilters[key].length > 0) {
-          if (key === "seats") {
-            filtered = filtered.filter((car) =>
-              selectedFilters[key].includes(String(car[key]))
+      Object.entries(selectedFilters).forEach(([key, filterValues]) => {
+        if (Array.isArray(filterValues) && filterValues.length > 0) {
+          filtered = filtered.filter((car) => {
+            const carValue = car[key];
+
+            if (carValue === undefined || carValue === null) return false;
+
+            if (key === "seats") {
+              return filterValues.includes(String(carValue));
+            }
+
+            return filterValues.some(
+              (filterValue) =>
+                String(carValue).toLowerCase() ===
+                String(filterValue).toLowerCase()
             );
-          } else {
-            filtered = filtered.filter((car) =>
-              selectedFilters[key].some(
-                (filterValue) =>
-                  car[key].toLowerCase() === filterValue.toLowerCase()
-              )
-            );
-          }
+          });
         }
       });
+
       setFilteredCars(filtered);
+      setLoading(false);
     };
+
     setLoading(true);
     filterCars();
     const timer = setTimeout(() => {

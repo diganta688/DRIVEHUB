@@ -13,6 +13,7 @@ import HostSignupMain from "./Components/Auth/Host/Signup/HostSignupMain";
 import Home from "./Components/HostHome/Home"
 import LeftPart from "./Components/Home/Search/LeftPart";
 import 'react-toastify/dist/ReactToastify.css';
+import ComfirmBookingMain from "./Components/Home/ComfirmBooking/ComfirmBookingMain";
 
 function App() {
   return (
@@ -54,6 +55,7 @@ function MainApp() {
         <Route path="/host/login" element={<HostLogin />} />
         <Route path="/host/signup" element={<HostSignupMain />} />
         <Route path="/host/home" element={<Home />} />
+        <Route path="/confirm-booking/:id" element={<ComfirmBookingMain />} />
       </Routes>
     </>
   );

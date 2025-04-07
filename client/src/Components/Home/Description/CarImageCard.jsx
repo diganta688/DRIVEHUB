@@ -1,9 +1,16 @@
-import React, {useState} from "react";
+import React, { useContext } from "react";
 import { Star } from "lucide-react";
 import UserLocation from "./UserLocation";
+import { carDetailsContext } from "../../../Context/context";
+import { useNavigate } from "react-router-dom";
 
-function CarImageCard({ carDetails, bookButtonRef, setFullScreenMapOpen, FullScreenMapOpen }) {
-
+function CarImageCard({
+  bookButtonRef,
+  setFullScreenMapOpen,
+  FullScreenMapOpen,
+}) {
+  const navigate = useNavigate();
+  const { carDetails } = useContext(carDetailsContext);
   return (
     <>
       <div className="col-span-12 lg:col-span-4" style={{ padding: "2rem 0" }}>
@@ -42,7 +49,16 @@ function CarImageCard({ carDetails, bookButtonRef, setFullScreenMapOpen, FullScr
         </div>
         <div className="w-full">
           <button
-          onClick={()=>setFullScreenMapOpen((p)=>!p)}
+            onClick={() => {
+              if (carDetails.doorstepDelivery === 500) {
+                setFullScreenMapOpen((p) => !p);
+              } else {
+                navigate(
+                  `/confirm-booking/${carDetails.id}?startDate=${carDetails.StartDate}&startTime=${carDetails.StartTime}&endDate=${carDetails.EndDate}&endTime=${carDetails.EndTime}`,
+                  { state: { display: true, carDetails: carDetails, homeDelivery: false} }
+                );
+              }
+            }}
             ref={bookButtonRef}
             className="border w-full mt-2 py-3 bg-orange-500"
             style={{ borderRadius: "10px", fontWeight: "700", color: "white" }}
@@ -51,7 +67,11 @@ function CarImageCard({ carDetails, bookButtonRef, setFullScreenMapOpen, FullScr
           </button>
         </div>
       </div>
-      <UserLocation FullScreenMapOpen={FullScreenMapOpen} setFullScreenMapOpen={setFullScreenMapOpen} carDetails={carDetails}/>
+      <UserLocation
+        FullScreenMapOpen={FullScreenMapOpen}
+        setFullScreenMapOpen={setFullScreenMapOpen}
+        carDetails={carDetails}
+      />
     </>
   );
 }

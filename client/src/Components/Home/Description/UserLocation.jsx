@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, use } from "react";
 import {
   Dialog,
   AppBar,
@@ -14,12 +14,14 @@ import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import mbxDirections from "@mapbox/mapbox-sdk/services/directions";
 import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 function UserLocation({ FullScreenMapOpen, setFullScreenMapOpen, carDetails }) {
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
   const defaultCoordinates = {
     lat: carDetails.hostLat,
     lng: carDetails.hostLng,
@@ -37,24 +39,11 @@ function UserLocation({ FullScreenMapOpen, setFullScreenMapOpen, carDetails }) {
   });
   const [suggestions, setSuggestions] = useState([]);
   const [serviceAreaError, setServiceAreaError] = useState("");
+  const[distanceKM, setDistanceKM] = useState(0);
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
   const markerRef = useRef(null);
   const routeLayerId = "route-line";
-  useEffect(() => {
-    if (
-      address.street.length === 0 ||
-      address.city.length === 0 ||
-      address.zipCode.length === 0 ||
-      address.country.length === 0
-    ) {
-      setServiceAreaError("All fields are required");
-    } else {
-      setServiceAreaError(""); 
-    }
-  }, [address]);
-  
-  
 
   useEffect(() => {
     if (
@@ -115,6 +104,7 @@ function UserLocation({ FullScreenMapOpen, setFullScreenMapOpen, carDetails }) {
           defaultCoordinates.lat,
           defaultCoordinates.lng
         );
+        setDistanceKM(dist)
         distanceDiv.innerText = `Distance from ${carDetails.hostCity}: ${dist} km`;
         if (dist > Number(carDetails.hostServiceArea)) {
           setServiceAreaError(
@@ -163,6 +153,7 @@ function UserLocation({ FullScreenMapOpen, setFullScreenMapOpen, carDetails }) {
     }
     if (mapRef.current?._distanceDiv) {
       mapRef.current._distanceDiv.innerText = `Distance from ${carDetails.hostCity}: ${dist} km`;
+      setDistanceKM(dist);
     }
   }, [mapLoaded, coordinates, defaultCoordinates, carDetails]);
   const calculateDistance = (lat1, lon1, lat2, lon2) => {
@@ -249,7 +240,6 @@ function UserLocation({ FullScreenMapOpen, setFullScreenMapOpen, carDetails }) {
       country: "",
     }));
   };
-  
 
   const handleStreetChange = async (e) => {
     const value = e.target.value;
@@ -299,39 +289,39 @@ function UserLocation({ FullScreenMapOpen, setFullScreenMapOpen, carDetails }) {
   };
 
   return (
-    <Dialog
-      fullScreen
-      open={FullScreenMapOpen}
-      onClose={handleClose}
-      TransitionComponent={Transition}
-    >
-      <AppBar sx={{ position: "relative" }}>
-        <Toolbar>
-          <IconButton edge="start" color="inherit" onClick={handleClose}>
-            <CloseIcon />
-          </IconButton>
-          <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-            Enter your exect location
-          </Typography>
-        </Toolbar>
-      </AppBar>
+    <>
+      <Dialog
+        fullScreen
+        open={FullScreenMapOpen}
+        onClose={handleClose}
+        TransitionComponent={Transition}
+      >
+        <AppBar sx={{ position: "relative" }}>
+          <Toolbar>
+            <IconButton edge="start" color="inherit" onClick={handleClose}>
+              <CloseIcon />
+            </IconButton>
+            <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+              Enter your exect location
+            </Typography>
+          </Toolbar>
+        </AppBar>
 
-      <div className="flex flex-col items-center justify-center p-4">
-        {serviceAreaError.length > 0 && (
-          <p className="" style={{ color: "red", fontWeight: "600" }}>
-            {serviceAreaError}
-          </p>
-        )}
-        <div className="relative w-full max-w-2xl h-[400px] rounded-lg overflow-hidden shadow-md border border-gray-200">
-          {!mapLoaded && (
-            <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/80">
-              <CircularProgress />
-            </div>
+        <div className="flex flex-col items-center justify-center p-4">
+          {serviceAreaError.length > 0 && (
+            <p className="" style={{ color: "red", fontWeight: "600" }}>
+              {serviceAreaError}
+            </p>
           )}
-          <div ref={mapContainerRef} className="w-full h-full" />
-        </div>
+          <div className="relative w-full max-w-2xl h-[400px] rounded-lg overflow-hidden shadow-md border border-gray-200">
+            {!mapLoaded && (
+              <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/80">
+                <CircularProgress />
+              </div>
+            )}
+            <div ref={mapContainerRef} className="w-full h-full" />
+          </div>
 
-        <form action="">
           <div className="w-full max-w-2xl mb-4 space-y-4 mt-4">
             <div className="relative">
               <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -372,6 +362,12 @@ function UserLocation({ FullScreenMapOpen, setFullScreenMapOpen, carDetails }) {
                   className="pl-10 w-full px-5 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                   placeholder="Kolkata"
                   required
+                  onChange={(e) => {
+                    setAddress((p) => ({
+                      ...p,
+                      city: e.target.value,
+                    }));
+                  }}
                 />
               </div>
 
@@ -386,6 +382,12 @@ function UserLocation({ FullScreenMapOpen, setFullScreenMapOpen, carDetails }) {
                   className="w-full px-5 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                   placeholder="West Bengal"
                   required
+                  onChange={(e) => {
+                    setAddress((p) => ({
+                      ...p,
+                      state: e.target.value,
+                    }));
+                  }}
                 />
               </div>
             </div>
@@ -396,12 +398,18 @@ function UserLocation({ FullScreenMapOpen, setFullScreenMapOpen, carDetails }) {
                   ZIP Code
                 </label>
                 <input
-                  type="text"
+                  type="number"
                   name="zipCode"
                   value={address.zipCode}
                   className="w-full px-5 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                   placeholder="700001"
                   required
+                  onChange={(e) => {
+                    setAddress((p) => ({
+                      ...p,
+                      zipCode: e.target.value,
+                    }));
+                  }}
                 />
               </div>
 
@@ -417,6 +425,12 @@ function UserLocation({ FullScreenMapOpen, setFullScreenMapOpen, carDetails }) {
                   className="pl-10 w-full px-5 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                   placeholder="India"
                   required
+                  onChange={(e) => {
+                    setAddress((p) => ({
+                      ...p,
+                      country: e.target.value,
+                    }));
+                  }}
                 />
               </div>
             </div>
@@ -427,6 +441,14 @@ function UserLocation({ FullScreenMapOpen, setFullScreenMapOpen, carDetails }) {
                     ? "bg-gray-400 cursor-not-allowed"
                     : "bg-orange-500 hover:bg-orange-600"
                 }`}
+                onClick={() => {
+                  const { street, city, state, zipCode, country } = address;
+                  if (street && city && state && zipCode && country) {
+                    setIsAlertOpen(true);
+                  } else {
+                    toast.error("All fields are required");
+                  }
+                }}
                 disabled={!!serviceAreaError}
                 style={{
                   borderRadius: "10px",
@@ -436,9 +458,52 @@ function UserLocation({ FullScreenMapOpen, setFullScreenMapOpen, carDetails }) {
               </button>
             </div>
           </div>
-        </form>
-      </div>
-    </Dialog>
+        </div>
+      </Dialog>
+      {isAlertOpen && (
+        <>
+          <div
+            className="modal fade show d-block"
+            tabIndex="-1"
+            role="dialog"
+            style={{ backgroundColor: "rgba(0,0,0,0.5)", zIndex: "100000" }}
+          >
+            <div className="modal-dialog modal-dialog-centered" role="document">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title">Confirm Booking</h5>
+                  <button
+                    type="button"
+                    className="btn-close"
+                    onClick={() => setIsAlertOpen(false)}
+                  ></button>
+                </div>
+                <div className="modal-body">
+                  <p>Are you sure you want to proceed with the booking?</p>
+                </div>
+                <div className="modal-footer">
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={() => setIsAlertOpen(false)}
+                  >
+                    Cancel
+                  </button>
+                  <Link
+                    to={`/confirm-booking/${carDetails.id}?startDate=${carDetails.StartDate}&startTime=${carDetails.StartTime}&endDate=${carDetails.EndDate}&endTime=${carDetails.EndTime}`}
+                    state={{ display: true, carDetails: carDetails, homeDelivery: true, Distance: distanceKM }}
+                    className="btn btn-primary"
+                  >
+                    Confirm & Continue
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="modal-backdrop fade show"></div>
+        </>
+      )}
+    </>
   );
 }
 
