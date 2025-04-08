@@ -53,77 +53,79 @@ function PasswordDOB({
   };
   return (
     <>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DemoContainer components={["DatePicker"]}>
-          <DatePicker
-            label="Enter Your Date of Birth"
-            sx={{ width: "100%" }}
-            value={input.dob}
-            onChange={dobChange}
-            slotProps={{
-              textField: {
-                error: !!ageError,
-                helperText: ageError || "",
-              },
-            }}
-          />
-        </DemoContainer>
-      </LocalizationProvider>
+      <div className="mt-2">
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DemoContainer components={["DatePicker"]}>
+            <DatePicker
+              label="Enter Your Date of Birth"
+              sx={{ width: "100%" }}
+              value={input.dob}
+              onChange={dobChange}
+              slotProps={{
+                textField: {
+                  error: !!ageError,
+                  helperText: ageError || "",
+                },
+              }}
+            />
+          </DemoContainer>
+        </LocalizationProvider>
 
-      <TextField
-        style={{ marginTop: "8px" }}
-        label="Password"
-        variant="outlined"
-        type={showPassword ? "text" : "password"}
-        fullWidth
-        className="mb-2"
-        value={input.password}
-        onChange={(e) => {
-          setInput({ ...input, password: e.target.value });
-          setPassValidationError(passCheck(e.target.value));
-        }}
-        error={!!passValidationError}
-        helperText={passValidationError}
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position="end">
-              <IconButton
-                onClick={() => setShowPassword(!showPassword)}
-                edge="end"
-              >
-                {showPassword ? <VisibilityOff /> : <Visibility />}
-              </IconButton>
-            </InputAdornment>
-          ),
-        }}
-      />
+        <TextField
+          style={{ marginTop: "8px" }}
+          label="Password"
+          variant="outlined"
+          type={showPassword ? "text" : "password"}
+          fullWidth
+          className="mb-2"
+          value={input.password}
+          onChange={(e) => {
+            setInput({ ...input, password: e.target.value });
+            setPassValidationError(passCheck(e.target.value));
+          }}
+          error={!!passValidationError}
+          helperText={passValidationError}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  onClick={() => setShowPassword(!showPassword)}
+                  edge="end"
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+        />
 
-      <TextField
-        label="Confirm Password"
-        variant="outlined"
-        type={showConfirmPassword ? "text" : "password"}
-        fullWidth
-        className="mb-2"
-        value={input.confirmPassword}
-        onChange={(e) => {
-          setInput({ ...input, confirmPassword: e.target.value });
-          setError(e.target.value !== input.password);
-        }}
-        error={error}
-        helperText={error ? "Passwords don't match" : ""}
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position="end">
-              <IconButton
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                edge="end"
-              >
-                {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
-              </IconButton>
-            </InputAdornment>
-          ),
-        }}
-      />
+        <TextField
+          label="Confirm Password"
+          variant="outlined"
+          type={showConfirmPassword ? "text" : "password"}
+          fullWidth
+          className="mb-2"
+          value={input.confirmPassword}
+          onChange={(e) => {
+            setInput({ ...input, confirmPassword: e.target.value });
+            setError(e.target.value !== input.password);
+          }}
+          error={error}
+          helperText={error ? "Passwords don't match" : ""}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  edge="end"
+                >
+                  {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+        />
+      </div>
     </>
   );
 }

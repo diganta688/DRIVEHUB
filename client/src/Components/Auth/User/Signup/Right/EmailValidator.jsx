@@ -39,9 +39,13 @@ function EmailValidator({ open, setOpen, formdata, onetimepass }) {
       const res = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/auth/signup`,
         formdata,
-        { withCredentials: true }
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
       );
-      
       if (res.data.success) {
         toast.success(res.data.message, {
           onClose: () => {
@@ -51,13 +55,14 @@ function EmailValidator({ open, setOpen, formdata, onetimepass }) {
       }
     } catch (error) {
       console.error("Signup failed:", error);
-      toast.error(error.response?.data?.message || "Something went wrong. Please try again.");
+      toast.error(
+        error.response?.data?.message || "Something went wrong. Please try again."
+      );
     } finally {
       setLoading(false);
     }
   };
   
-
   return (
     <Dialog
       open={open}
