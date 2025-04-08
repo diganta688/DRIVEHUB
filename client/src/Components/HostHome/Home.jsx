@@ -276,7 +276,7 @@ function App() {
       }}
     >
       <div className="h-screen bg-gray-50 moving-gradient ">
-        <HostNav who={host}/>
+        <HostNav who="host" info ={name}/>
         <div
           className="p-5"
           style={{ display: "flex", justifyContent: "center" }}

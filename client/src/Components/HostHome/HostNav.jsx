@@ -4,7 +4,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 
-function HostNav({who}) {
+function HostNav({who, info}) {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
 
@@ -45,7 +45,7 @@ function HostNav({who}) {
       style={{ backgroundColor: "rgba(0, 0, 0)" }}
     >
       <div className="flex items-center">
-        <Link to="/host">
+        <Link to={who=== "user" ? "/" : "/host"}>
           <img
             src="\media\Images\logo.png"
             alt="Logo"
@@ -70,13 +70,13 @@ function HostNav({who}) {
             className="absolute right-0 mt-2 bg-white shadow-lg rounded-lg w-48 py-2 animate-fade-in border"
             style={{ zIndex: "1000" }}
           >
-            <a
-              href="#"
+            <Link
+              to={`/${who}/${info._id}/profile`}
               className="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100"
             >
               <User className="h-5 w-5 mr-2" />{" "}
               <span className="mx-3">Profile</span>
-            </a>
+            </Link>
             <button
               className="flex items-center px-4 py-3 text-red-600 hover:bg-gray-100 w-full"
               onClick={logout}

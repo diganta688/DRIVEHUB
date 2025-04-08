@@ -70,7 +70,7 @@ function Homee() {
       }}
     >
       <div>
-        <HostNav who="user"/>
+        <HostNav who="user" info = {user}/>
         <div className="flex justify-center pt-3">
           {user?.name && (
             <BlurText
