@@ -1,7 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { User, Mail, Phone, MapPin, Calendar, Pencil } from "lucide-react";
+import { useContext } from "react";
+import { UserProfileContext } from "../../../Context/context";
 
-function PersonalInformation({userProfileInfo}) {
+function PersonalInformation() {
+  const {
+    nameEdit,
+    setNameEdit,
+    profilePhotoEdit,
+    setProfilePhotoEdit,
+    userProfileAllInfo,
+    setUserProfileAllInfo,
+    userProfileInfo,
+    setUserProfileInfo
+  } = useContext(UserProfileContext);
   return (
     <>
       <div>

@@ -61,6 +61,11 @@ const userSchema = new Schema({
   Premium:{
     type: Boolean,
     default: false
+  },
+  RentHistory:[],
+  profilePhoto:{
+    type: String,
+    default:""
   }
 });
 userSchema.pre("save", async function (next) {
