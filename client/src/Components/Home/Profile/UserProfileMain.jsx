@@ -15,10 +15,12 @@ function UserProfileMain() {
   const [userProfileInfo, setUserProfileInfo] = useState(null);
   const [profilePhotoEdit, setProfilePhotoEdit] = useState(false);
   const [nameEdit, setNameEdit] = useState(false);
-  const [submitLoader, setSubmitLoader] = useState(false);
+  const [nameSubmitLoader, setNameSubmitLoader] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewURL, setPreviewURL] = useState("");
   const [profilePhotoLoader, setProfilePhotoLoader] = useState(false);
+  const [profileInfoOpen, setProfileInfoOpen] = useState(false);
+  const [emailValidOpen, setEmailValidOpen] = useState(false);
   useEffect(() => {
     const getUserInfo = async () => {
       try {
@@ -41,7 +43,7 @@ function UserProfileMain() {
 
   const handleSubmit = async () => {
     try {
-      setSubmitLoader(true);
+      setNameSubmitLoader(true);
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/user/updateinfo/${id}`,
         { name: userProfileAllInfo.name },
@@ -62,7 +64,7 @@ function UserProfileMain() {
       console.error(error);
       toast.error("Something went wrong while updating info");
     } finally {
-      setSubmitLoader(false);
+      setNameSubmitLoader(false);
       setNameEdit(false);
     }
   };
@@ -105,6 +107,26 @@ function UserProfileMain() {
     }
   };
 
+  const handleProfileInfoUpload = async (locationData) => {
+    try {
+      const response = await axios.put(
+        `${import.meta.env.VITE_BACKEND_URL}/user/update-location/${id}`,
+        locationData
+      );
+      const result = response.data;
+      if (!result.success) {
+        toast.error(result.message || "Failed to update location.");
+      }
+      return result;
+    } catch (error) {
+      console.error("Error updating location:", error);
+      const errorMessage =
+        error?.response?.data?.message || "An error occurred while updating location.";
+      toast.error(errorMessage);
+      throw error;
+    } 
+  };  
+
   return (
     <UserProfileContext.Provider
       value={{
@@ -116,11 +138,6 @@ function UserProfileMain() {
         setProfilePhotoEdit,
         userProfileAllInfo,
         setUserProfileAllInfo,
-        handleSubmit,
-        submitLoader,
-        setSubmitLoader,
-        profilePhotoLoader,
-        setProfilePhotoLoader,
       }}
     >
       <div className="min-h-screen bg-gray-100">
@@ -134,15 +151,23 @@ function UserProfileMain() {
               <div className="flex flex-col sm:flex-row items-center p-4">
                 <PictureSection
                   handlePhotoUpload={handlePhotoUpload}
-                  selectedFile={selectedFile}
                   setSelectedFile={setSelectedFile}
                   setPreviewURL={setPreviewURL}
                   previewURL={previewURL}
+                  profilePhotoLoader={profilePhotoLoader}
+                  nameSubmitLoader={nameSubmitLoader}
+                  handleSubmit={handleSubmit}
                 />
               </div>
             </div>
             <div className="p-6 sm:p-8 space-y-8">
-              <PersonalInformation userProfileInfo={userProfileInfo} />
+              <PersonalInformation
+                profileInfoOpen={profileInfoOpen}
+                setProfileInfoOpen={setProfileInfoOpen}
+                handleProfileInfoUpload={handleProfileInfoUpload}
+                setEmailValidOpen={setEmailValidOpen}
+                emailValidOpen={emailValidOpen}
+              />
               <MemberShipInfo />
               {userProfileInfo?.RentHistory > 0 ? (
                 <CarRentHistory />

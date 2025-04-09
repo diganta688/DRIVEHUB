@@ -7,9 +7,12 @@ import TextField from "@mui/material/TextField";
 
 function PictureSection({
   handlePhotoUpload,
-  setPreviewURL,
   setSelectedFile,
+  setPreviewURL,
   previewURL,
+  profilePhotoLoader,
+  nameSubmitLoader,
+  handleSubmit,
 }) {
   const {
     nameEdit,
@@ -19,9 +22,6 @@ function PictureSection({
     userProfileAllInfo,
     setUserProfileAllInfo,
     userProfileInfo,
-    handleSubmit,
-    submitLoader,
-    profilePhotoLoader,
   } = useContext(UserProfileContext);
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -68,7 +68,7 @@ function PictureSection({
             </button>
           </div>
         ) : (
-          <div className="flex flex-col sm:flex-row items-center gap-3">
+          <div className="flex flex-col sm:flex-row items-center gap-3 mb-1">
             <TextField
               id="outlined-name"
               label="Enter New Name"
@@ -87,7 +87,7 @@ function PictureSection({
               <Button
                 variant="contained"
                 color="success"
-                disabled={submitLoader}
+                disabled={nameSubmitLoader}
                 onClick={handleSubmit}
                 style={{
                   textTransform: "none",
@@ -95,7 +95,7 @@ function PictureSection({
                   minWidth: "100px",
                 }}
               >
-                {submitLoader ? (
+                {nameSubmitLoader ? (
                   <span className="flex items-center gap-2">
                     <span className="loader-small" />
                     Saving...
@@ -108,7 +108,7 @@ function PictureSection({
               <Button
                 variant="outlined"
                 color="error"
-                disabled={submitLoader}
+                disabled={nameSubmitLoader}
                 onClick={() => {
                   setNameEdit(false);
                   setUserProfileAllInfo((p) => ({

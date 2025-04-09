@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { Carmodel } = require("../../models/Car");
 const { UserModel } = require("../../models/User");
+const { Hostmodel } = require("../../models/Host");
 const { storage } = require("../../cloudinaryConfig");
 const multer = require("multer");
 const upload = multer({ storage });
@@ -89,5 +90,65 @@ router.post("/updatephoto/:id", upload.single("file"), async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+
+router.put("/update-location/:id", async (req, res) => {
+  const { id } = req.params;
+  const {
+    address,
+    city,
+    state,
+    zipCode,
+    country,
+    lat,
+    lng,
+    name,
+    email,
+    phone,
+    licenseExpiryDate,
+  } = req.body;
+
+  try {
+    const hostExist = await Hostmodel.findOne({ email: email });
+    if (hostExist) {
+      return res
+        .status(401)
+        .json({ success: false, message: "Email is already registered as a host" });
+    }
+
+    const updatedUser = await UserModel.findByIdAndUpdate(
+      id,
+      {
+        $set: {
+          address,
+          city,
+          state,
+          zipCode,
+          country,
+          lat,
+          lng,
+          phone,
+          name,
+          email,
+          licenseExpiryDate,
+        },
+      },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Information updated successfully",
+      user: updatedUser,
+    });
+  } catch (error) {
+    console.error("Error updating location:", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+});
+
 
 module.exports = router;

@@ -70,7 +70,7 @@ const BlurText = ({
   );
 
   return (
-    <p ref={ref} className={`blur-text ${className} flex flex-wrap`} style={{ fontFamily: 'Emblema One, sans-serif' }}>
+    <p ref={ref} className={`blur-text ${className} flex flex-wrap`} style={{ fontFamily: 'Emblema One, sans-serif', justifyContent: "center" }}>
       {springs.map((props, index) => (
         <animated.span
           key={index}

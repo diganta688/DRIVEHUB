@@ -103,8 +103,8 @@ function EmailValidator({ open, setOpen, formdata, onetimepass }) {
             value={otp}
             onChange={handleOtpChange}
             inputProps={{
-              maxLength: 6, // Restricts input to 6 digits
-              pattern: "[0-9]*", // Allows only numeric input
+              maxLength: 6, 
+              pattern: "[0-9]*",
             }}
             sx={{
               "& .MuiOutlinedInput-root": {
