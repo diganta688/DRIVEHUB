@@ -22,6 +22,7 @@ function HomeHeroNav({
   img,
   imgClass,
   is,
+  userInfo,
 }) {
   const scrollToAbout = () => {
     handleCloseUserMenu();
@@ -135,11 +136,21 @@ function HomeHeroNav({
           </>
         )}
         {display && (
-          <Link to="/home">
-            <MenuItem onClick={handleCloseUserMenu}>
-              <Typography>Home</Typography>
-            </MenuItem>
-          </Link>
+          <>
+            {userInfo && (
+              <Link to={`/user/${userInfo._id}/profile`}>
+                <MenuItem onClick={handleCloseUserMenu}>
+                  <Typography>Profile</Typography>
+                </MenuItem>
+              </Link>
+            )}
+
+            <Link to="/profile">
+              <MenuItem onClick={handleCloseUserMenu}>
+                <Typography>Home</Typography>
+              </MenuItem>
+            </Link>
+          </>
         )}
         <div
           className="divider"

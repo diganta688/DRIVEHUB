@@ -16,30 +16,32 @@ import RollingGallery from "./RollingGallery";
 
 function HomeHero() {
   const [isMouse, setIsMouse] = useState(false);
+  const [display, setDisplay] = useState(true);
+  const [userInfo, setUserInfo] = useState(null);
   useEffect(() => {
     const hasMouse = window.matchMedia("(pointer: fine)").matches;
     setIsMouse(hasMouse);
   });
-  const [display, setDisplay] = useState(true);
   useEffect(() => {
     check();
   }, []);
   const check = async () => {
-    await axios
-      .get(`${import.meta.env.VITE_BACKEND_URL}/auth/home`, {
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/auth/home`, {
         withCredentials: true,
-      })
-      .then((response) => {
-        if (response.status !== 200) {
-          setDisplay(false);
-        }
-      })
-      .catch((error) => {
-        if (error.response?.status === 401) {
-          setDisplay(false);
-        }
       });
+      if (response.status === 200) {
+        setUserInfo(response.data.user);
+      } else {
+        setDisplay(false);
+      }
+    } catch (error) {
+      if (error.response?.status === 401) {
+        setDisplay(false);
+      }
+    }
   };
+  
   return (
     <div className="main-home-hero">
       <div className="HomeHeroVideo">
@@ -52,6 +54,7 @@ function HomeHero() {
           img="\media\Images\logo.png"
           imgClass="nav-logo"
           is={false}
+          userInfo={userInfo}
         />
         {isMouse && <p className="chakra-text css-1gyytsn">Click Me</p>}
         <div

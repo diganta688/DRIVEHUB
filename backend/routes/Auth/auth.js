@@ -5,6 +5,9 @@ const { UserModel } = require("../../models/User");
 const { generateToken } = require("../../util/jwt");
 const { Protect, ProtectHost } = require("../../middleware");
 const { Hostmodel } = require("../../models/Host");
+const { storage } = require("../../cloudinaryConfig");
+const multer = require("multer");
+const upload = multer({ storage });
 const cookieOptions = {
   httpOnly: true,
   secure: false,
@@ -12,9 +15,24 @@ const cookieOptions = {
   maxAge: 24 * 60 * 60 * 1000,
 };
 
-router.post("/signup", async (req, res) => {
+router.post("/signup", upload.single("licenseImage"), async (req, res) => {
   try {
-    const { name, email, password, phone, dob } = req.body;
+    const {
+      name,
+      email,
+      password,
+      phone,
+      dob,
+      address,
+      city,
+      state,
+      zipCode,
+      country,
+      lng,
+      lat,
+      licenseExpiryDate,
+    } = req.body;
+
     const existingUser = await UserModel.findOne({
       $or: [{ email }, { phone }],
     });
@@ -23,15 +41,25 @@ router.post("/signup", async (req, res) => {
         return res.status(400).json({ message: "Email already exists" });
       }
       if (existingUser.phone === phone) {
-        return res.status(400).json({ message: "phoneNumber already exists" });
+        return res.status(400).json({ message: "Phone number already exists" });
       }
     }
+    const licenseImageURL = req.file?.path || "";
     const user = await UserModel.create({
       name,
       email,
       password,
       phone,
       dob,
+      address,
+      city,
+      state,
+      zipCode,
+      country,
+      lng,
+      lat,
+      licenseImage: licenseImageURL,
+      licenseExpiryDate,
     });
     const token = generateToken(user._id);
     res.cookie("jwtUser", token, cookieOptions);
@@ -39,7 +67,7 @@ router.post("/signup", async (req, res) => {
       message: "User signed up successfully",
       success: true,
       redirectTo: `${process.env.FRONTEND}`,
-      user: user,
+      user,
     });
   } catch (error) {
     console.error("Signup error:", error);
@@ -68,7 +96,7 @@ router.post("/login", async (req, res) => {
     });
   } catch (error) {
     console.error("Login error:", error);
-    res.status(500).json({ message: error.message});
+    res.status(500).json({ message: error.message });
   }
 });
 
@@ -97,7 +125,7 @@ router.post("/host/signup", async (req, res) => {
       experience,
       description,
       lat,
-      lng
+      lng,
     } = req.body;
     const existingHost = await Hostmodel.findOne({
       $or: [{ email }, { phone }],
@@ -125,7 +153,7 @@ router.post("/host/signup", async (req, res) => {
       experience,
       description,
       lat,
-      lng
+      lng,
     });
     const token = generateToken(host._id);
     res.cookie("jwtHost", token, cookieOptions);
@@ -133,7 +161,7 @@ router.post("/host/signup", async (req, res) => {
       message: "Host signed up successfully",
       success: true,
       redirectTo: `/host/home`,
-      host: host
+      host: host,
     });
   } catch (error) {
     console.error("Signup error:", error);
@@ -158,7 +186,7 @@ router.post("/host/login", async (req, res) => {
       message: "Host logged in successfully",
       success: true,
       redirectTo: `/host/home`,
-      host:host
+      host: host,
     });
   } catch (error) {
     console.error("Login error:", error);
@@ -170,21 +198,9 @@ router.get("/host/home", ProtectHost, (req, res) => {
   res.status(200).json({ message: "Welcome to the Home Page", host: req.user });
 });
 
-
 router.get("/host/logout", (req, res) => {
   res.clearCookie("jwtHost", cookieOptions);
   res.status(200).json({ success: true, message: "Logged out successfully" });
 });
-
-
-
-
-
-
-
-
-
-
-
 
 module.exports = router;

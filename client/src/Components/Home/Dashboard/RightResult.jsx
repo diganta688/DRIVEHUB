@@ -1,14 +1,9 @@
 import React, { useEffect } from "react";
-import {
-  Users,
-  Fuel,
-  Gauge,
-  Calendar,
-  Star,
-  CarFront,
-} from "lucide-react";
+import { Users, Fuel, Gauge, Calendar, Star, CarFront } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
+import InfoIcon from "@mui/icons-material/Info";
 import LoadingScreen from "../../LoadingScreen";
+import Tooltip from "@mui/material/Tooltip";
 
 function CarCard({ car }) {
   const location = useLocation();
@@ -19,8 +14,8 @@ function CarCard({ car }) {
       `/car-description/${car._id}/?city=${car.city}&startDate=${car.startDate}&startTime=${car.startTime}&endDate=${car.endDate}&endTime=${car.endTime}`,
       {
         state: {
-          fromSearch: searchQuery, // ✅ match this key
-        }      
+          fromSearch: searchQuery,
+        },
       }
     );
   };
@@ -67,8 +62,18 @@ function CarCard({ car }) {
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <Calendar className="w-5 h-5 text-gray-600" />
-              <span className="text-sm text-gray-600">Available Now</span>
+              <span className="text-sm text-gray-600 flex">
+                <p className="m-0">{car.UsageLimits} km limit </p>
+                <Tooltip
+                  title={
+                    car.ExtraCharges > 0
+                      ? `If the distance exceeds the limit, charges will be ₹${car.ExtraCharges} per km`
+                      : `No extra charges even if the distance limit is exceeded – it's completely free`
+                  }
+                >
+                  <InfoIcon fontSize="small" className="mx-1" style={{cursor: "pointer"}} />
+                </Tooltip>
+              </span>
             </div>
           </div>
           <div className="flex items-center justify-between mt-3">
