@@ -56,7 +56,7 @@ npm install
 ```
 
 ##### Create a `.env` file in the `backend` folder:
-```env
+```bash
 PORT=8080
 MONGO_URL=<your_mongodb_connection_string>
 JWT_SECRET=<your_jwt_secret>
@@ -80,7 +80,7 @@ npm install
 ```
 
 ##### Create a `.env` file in the `client` folder:
-```env
+```bash
 VITE_BACKEND_URL=http://localhost:8080
 VITE_FRONTEND_URL=http://localhost:5173
 VITE_MAP_TOKEN=<your_mapbox_mapToken>
