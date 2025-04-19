@@ -15,6 +15,7 @@ import { useInView } from "react-intersection-observer";
 import HostNav from "../../HostHome/HostNav";
 import { useLocation } from "react-router-dom";
 import { carDetailsContext } from "../../../Context/context";
+import { checkUser } from "../../../utils/checkHost";
 
 function CarDescription() {
   const location = useLocation();
@@ -27,25 +28,7 @@ function CarDescription() {
   const [carDetails, setCarDetails] = useState(null);
   const [user, setUser] = useState(null);
   useEffect(() => {
-    const check = async () => {
-      try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/auth/home`,
-          { withCredentials: true }
-        );
-        if (response.status === 200) {
-          setUser(response.data.user);
-        }
-      } catch (error) {
-        if (error.response?.status === 401) {
-          window.location.href = `${import.meta.env.VITE_FRONTEND_URL}/log-in`;
-        } else {
-          console.error("Error fetching user:", error.message);
-        }
-      }
-    };
-
-    check();
+    checkUser(setUser);
   }, []);
   const fetchCarDetails = async () => {
     try {
@@ -130,7 +113,7 @@ function CarDescription() {
       }}
     >
       <div className="min-h-screen bg-[#f8fafc]">
-        <HostNav who="user" />
+        <HostNav who="user" info={user._id}/>
         <main
           className="max-w-7xl mx-auto px-4 py-8 mt-2"
           style={{ paddingBottom: "5rem" }}

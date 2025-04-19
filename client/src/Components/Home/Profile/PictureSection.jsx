@@ -4,15 +4,20 @@ import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import { UserProfileContext } from "../../../Context/context";
 import TextField from "@mui/material/TextField";
+import {
+  handleSubmit,
+  handlePhotoUpload,
+} from "../../../utils/submitOperation";
 
 function PictureSection({
-  handlePhotoUpload,
   setSelectedFile,
   setPreviewURL,
   previewURL,
   profilePhotoLoader,
   nameSubmitLoader,
-  handleSubmit,
+  setNameSubmitLoader,
+  selectedFile,
+  setProfilePhotoLoader,
 }) {
   const {
     nameEdit,
@@ -22,6 +27,7 @@ function PictureSection({
     userProfileAllInfo,
     setUserProfileAllInfo,
     userProfileInfo,
+    setUserProfileInfo,
   } = useContext(UserProfileContext);
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -88,7 +94,16 @@ function PictureSection({
                 variant="contained"
                 color="success"
                 disabled={nameSubmitLoader}
-                onClick={handleSubmit}
+                onClick={() => {
+                  handleSubmit(
+                    setNameSubmitLoader,
+                    setUserProfileInfo,
+                    userProfileAllInfo,
+                    setNameEdit,
+                    "user",
+                    userProfileInfo._id
+                  );
+                }}
                 style={{
                   textTransform: "none",
                   borderRadius: "8px",
@@ -122,28 +137,6 @@ function PictureSection({
               </Button>
             </div>
           </div>
-        )}
-        {userProfileInfo?.Premium ? (
-          <>
-            <p className="text-gray-500 text-sm">Premium Member since 2022</p>
-          </>
-        ) : (
-          <>
-            <button
-              style={{
-                marginLeft: "0.5rem",
-                borderRadius: "7px",
-                padding: "0.3rem 1rem",
-                color: "black",
-                background: "gold",
-                fontWeight: "bold",
-                cursor: "pointer",
-                WebkitBorderStroke: "0.5px black",
-              }}
-            >
-              Get Premium
-            </button>
-          </>
         )}
       </div>
       <Dialog
@@ -236,7 +229,17 @@ function PictureSection({
             <Button
               variant="contained"
               disabled={profilePhotoLoader}
-              onClick={handlePhotoUpload}
+              onClick={() => {
+                handlePhotoUpload(
+                  selectedFile,
+                  userProfileInfo._id,
+                  setProfilePhotoLoader,
+                  setUserProfileInfo,
+                  setProfilePhotoEdit,
+                  setPreviewURL,
+                  "user"
+                );
+              }}
               style={{
                 backgroundColor: "orange",
                 color: "white",

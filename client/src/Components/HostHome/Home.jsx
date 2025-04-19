@@ -6,6 +6,7 @@ import { HostMainContext } from "../../Context/context";
 import HostInfo from "./HostInfo";
 import HostNav from "./HostNav";
 import { toast } from "react-toastify";
+import { checkHost } from '../../utils/checkHost';
 
 function App() {
   const [isLoading, setIsLoading] = useState(false);
@@ -140,37 +141,8 @@ function App() {
       [name]: value,
     }));
   };
-  const check = async () => {
-    try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/auth/host/home`,
-        {
-          withCredentials: true,
-        }
-      );
-      if (response.status !== 200) {
-        throw new Error("Failed to fetch user data");
-      }
-      const host = response.data.host;
-      setName(host);
-      setFormData((prev) => ({
-        ...prev,
-        address: host.address,
-        city: host.city,
-        state: host.state,
-        zipCode: host.zipCode,
-        country: host.country,
-      }));
-    } catch (error) {
-      if (error.response?.status === 401) {
-        window.location.href = `${
-          import.meta.env.VITE_FRONTEND_URL
-        }/host/login`;
-      }
-    }
-  };
   useEffect(() => {
-    check();
+   checkHost(setName, setFormData);
   }, []);
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -259,6 +231,7 @@ function App() {
     }
   };
 
+  
   if(!name) return null;
   
   return (
@@ -276,7 +249,7 @@ function App() {
       }}
     >
       <div className="h-screen bg-gray-50 moving-gradient ">
-        <HostNav who="host" info ={name}/>
+        <HostNav who="host" info ={name._id}/>
         <div
           className="p-5"
           style={{ display: "flex", justifyContent: "center" }}

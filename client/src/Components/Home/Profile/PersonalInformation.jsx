@@ -25,11 +25,11 @@ import { toast } from "react-toastify";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import axios from "axios";
+import { handleProfileInfoUpload } from "../../../utils/submitOperation";
 
 function PersonalInformation({
   profileInfoOpen,
   setProfileInfoOpen,
-  handleProfileInfoUpload,
   setEmailValidOpen,
   emailValidOpen,
 }) {
@@ -103,7 +103,7 @@ function PersonalInformation({
       console.error("Error saving profile:", error);
       toast.error("Something went wrong while saving.");
     } finally {
-      setIsSaving(false); // Stop loader
+      setIsSaving(false);
     }
   };
   const OtpSend = async () => {
@@ -149,7 +149,11 @@ function PersonalInformation({
 
   const updateProcess = async (updatedFields) => {
     try {
-      const res = await handleProfileInfoUpload(updatedFields);
+      const res = await handleProfileInfoUpload(
+        updatedFields,
+        "user",
+        userProfileInfo._id
+      );
       if (res && res.success) {
         setUserProfileInfo((prev) => ({
           ...prev,
@@ -444,23 +448,6 @@ function PersonalInformation({
                 <p className="text-gray-800 m-0 mx-3 mt-1">
                   {userProfileInfo?.address || "-"}
                 </p>
-                <div
-                  className="flex"
-                  style={{ justifyContent: "space-evenly" }}
-                >
-                  <p className="text-gray-800">
-                    City: {userProfileInfo?.city || "-"}
-                  </p>
-                  <p className="text-gray-800">
-                    State: {userProfileInfo?.state || "-"}
-                  </p>
-                  <p className="text-gray-800">
-                    Country: {userProfileInfo?.country || "-"}
-                  </p>
-                  <p className="text-gray-800">
-                    Zip: {userProfileInfo?.zipCode || "-"}
-                  </p>
-                </div>
               </>
             )}
             {profileInfoOpen && (
@@ -516,8 +503,8 @@ function PersonalInformation({
               value={otp}
               onChange={handleOtpChange}
               inputProps={{
-                maxLength: 6, // Restricts input to 6 digits
-                pattern: "[0-9]*", // Allows only numeric input
+                maxLength: 6,
+                pattern: "[0-9]*",
               }}
               sx={{
                 "& .MuiOutlinedInput-root": {

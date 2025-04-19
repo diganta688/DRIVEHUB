@@ -83,8 +83,8 @@ function CarCard({ car }) {
               </span>
               <span className="text-gray-600">/day</span>
             </div>
-
             <button
+            style={{borderRadius: "10px"}}
               className="bg-orange-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-orange-700 transition-colors"
               onClick={navigateToCarDescription}
             >

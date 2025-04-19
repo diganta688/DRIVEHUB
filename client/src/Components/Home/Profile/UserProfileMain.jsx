@@ -8,6 +8,7 @@ import MemberShipInfo from "./MemberShipInfo";
 import CarRentHistory from "./CarRentHistory";
 import HistoryIcon from "@mui/icons-material/History";
 import { UserProfileContext } from "../../../Context/context";
+import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 
 function UserProfileMain() {
   const { id } = useParams();
@@ -41,91 +42,6 @@ function UserProfileMain() {
     if (id) getUserInfo();
   }, [id]);
 
-  const handleSubmit = async () => {
-    try {
-      setNameSubmitLoader(true);
-      const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/user/updateinfo/${id}`,
-        { name: userProfileAllInfo.name },
-        {
-          withCredentials: true,
-        }
-      );
-      if (response.status === 200) {
-        toast.success("Name updated successfully");
-        setUserProfileInfo((prev) => ({
-          ...prev,
-          name: userProfileAllInfo.name,
-        }));
-      } else {
-        toast.error("Failed to update user information");
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("Something went wrong while updating info");
-    } finally {
-      setNameSubmitLoader(false);
-      setNameEdit(false);
-    }
-  };
-
-  const handlePhotoUpload = async () => {
-    if (!selectedFile) {
-      toast.error("Please select a photo first.");
-      return;
-    }
-    setProfilePhotoLoader(true);
-    try {
-      const formData = new FormData();
-      formData.append("file", selectedFile);
-      const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/user/updatephoto/${id}`,
-        formData,
-        {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-      if (response.status === 200) {
-        toast.success("Profile photo updated successfully!");
-        setUserProfileInfo((prev) => ({
-          ...prev,
-          profilePhoto: response.data.photoUrl,
-        }));
-      } else {
-        toast.error("Failed to update profile photo");
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error("Something went wrong while uploading");
-    } finally {
-      setProfilePhotoLoader(false);
-      setProfilePhotoEdit(false);
-      setPreviewURL("");
-    }
-  };
-
-  const handleProfileInfoUpload = async (locationData) => {
-    try {
-      const response = await axios.put(
-        `${import.meta.env.VITE_BACKEND_URL}/user/update-location/${id}`,
-        locationData
-      );
-      const result = response.data;
-      if (!result.success) {
-        toast.error(result.message || "Failed to update location.");
-      }
-      return result;
-    } catch (error) {
-      console.error("Error updating location:", error);
-      const errorMessage =
-        error?.response?.data?.message || "An error occurred while updating location.";
-      toast.error(errorMessage);
-      throw error;
-    } 
-  };  
 
   return (
     <UserProfileContext.Provider
@@ -146,17 +62,24 @@ function UserProfileMain() {
           className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 -mt-28"
           style={{ position: "relative", bottom: "8rem" }}
         >
+          <button
+            onClick={() => window.history.back()}
+            className="absolute top-2 left-7 text-gray-600 hover:text-gray-900 transition"
+          >
+            <NavigateBeforeIcon fontSize="large" />
+          </button>
           <div className="bg-white rounded-2xl shadow-xl overflow-hidden pb-5">
             <div className="p-6 sm:p-8 border-b border-gray-200">
               <div className="flex flex-col sm:flex-row items-center p-4">
                 <PictureSection
-                  handlePhotoUpload={handlePhotoUpload}
                   setSelectedFile={setSelectedFile}
                   setPreviewURL={setPreviewURL}
                   previewURL={previewURL}
                   profilePhotoLoader={profilePhotoLoader}
                   nameSubmitLoader={nameSubmitLoader}
-                  handleSubmit={handleSubmit}
+                  setNameSubmitLoader={setNameSubmitLoader}
+                  setProfilePhotoLoader={setProfilePhotoLoader}
+                  selectedFile={selectedFile}
                 />
               </div>
             </div>
@@ -164,7 +87,6 @@ function UserProfileMain() {
               <PersonalInformation
                 profileInfoOpen={profileInfoOpen}
                 setProfileInfoOpen={setProfileInfoOpen}
-                handleProfileInfoUpload={handleProfileInfoUpload}
                 setEmailValidOpen={setEmailValidOpen}
                 emailValidOpen={emailValidOpen}
               />

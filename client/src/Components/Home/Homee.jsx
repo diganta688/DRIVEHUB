@@ -3,9 +3,9 @@ import HomeSearch from "./Search/HomeSearch";
 import Dashboard from "./Dashboard/Dashboard";
 import axios from "axios";
 import { UserHomeContext } from "../../Context/context";
-import HomeHeroNav from "../LandingPage/HomeHeroNav";
 import BlurText from "./BlueText";
 import HostNav from "../HostHome/HostNav";
+import { checkUser } from "../../utils/checkHost";
 
 function Homee() {
   const [cars, setCars] = useState([]);
@@ -17,29 +17,10 @@ function Homee() {
     transmission: [],
     seats: [],
   });
-
-  useEffect(() => {
-    const check = async () => {
-      await fetchCars();
-      try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/auth/home`,
-          { withCredentials: true }
-        );
-        if (response.status === 200) {
-          setUser(response.data.user);
-        }
-      } catch (error) {
-        if (error.response?.status === 401) {
-          window.location.href = `${import.meta.env.VITE_FRONTEND_URL}/log-in`;
-        } else {
-          console.error("Error fetching user:", error.message);
-        }
-      }
-    };
-
-    check();
-  }, []);
+  const check = async ()=>{
+    await fetchCars();
+    checkUser(setUser);
+  }
 
   const fetchCars = async () => {
     try {
@@ -55,7 +36,10 @@ function Homee() {
       console.error("Error fetching cars:", error.message);
     }
   };
-
+  useEffect(() => {
+    check();
+  }, []);
+  
   if (!user) return null;
 
   return (
@@ -70,7 +54,7 @@ function Homee() {
       }}
     >
       <div>
-        <HostNav who="user" info = {user}/>
+        <HostNav who="user" info = {user._id}/>
         <div className="flex justify-center pt-3">
           {user?.name && (
             <BlurText

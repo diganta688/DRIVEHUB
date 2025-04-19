@@ -11,7 +11,6 @@ import Timing from "./Timing";
 import LigalDoc from "./LigalDoc";
 import { toast } from "react-toastify";
 import { MuiColorInput } from "mui-color-input";
-import KeyFeatures from "./KeyFeatures";
 import AllFeatureRender from "./AllFeatureRender";
 import Service from "./Service";
 

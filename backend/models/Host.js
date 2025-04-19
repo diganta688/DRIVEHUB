@@ -1,6 +1,9 @@
 const { Schema, model } = require("mongoose");
 const bcrypt = require("bcryptjs");
 const HostSchema = new Schema({
+  profilePhoto:{
+    type: String,
+  },
   email: {
     type: String,
     required: true,
@@ -17,6 +20,10 @@ const HostSchema = new Schema({
   phone: {
     type: String,
     required: true,
+  },
+  Earnings:{
+    type: Number,
+    default:0
   },
   address: {
     type: String,
