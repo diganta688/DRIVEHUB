@@ -323,8 +323,8 @@ function LeftMain({ handleSubmit, isLoading, name }) {
                 onChange={(e) => setConditionCheck(e.target.checked)}
               />
               <span>
-                Make sure you upload all images correctly. This cannot be
-                changed after listing your car.
+              Make sure you upload all images correctly. This cannot be changed after listing your car. <br />
+              The platform fee is 30% of your price So make sure the price before list.
               </span>
             </label>
           </div>

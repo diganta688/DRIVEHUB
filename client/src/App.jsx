@@ -16,6 +16,7 @@ import "react-toastify/dist/ReactToastify.css";
 import ComfirmBookingMain from "./Components/Home/ComfirmBooking/ComfirmBookingMain";
 import UserProfileMain from "./Components/Home/Profile/UserProfileMain";
 import HostProfileMain from "./Components/HostHome/Profile/HostProfileMain";
+import HostCarDescriptionMain from "./Components/HostHome/HostCarDescription/HostCarDescriptionMain";
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
             <Route path="/host/:id/profile" element={<HostProfileMain />} />
             <Route path="/modify-search" element={<LeftPart />} />
             <Route path="/car-description/:id" element={<CarDescription />} />
+            <Route path="/host/car-description/:id" element={<HostCarDescriptionMain />} />
             <Route
               path="/confirm-booking/:id"
               element={<ComfirmBookingMain />}
@@ -52,6 +54,7 @@ function App() {
             <Route path="/host/login" element={<HostLogin />} />
             <Route path="/host/signup" element={<HostSignupMain />} />
             <Route path="/host/home" element={<Home />} />
+          <Route path="*" element={<h1>404 - Page Not Found</h1>} />
           </Routes>
       </BrowserRouter>
     </>
