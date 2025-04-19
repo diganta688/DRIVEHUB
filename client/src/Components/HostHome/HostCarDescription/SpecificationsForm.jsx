@@ -116,10 +116,10 @@ const SpecificationsForm = () => {
               label="Tires Condition"
               onChange={handleChange}
             >
-              <MenuItem value="New">New</MenuItem>
+              <MenuItem value="Excellent">Excellent</MenuItem>
               <MenuItem value="Good">Good</MenuItem>
-              <MenuItem value="Average">Average</MenuItem>
-              <MenuItem value="Worn">Worn</MenuItem>
+              <MenuItem value="Fair">Fair</MenuItem>
+              <MenuItem value="Poor">Poor</MenuItem>
             </Select>
           </FormControl>
         </Grid>
@@ -129,7 +129,7 @@ const SpecificationsForm = () => {
             label="Usage Limits (km) *"
             type="number"
             name="usageLimit"
-            value={hostCarInfo.usageLimit}
+            value={hostCarInfo.UsageLimits}
             onChange={handleChange}
             fullWidth
           />
@@ -140,7 +140,7 @@ const SpecificationsForm = () => {
             label="Extra Charges ($) *"
             type="number"
             name="extraCharges"
-            value={hostCarInfo.extraCharges}
+            value={hostCarInfo.ExtraCharges}
             onChange={handleChange}
             fullWidth
           />
@@ -157,7 +157,7 @@ const SpecificationsForm = () => {
             label="Acceleration (0–100 km/h) *"
             type="text"
             name="acceleration"
-            value={hostCarInfo.acceleration}
+            value={hostCarInfo.Acceleration}
             onChange={handleChange}
             fullWidth
           />
@@ -168,7 +168,7 @@ const SpecificationsForm = () => {
             label="Top Speed (km/h) *"
             type="number"
             name="topSpeed"
-            value={hostCarInfo.topSpeed}
+            value={hostCarInfo.TopSpeed}
             onChange={handleChange}
             fullWidth
           />
@@ -179,7 +179,7 @@ const SpecificationsForm = () => {
             label="Peak Power (HP) *"
             type="number"
             name="peakPower"
-            value={hostCarInfo.peakPower}
+            value={hostCarInfo.PeakPower}
             onChange={handleChange}
             fullWidth
           />

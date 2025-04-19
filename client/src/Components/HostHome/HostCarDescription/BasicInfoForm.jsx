@@ -12,81 +12,90 @@ const BasicInfoForm = () => {
   return (
     <div className="p-5 bg-white rounded shadow">
       <h2 className="text-xl font-semibold mb-4">Basic Information</h2>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <TextField
-          label="Make *"
-          variant="outlined"
+          label="Make"
           name="make"
           value={hostCarInfo.make}
           onChange={handleChange}
+          variant="outlined"
           fullWidth
+          required
         />
         <TextField
-          label="Model *"
-          variant="outlined"
+          label="Model"
           name="model"
           value={hostCarInfo.model}
           onChange={handleChange}
+          variant="outlined"
           fullWidth
+          required
         />
         <TextField
-          label="Year *"
-          variant="outlined"
+          label="Year"
           name="year"
           value={hostCarInfo.year}
           onChange={handleChange}
+          variant="outlined"
           type="number"
           fullWidth
+          required
         />
         <TextField
-          label="Price ($) *"
-          variant="outlined"
+          label="Price ($)"
           name="price"
           value={hostCarInfo.price}
           onChange={handleChange}
+          variant="outlined"
           type="number"
           fullWidth
+          required
         />
         <TextField
-          label="Color *"
-          variant="outlined"
+          label="Color"
           name="color"
           value={hostCarInfo.color}
           onChange={handleChange}
+          variant="outlined"
           fullWidth
+          required
         />
         <TextField
-          label="Mileage (km) *"
-          variant="outlined"
+          label="Mileage (km)"
           name="mileage"
           value={hostCarInfo.mileage}
           onChange={handleChange}
+          variant="outlined"
           type="number"
           fullWidth
+          required
         />
       </div>
 
       <div className="mt-4">
         <TextField
           label="Description"
-          variant="outlined"
           name="description"
           value={hostCarInfo.description}
           onChange={handleChange}
+          variant="outlined"
           fullWidth
           multiline
-          rows={3}
+          rows={6}
+          required
         />
       </div>
 
       <div className="mt-4">
         <TextField
-          label="Main Image URL *"
-          variant="outlined"
+          label="Main Image URL"
           name="MainImage"
           value={hostCarInfo.MainImage}
           onChange={handleChange}
+          variant="outlined"
           fullWidth
+          required
           disabled
         />
         {hostCarInfo.MainImage && (

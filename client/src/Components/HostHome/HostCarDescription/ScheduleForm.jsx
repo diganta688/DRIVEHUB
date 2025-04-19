@@ -115,11 +115,12 @@ const ScheduleForm = () => {
             </FormControl>
           </div>
         </div>
-        <div>
+        <div className="mt-3">
           <h3 className="text-lg font-medium mb-2">Service Information</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <DatePicker
               label="Last Service Date"
+              maxDate={dayjs().subtract(1, "day")}
               value={
                 hostCarInfo.lastService ? dayjs(hostCarInfo.lastService) : null
               }
@@ -136,8 +137,10 @@ const ScheduleForm = () => {
                 />
               )}
             />
+
             <DatePicker
               label="Upcoming Service Date"
+              minDate={dayjs().add(7, "day")}
               value={
                 hostCarInfo.upcomingService
                   ? dayjs(hostCarInfo.upcomingService)
