@@ -16,6 +16,7 @@ import Service from "./Service";
 
 function LeftMain({ handleSubmit, isLoading, name }) {
   const [hasShownToast, setHasShownToast] = useState(false);
+  const [conditionCheck, setConditionCheck] = useState(false);
   const handleChange = (e) => {
     handleInputChange(e);
 
@@ -65,7 +66,7 @@ function LeftMain({ handleSubmit, isLoading, name }) {
     inputError.color ||
     inputError.tiresCondition ||
     inputError.crouseControl ||
-    inputError.Bluetooth ;
+    inputError.Bluetooth;
 
   const handleMainImageChange = (event) => {
     const selectedFile = event.target.files[0];
@@ -286,15 +287,15 @@ function LeftMain({ handleSubmit, isLoading, name }) {
               error={inputError.transmission}
             />
           </div>
-              <Service/>
-              <SelectField
-              label="tiresCondition"
-              name="tiresCondition"
-              value={formData.tiresCondition}
-              onChange={handleInputChange}
-              options={["Excellent", "Good", "Fair", "Poor"]}
-              error={inputError.tiresCondition}
-            />
+          <Service />
+          <SelectField
+            label="tiresCondition"
+            name="tiresCondition"
+            value={formData.tiresCondition}
+            onChange={handleInputChange}
+            options={["Excellent", "Good", "Fair", "Poor"]}
+            error={inputError.tiresCondition}
+          />
           <FileUploadField
             handleMainImageChange={handleMainImageChange}
             handleOptionalImagesChange={handleOptionalImagesChange}
@@ -310,8 +311,24 @@ function LeftMain({ handleSubmit, isLoading, name }) {
             error={inputError.description}
           />
           <Timing />
-         <AllFeatureRender/>
+          <AllFeatureRender />
           <LigalDoc />
+          <div style={{ marginTop: "1rem" }}>
+            <label
+              style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
+            >
+              <input
+                type="checkbox"
+                required
+                onChange={(e) => setConditionCheck(e.target.checked)}
+              />
+              <span>
+                Make sure you upload all images correctly. This cannot be
+                changed after listing your car.
+              </span>
+            </label>
+          </div>
+
           {isLoading ? (
             <button
               disabled={true}
@@ -323,14 +340,14 @@ function LeftMain({ handleSubmit, isLoading, name }) {
             </button>
           ) : (
             <button
-              disabled={hasError}
+              disabled={hasError || !conditionCheck}
               type="submit"
               className={`w-full text-white py-3 px-4 rounded-lg font-semibold transition-all duration-300 transform shadow-md flex items-center justify-center
-      ${
-        hasError
-          ? "bg-blue-400 cursor-not-allowed opacity-50"
-          : "bg-blue-600 hover:bg-blue-700 hover:scale-101 active:scale-95"
-      }`}
+    ${
+      hasError || !conditionCheck
+        ? "bg-blue-400 cursor-not-allowed opacity-50"
+        : "bg-blue-600 hover:bg-blue-700 hover:scale-101 active:scale-95"
+    }`}
               style={{ marginTop: "1rem", borderRadius: "10px" }}
             >
               List Car
