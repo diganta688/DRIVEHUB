@@ -64,6 +64,13 @@ PORT=8080
 MONGO_URL=<your_mongodb_connection_string>
 JWT_SECRET=<your_jwt_secret>
 FRONTEND=http://localhost:5173
+EMAIL_USER=<your_Email>
+EMAIL_PASS=<your_email_app_password>
+CLOUD_NAME=<your_cloudinary_name>
+CLOUD_API_KEY=<your_cloudinary_api_key>
+CLOUD_API_SECRET=<your_cloudinary_secret>
+RAZOR_PAY_ID=<your_razorpay_id>
+RAZOR_PAY_SECRET=<your_razorpay_secret>
 ```
 
 #### 3️⃣ Frontend Setup
@@ -75,6 +82,9 @@ npm install
 #### Create a .env file in the client folder with:
 ```bash
 VITE_BACKEND_URL=http://localhost:8080
+VITE_FRONTEND_URL=http://localhost:5173
+VITE_MAP_TOKEN=<your_mapbox_mapToken>
+VITE_RAZOR_PAY_ID=<your_razorpay_id>
 ```
 
 ## 🎬 Running the Application 
