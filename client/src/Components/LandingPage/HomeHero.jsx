@@ -27,7 +27,7 @@ function HomeHero() {
     setIsMouse(hasMouse);
   });
   useEffect(() => {
-    checkUser(setUserInfo, navigate);
+    checkUser(setUserInfo);
   }, []);
   
   return (

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const checkHost = async (setName, setFormData = "", navigate) => {
+export const checkHost = async (setName, setFormData = "", navigate=null) => {
   try {
     const response = await axios.get(
       `${import.meta.env.VITE_BACKEND_URL}/auth/host/home`,
@@ -30,7 +30,7 @@ export const checkHost = async (setName, setFormData = "", navigate) => {
     }
   }
 };
-export const checkUser = async (setUser, navigate) => {
+export const checkUser = async (setUser, navigate=null) => {
   try {
     const response = await axios.get(
       `${import.meta.env.VITE_BACKEND_URL}/auth/home`,
