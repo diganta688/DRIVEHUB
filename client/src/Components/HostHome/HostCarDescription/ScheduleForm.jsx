@@ -49,20 +49,32 @@ const ScheduleForm = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <DatePicker
               label="Start Date"
+              minDate={dayjs().add(1, "day")}
               value={
                 hostCarInfo.startDate ? dayjs(hostCarInfo.startDate) : null
               }
-              onChange={(newValue) =>
-                handleFieldChange("startDate", newValue.format("YYYY-MM-DD"))
-              }
+              onChange={(newValue) => {
+                const formatted = newValue.format("YYYY-MM-DD");
+                handleFieldChange("startDate", formatted);
+                if (
+                  hostCarInfo.endDate &&
+                  dayjs(formatted)
+                    .add(7, "day")
+                    .isAfter(dayjs(hostCarInfo.endDate))
+                ) {
+                  handleFieldChange("endDate", "");
+                }
+                if (
+                  hostCarInfo.upcomingService &&
+                  dayjs(formatted)
+                    .add(7, "day")
+                    .isAfter(dayjs(hostCarInfo.upcomingService))
+                ) {
+                  handleFieldChange("upcomingService", "");
+                }
+              }}
               renderInput={(params) => (
-                <TextField
-                  {...params}
-                  required
-                  fullWidth
-                  variant="outlined"
-                  sx={{ backgroundColor: "white", borderRadius: "8px" }}
-                />
+                <TextField {...params} required fullWidth variant="outlined" />
               )}
             />
             <FormControl fullWidth required>
@@ -83,20 +95,28 @@ const ScheduleForm = () => {
             </FormControl>
             <DatePicker
               label="End Date"
-              value={hostCarInfo.endDate ? dayjs(hostCarInfo.endDate) : null}
-              onChange={(newValue) =>
-                handleFieldChange("endDate", newValue.format("YYYY-MM-DD"))
+              disabled={!hostCarInfo.startDate}
+              minDate={
+                hostCarInfo.startDate
+                  ? dayjs(hostCarInfo.startDate).add(7, "day")
+                  : null
               }
+              value={hostCarInfo.endDate ? dayjs(hostCarInfo.endDate) : null}
+              onChange={(newValue) => {
+                const formatted = newValue.format("YYYY-MM-DD");
+                handleFieldChange("endDate", formatted);
+                if (
+                  hostCarInfo.upcomingService &&
+                  dayjs(formatted).isAfter(dayjs(hostCarInfo.upcomingService))
+                ) {
+                  handleFieldChange("upcomingService", "");
+                }
+              }}
               renderInput={(params) => (
-                <TextField
-                  {...params}
-                  required
-                  fullWidth
-                  variant="outlined"
-                  sx={{ backgroundColor: "white", borderRadius: "8px" }}
-                />
+                <TextField {...params} required fullWidth variant="outlined" />
               )}
             />
+
             <FormControl fullWidth required>
               <InputLabel id="endTime-label">End Time</InputLabel>
               <Select
@@ -140,7 +160,12 @@ const ScheduleForm = () => {
 
             <DatePicker
               label="Upcoming Service Date"
-              minDate={dayjs().add(7, "day")}
+              disabled={!hostCarInfo.endDate}
+              minDate={
+                hostCarInfo.endDate
+                  ? dayjs(hostCarInfo.endDate).add(1, "day")
+                  : null
+              }
               value={
                 hostCarInfo.upcomingService
                   ? dayjs(hostCarInfo.upcomingService)
@@ -153,13 +178,7 @@ const ScheduleForm = () => {
                 )
               }
               renderInput={(params) => (
-                <TextField
-                  {...params}
-                  required
-                  fullWidth
-                  variant="outlined"
-                  sx={{ backgroundColor: "white", borderRadius: "8px" }}
-                />
+                <TextField {...params} required fullWidth variant="outlined" />
               )}
             />
           </div>

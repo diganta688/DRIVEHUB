@@ -16,6 +16,8 @@ const FeaturesSection = () => {
   const { hostCarInfo, setHostCarInfo } = useContext(HostCarEditContext);
 
   const handleToggle = (featureKey) => {
+    console.log(featureKey);
+    
     setHostCarInfo((prevInfo) => ({
       ...prevInfo,
       features: {

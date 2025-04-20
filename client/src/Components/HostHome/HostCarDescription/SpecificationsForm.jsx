@@ -1,16 +1,25 @@
 import React, { useContext } from "react";
-import { Grid, Typography, TextField, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import {
+  Grid,
+  Typography,
+  TextField,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+} from "@mui/material";
 import { HostCarEditContext } from "../../../Context/context";
 
 const SpecificationsForm = () => {
-  const { hostCarInfo, setHostCarInfo } = useContext(HostCarEditContext);
+  const {
+    hostCarInfo,
+    setHostCarInfo,
+    hostCarEditInputError,
+    handleInputChange,
+  } = useContext(HostCarEditContext);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setHostCarInfo((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setHostCarInfo({ ...hostCarInfo, [e.target.name]: e.target.value });
   };
 
   return (
@@ -29,12 +38,11 @@ const SpecificationsForm = () => {
               name="fuelType"
               value={hostCarInfo.fuelType}
               label="Fuel Type"
-              onChange={handleChange}
+              onChange={(e) => handleInputChange(e)}
             >
               <MenuItem value="Petrol">Petrol</MenuItem>
               <MenuItem value="Diesel">Diesel</MenuItem>
               <MenuItem value="Electric">Electric</MenuItem>
-              <MenuItem value="Hybrid">Hybrid</MenuItem>
               <MenuItem value="CNG">CNG</MenuItem>
             </Select>
           </FormControl>
@@ -49,7 +57,7 @@ const SpecificationsForm = () => {
               name="transmission"
               value={hostCarInfo.transmission}
               label="Transmission"
-              onChange={handleChange}
+              onChange={(e) => handleInputChange(e)}
             >
               <MenuItem value="Automatic">Automatic</MenuItem>
               <MenuItem value="Manual">Manual</MenuItem>
@@ -66,7 +74,7 @@ const SpecificationsForm = () => {
               name="segment"
               value={hostCarInfo.segment}
               label="Segment"
-              onChange={handleChange}
+              onChange={(e) => handleInputChange(e)}
             >
               <MenuItem value="Hatchback">Hatchback</MenuItem>
               <MenuItem value="Sedan">Sedan</MenuItem>
@@ -80,7 +88,9 @@ const SpecificationsForm = () => {
               <MenuItem value="Roadster">Roadster</MenuItem>
               <MenuItem value="Luxury Car">Luxury Car</MenuItem>
               <MenuItem value="Sportscar">Sportscar</MenuItem>
-              <MenuItem value="MPV (Multi-Purpose Vehicle)">MPV (Multi-Purpose Vehicle)</MenuItem>
+              <MenuItem value="MPV (Multi-Purpose Vehicle)">
+                MPV (Multi-Purpose Vehicle)
+              </MenuItem>
               <MenuItem value="Estate/Wagon">Estate/Wagon</MenuItem>
               <MenuItem value="Compact">Compact</MenuItem>
               <MenuItem value="Subcompact">Subcompact</MenuItem>
@@ -100,8 +110,10 @@ const SpecificationsForm = () => {
             type="number"
             name="seats"
             value={hostCarInfo.seats}
-            onChange={handleChange}
+            onChange={(e) => handleInputChange(e)}
             fullWidth
+            error={!!hostCarEditInputError?.seats}
+            helperText={hostCarEditInputError?.seats || " "}
           />
         </Grid>
 
@@ -114,7 +126,7 @@ const SpecificationsForm = () => {
               name="tiresCondition"
               value={hostCarInfo.tiresCondition}
               label="Tires Condition"
-              onChange={handleChange}
+              onChange={(e) => handleInputChange(e)}
             >
               <MenuItem value="Excellent">Excellent</MenuItem>
               <MenuItem value="Good">Good</MenuItem>
@@ -128,10 +140,12 @@ const SpecificationsForm = () => {
           <TextField
             label="Usage Limits (km) *"
             type="number"
-            name="usageLimit"
+            name="UsageLimits"
             value={hostCarInfo.UsageLimits}
-            onChange={handleChange}
+            onChange={(e) => handleInputChange(e)}
             fullWidth
+            error={!!hostCarEditInputError?.UsageLimits}
+            helperText={hostCarEditInputError?.UsageLimits || " "}
           />
         </Grid>
 
@@ -139,10 +153,12 @@ const SpecificationsForm = () => {
           <TextField
             label="Extra Charges ($) *"
             type="number"
-            name="extraCharges"
+            name="ExtraCharges"
             value={hostCarInfo.ExtraCharges}
-            onChange={handleChange}
+            onChange={(e) => handleInputChange(e)}
             fullWidth
+            error={!!hostCarEditInputError?.ExtraCharges}
+            helperText={hostCarEditInputError?.ExtraCharges || " "}
           />
         </Grid>
 
@@ -156,10 +172,12 @@ const SpecificationsForm = () => {
           <TextField
             label="Acceleration (0–100 km/h) *"
             type="text"
-            name="acceleration"
+            name="Acceleration"
             value={hostCarInfo.Acceleration}
-            onChange={handleChange}
+            onChange={(e) => handleInputChange(e)}
             fullWidth
+            error={!!hostCarEditInputError?.Acceleration}
+            helperText={hostCarEditInputError?.Acceleration || " "}
           />
         </Grid>
 
@@ -167,10 +185,12 @@ const SpecificationsForm = () => {
           <TextField
             label="Top Speed (km/h) *"
             type="number"
-            name="topSpeed"
+            name="TopSpeed"
             value={hostCarInfo.TopSpeed}
-            onChange={handleChange}
+            onChange={(e) => handleInputChange(e)}
             fullWidth
+            error={!!hostCarEditInputError?.TopSpeed}
+            helperText={hostCarEditInputError?.TopSpeed || " "}
           />
         </Grid>
 
@@ -178,10 +198,12 @@ const SpecificationsForm = () => {
           <TextField
             label="Peak Power (HP) *"
             type="number"
-            name="peakPower"
+            name="PeakPower"
             value={hostCarInfo.PeakPower}
-            onChange={handleChange}
+            onChange={(e) => handleInputChange(e)}
             fullWidth
+            error={!!hostCarEditInputError?.PeakPower}
+            helperText={hostCarEditInputError?.PeakPower || " "}
           />
         </Grid>
       </Grid>

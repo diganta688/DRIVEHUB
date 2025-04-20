@@ -100,5 +100,19 @@ router.post("/cars/get/:id", async (req, res) => {
     
   }
 });
+router.post('/:carId/car-update', async (req, res) => {
+  const { carId } = req.params;
+  const updatedData = req.body;
+  try {
+    const updatedCar = await Carmodel.findByIdAndUpdate(carId, updatedData, { new: true });
+    if (!updatedCar) {
+      return res.status(404).json({ message: "Car not found" });
+    }
+    res.status(200).json({ message: "Car updated successfully", car: updatedCar });
+  } catch (error) {
+    console.error("Update Error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
 
 module.exports = router;

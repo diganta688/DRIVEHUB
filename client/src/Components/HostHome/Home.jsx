@@ -89,7 +89,7 @@ function App() {
     const errors = { ...inputError };
     const currentYear = new Date().getFullYear();
     if (name === "price") {
-      errors.price = value < 10 ? "Price cannot be less than 10" : "";
+      errors.price = value < 100 ? "Price cannot be less than 10" : "";
     } else if (name === "year") {
       errors.year =
         value > currentYear
