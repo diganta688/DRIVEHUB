@@ -3,11 +3,13 @@ import { Menu, User, LogOut } from "lucide-react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
 
 function HostNav({who, info}) {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
-
+  const navigate = useNavigate();
   useEffect(() => {
     function handleClickOutside(event) {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -29,10 +31,10 @@ function HostNav({who, info}) {
       if (res.status === 200) {
         toast.success("Logout Done", {
           onClose: () => {
-            if(who==="user"){
-              window.location.href=`${import.meta.env.VITE_FRONTEND_URL}/log-in`
-            } else if(who==="host"){
-              window.location.href=`${import.meta.env.VITE_FRONTEND_URL}/host/login`
+            if (who === "user") {
+              navigate("/log-in");
+            } else if (who === "host") {
+              navigate("/host/login");
             }
           },
         });
@@ -42,6 +44,7 @@ function HostNav({who, info}) {
       toast.error("Logout error");
     }
   };
+  
 
   return (
     <nav
