@@ -72,6 +72,9 @@ function ConfirmBookingMain() {
           currency: "INR",
           receipt: `receipt_${id}`,
           notes: { userId: id },
+        },
+        {
+          withCredentials: true,
         }
       );
 
@@ -87,7 +90,10 @@ function ConfirmBookingMain() {
           try {
             const verification = await axios.post(
               `${import.meta.env.VITE_BACKEND_URL}/pay/verify-payment/${id}`,
-              response
+              response,
+              {
+                withCredentials: true,
+              }
             );
             if (verification.data.status === "ok") {
               toast.success("Payment Successful!");

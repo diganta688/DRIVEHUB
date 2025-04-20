@@ -26,7 +26,9 @@ function UserProfileMain() {
     const getUserInfo = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/user/getUserInfo/${id}`
+          `${import.meta.env.VITE_BACKEND_URL}/user/getUserInfo/${id}`,{
+            withCredentials: true,
+          }
         );
         if (response.status === 200) {
           setUserProfileInfo(response.data.user);

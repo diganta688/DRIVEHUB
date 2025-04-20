@@ -41,9 +41,6 @@ function EmailValidator({ open, setOpen, formdata, onetimepass }) {
         formdata,
         {
           withCredentials: true,
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
         }
       );
       if (res.data.success) {

@@ -25,7 +25,9 @@ function Homee() {
   const fetchCars = async () => {
     try {
       const res = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/user/car/getAllCars`
+        `${import.meta.env.VITE_BACKEND_URL}/user/car/getAllCars`,{
+          withCredentials: true,
+        }
       );
       if (res.status === 200) {
         setCars(res.data);

@@ -33,7 +33,9 @@ function CarDescription() {
   const fetchCarDetails = async () => {
     try {
       const res = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/user/car/getCarDetails/${id}`
+        `${import.meta.env.VITE_BACKEND_URL}/user/car/getCarDetails/${id}`,{
+          withCredentials: true,
+        }
       );
       const data = res.data;
       const newCarDetails = {

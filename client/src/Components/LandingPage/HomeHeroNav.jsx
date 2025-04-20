@@ -137,15 +137,7 @@ function HomeHeroNav({
         )}
         {display && (
           <>
-            {userInfo && (
-              <Link to={`/user/${userInfo._id}/profile`}>
-                <MenuItem onClick={handleCloseUserMenu}>
-                  <Typography>Profile</Typography>
-                </MenuItem>
-              </Link>
-            )}
-
-            <Link to="/profile">
+            <Link to="/home">
               <MenuItem onClick={handleCloseUserMenu}>
                 <Typography>Home</Typography>
               </MenuItem>

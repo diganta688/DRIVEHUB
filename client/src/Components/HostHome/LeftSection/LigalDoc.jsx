@@ -1,6 +1,5 @@
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 import { HostMainContext } from "../../../Context/context";
-import axios from "axios";
 import { toast } from "react-toastify";
 
 function LegalDoc() {

@@ -172,7 +172,6 @@ function App() {
         data,
         {
           withCredentials: true,
-          headers: { "Content-Type": "multipart/form-data" },
         }
       );
       toast.success("Car uploaded successfully!");
