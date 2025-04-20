@@ -6,12 +6,17 @@ import PictureSection from "./PictureSection";
 import PersonalInformation from "./PersonalInformation";
 import MemberShipInfo from "./MemberShipInfo";
 import CarRentHistory from "./CarRentHistory";
-import HistoryIcon from "@mui/icons-material/History";
 import { UserProfileContext } from "../../../Context/context";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
+import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import HostNav from "../../HostHome/HostNav";
 
 function UserProfileMain() {
+  const location = useLocation();
+  const { state } = location;
   const { id } = useParams();
+  const navigate = useNavigate();
   const [userProfileAllInfo, setUserProfileAllInfo] = useState(null);
   const [userProfileInfo, setUserProfileInfo] = useState(null);
   const [profilePhotoEdit, setProfilePhotoEdit] = useState(false);
@@ -22,11 +27,12 @@ function UserProfileMain() {
   const [profilePhotoLoader, setProfilePhotoLoader] = useState(false);
   const [profileInfoOpen, setProfileInfoOpen] = useState(false);
   const [emailValidOpen, setEmailValidOpen] = useState(false);
-  useEffect(() => {
+  useEffect(() => {    
     const getUserInfo = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/user/getUserInfo/${id}`,{
+          `${import.meta.env.VITE_BACKEND_URL}/user/getUserInfo/${id}`,
+          {
             withCredentials: true,
           }
         );
@@ -43,7 +49,14 @@ function UserProfileMain() {
     };
     if (id) getUserInfo();
   }, [id]);
-
+  const handleButtonClick = () => {
+    console.log("Button clicked!");
+    if (state?.paymentId) {
+      navigate(`/home`);
+    } else {
+      window.history.back();
+    }
+  };
 
   return (
     <UserProfileContext.Provider
@@ -58,6 +71,7 @@ function UserProfileMain() {
         setUserProfileAllInfo,
       }}
     >
+      <HostNav who="user" info={userProfileInfo?._id} />
       <div className="min-h-screen bg-gray-100">
         <div className="bg-blue-600 h-48"></div>
         <div
@@ -65,11 +79,12 @@ function UserProfileMain() {
           style={{ position: "relative", bottom: "8rem" }}
         >
           <button
-            onClick={() => window.history.back()}
+            onClick={handleButtonClick}
             className="absolute top-2 left-7 text-gray-600 hover:text-gray-900 transition"
           >
             <NavigateBeforeIcon fontSize="large" />
           </button>
+
           <div className="bg-white rounded-2xl shadow-xl overflow-hidden pb-5">
             <div className="p-6 sm:p-8 border-b border-gray-200">
               <div className="flex flex-col sm:flex-row items-center p-4">
@@ -93,21 +108,9 @@ function UserProfileMain() {
                 emailValidOpen={emailValidOpen}
               />
               <MemberShipInfo />
-              {userProfileInfo?.RentHistory > 0 ? (
-                <CarRentHistory />
-              ) : (
-                <>
-                  <div
-                    className="bg-gray-50 rounded-xl p-4 mx-4 mt-4 flex"
-                    style={{ justifyContent: "center" }}
-                  >
-                    <div className="">
-                      <HistoryIcon sx={{ marginRight: "0.5rem" }} />
-                      you doesn't rent any car till now
-                    </div>
-                  </div>
-                </>
-              )}
+              <div className="" style={{maxHeight:"30rem",overflowY: "auto"}}>
+              <CarRentHistory userProfileInfo={userProfileInfo} payment={state}/>
+              </div>
             </div>
           </div>
         </div>

@@ -8,9 +8,11 @@ import PickupINFO from "./PickupINFO";
 import PriceBreakup from "./PriceBreakup";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import { checkUser } from "../../../utils/checkHost";
+import { v4 as uuidv4 } from "uuid";
 
 function ConfirmBookingMain() {
   const { id } = useParams();
+  const location = useLocation();
   const navigate = useNavigate();
   const [accepted, setAccepted] = useState(false);
   const [totalAmmount, setTotalAmmount] = useState(0);
@@ -25,7 +27,6 @@ function ConfirmBookingMain() {
   const handleCheckboxChange = (e) => {
     setAccepted(e.target.checked);
   };
-  const location = useLocation();
   useEffect(() => {
     const {
       display,
@@ -54,6 +55,45 @@ function ConfirmBookingMain() {
     const total = base + security + delivery + platform + gst;
     setTotalAmmount(total.toFixed(2));
   }, [carInfo, homeDelivery, distanceHome]);
+
+  const handlePayment2 = async () => {
+    const randomId = uuidv4();
+    setMakePaymentLoading(true);
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/user/bookcarforuser/${user._id}/${
+          carInfo.id
+        }`,
+        carInfo,
+        {
+          withCredentials: true,
+        }
+      );
+      console.log("Booking successful:", response.data);
+      setUser((prevUser) => ({
+        ...prevUser,
+        ...response.data.user,
+      }));
+      setTimeout(() => {
+        setMakePaymentLoading(false);
+        navigate(`/user/${user._id}/profile`, {
+          state: {
+            success: true,
+            paymentId: randomId,
+            carInfo: carInfo,
+            userInfo: response.data.user,
+          },
+        });
+      }, 2000);
+    } catch (error) {
+      console.error(
+        "Error booking car:",
+        error.response?.data || error.message
+      );
+      setMakePaymentLoading(false);
+      toast.error("Booking failed. Please try again.");
+    }
+  };
 
   const handlePayment = async () => {
     setMakePaymentLoading(true);
@@ -97,6 +137,7 @@ function ConfirmBookingMain() {
             );
             if (verification.data.status === "ok") {
               toast.success("Payment Successful!");
+              handlePayment2();
             } else {
               toast.error("Payment verification failed");
             }
@@ -124,7 +165,7 @@ function ConfirmBookingMain() {
   };
   if (!user) return null;
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 pb-3">
+    <div className="min-h-screen bg-gray-50 py-12 pb-3">
       <div className="max-w-4xl mx-auto">
         <div className="md:col-span-2 p-4">
           <div className="bg-white shadow-lg rounded-lg overflow-hidden p-4 relative">
@@ -140,10 +181,12 @@ function ConfirmBookingMain() {
             </h1>
 
             <ConfirmTop carInfo={carInfo} />
+
             <PickupINFO
               carInfo={carInfo}
               homeDelivery={homeDelivery}
               distanceHome={distanceHome}
+              setCarInfo={setCarInfo}
             />
             <PriceBreakup
               carInfo={carInfo}
@@ -185,9 +228,24 @@ function ConfirmBookingMain() {
             </div>
 
             <div className="w-full">
+              {(!carInfo?.userStartTime ||
+                !carInfo?.userEndTime ||
+                !carInfo?.userStartDate ||
+                !carInfo?.userEndDate) && (
+                <p className="text-red-500 text-sm mt-2">
+                  Please select both start and end date/time before proceeding.
+                </p>
+              )}
               <button
                 className="w-full bg-orange-500 text-white py-2 rounded hover:bg-orange-600 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                disabled={!accepted || makePaymentLoading}
+                disabled={
+                  !accepted ||
+                  makePaymentLoading ||
+                  !carInfo?.userStartDate ||
+                  !carInfo?.userEndDate ||
+                  !carInfo?.userStartTime ||
+                  !carInfo?.userEndTime
+                }
                 onClick={handlePayment}
               >
                 {makePaymentLoading ? "Loading..." : "Make payment"}

@@ -32,6 +32,10 @@ const carSchema = new mongoose.Schema(
     startTime: { type: String, required: true },
     endDate: { type: String, required: true },
     endTime: { type: String, required: true },
+    userStartDate: { type: String, },
+    userStartTime: { type: String, },
+    userEndDate: { type: String, },
+    userEndTime: { type: String, },
     upcomingService: { type: String, required: true },
     lastService: { type: String, required: true },
     tiresCondition: { type: String, required: true, enum: ["Excellent", "Good", "Fair", "Poor"] },
@@ -54,6 +58,11 @@ const carSchema = new mongoose.Schema(
       crouseControl: { type: Boolean, default: false },
     },
     host: { type: mongoose.Schema.Types.ObjectId, ref: "Host", required: true },
+    available:{
+      type:String,
+      enum: ["active", "pending", "booked", "conpleted"] ,
+      default: "active"
+    }
   },
   { timestamps: true }
 );

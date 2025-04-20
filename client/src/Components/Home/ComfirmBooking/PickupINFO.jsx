@@ -1,9 +1,61 @@
 import React from "react";
-import { Calendar, Clock, MapPin } from "lucide-react";
+import { Calendar, MapPin } from "lucide-react";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import TextField from "@mui/material/TextField";
+import dayjs from "dayjs";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+import { useLocation } from "react-router-dom";
 
-function PickupINFO({ carInfo, homeDelivery, distanceHome }) {
+function PickupINFO({ carInfo, homeDelivery, distanceHome, setCarInfo }) {
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const availableStart = carInfo.StartDate ? dayjs(carInfo.StartDate) : null;
+  const availableEnd = carInfo.EndDate ? dayjs(carInfo.EndDate) : null;
+  const selectedStart = carInfo.userStartDate
+    ? dayjs(carInfo.userStartDate)
+    : null;
+
+  const generateTimeOptions = () => {
+    const times = [];
+    let hour = 0;
+    let minute = 0;
+    for (let i = 0; i < 48; i++) {
+      const timeString = `${String(hour).padStart(2, "0")}:${String(
+        minute
+      ).padStart(2, "0")}`;
+      times.push(timeString);
+      minute += 30;
+      if (minute === 60) {
+        minute = 0;
+        hour++;
+      }
+    }
+    return times;
+  };
+
+  const handleStartDateChange = (newValue) => {
+    if (newValue) {
+      setCarInfo((prevCarInfo) => ({
+        ...prevCarInfo,
+        userStartDate: newValue.format("YYYY-MM-DD"),
+      }));
+    }
+  };
+
+  const handleEndDateChange = (newValue) => {
+    if (newValue) {
+      setCarInfo((prevCarInfo) => ({
+        ...prevCarInfo,
+        userEndDate: newValue.format("YYYY-MM-DD"),
+      }));
+    }
+  };
+
   return (
-    <>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className="px-6 py-4 border-b">
         <div className="space-y-4">
           <div>
@@ -28,31 +80,121 @@ function PickupINFO({ carInfo, homeDelivery, distanceHome }) {
               <h3 className="flex items-center gap-2 text-gray-600 font-medium mb-2">
                 <Calendar className="h-5 w-5" /> Pickup
               </h3>
-              <p className="text-gray-800">
-                {carInfo?.StartDate || "fetching issue"}
-              </p>
-              <p className="text-gray-600 flex items-center gap-1 mt-1">
-                <Clock className="h-4 w-4" />{" "}
-                {carInfo?.StartTime || "fetching issue"}
-              </p>
+              <DatePicker
+                label="Start Date"
+                value={
+                  carInfo.userStartDate ? dayjs(carInfo.userStartDate) : null
+                }
+                onChange={handleStartDateChange}
+                shouldDisableDate={(date) =>
+                  (availableStart && date.isBefore(availableStart, "day")) ||
+                  (availableEnd && date.isAfter(availableEnd, "day"))
+                }
+                renderInput={(params) => (
+                  <TextField
+                    required
+                    {...params}
+                    fullWidth
+                    variant="outlined"
+                    sx={{ backgroundColor: "white", borderRadius: "8px" }}
+                  />
+                )}
+              />
+              <div className="mt-2" style={{ height: "4rem" }}>
+                <Select
+                  labelId="start-time-label"
+                  id="start-time"
+                  value={carInfo.userStartTime || ""}
+                  onChange={(e) => {
+                    setCarInfo((prevCarInfo) => ({
+                      ...prevCarInfo,
+                      userStartTime: e.target.value,
+                    }));
+                  }}
+                  required
+                  fullWidth
+                >
+                  {generateTimeOptions().map((time) => (
+                    <MenuItem key={time} value={time}>
+                      {time}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </div>
             </div>
 
             <div>
               <h3 className="flex items-center gap-2 text-gray-600 font-medium mb-2">
                 <Calendar className="h-5 w-5" /> Return
               </h3>
-              <p className="text-gray-800">
-                {carInfo?.EndDate || "fetching issue"}
-              </p>
-              <p className="text-gray-600 flex items-center gap-1 mt-1">
-                <Clock className="h-4 w-4" />{" "}
-                {carInfo?.EndTime || "fetching issue"}
-              </p>
+              <DatePicker
+                label="End Date"
+                value={carInfo.userEndDate ? dayjs(carInfo.userEndDate) : null}
+                onChange={handleEndDateChange}
+                shouldDisableDate={(date) =>
+                  (selectedStart && date.isBefore(selectedStart, "day")) ||
+                  (availableEnd && date.isAfter(availableEnd, "day"))
+                }
+                renderInput={(params) => (
+                  <TextField
+                    required
+                    {...params}
+                    fullWidth
+                    variant="outlined"
+                    sx={{ backgroundColor: "white", borderRadius: "8px" }}
+                  />
+                )}
+              />
+              <div className="mt-2" style={{ height: "4rem" }}>
+                <Select
+                  labelId="end-time-label"
+                  id="end-time"
+                  value={carInfo.userEndTime || ""}
+                  onChange={(e) => {
+                    setCarInfo((prevCarInfo) => ({
+                      ...prevCarInfo,
+                      userEndTime: e.target.value,
+                    }));
+                  }}
+                  required
+                  fullWidth
+                >
+                  {generateTimeOptions().map((time) => (
+                    <MenuItem key={time} value={time}>
+                      {time}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </div>
             </div>
           </div>
         </div>
+        <h3 className="flex items-center gap-2 text-gray-600 font-medium mb-2">
+          Availablity
+        </h3>
+        <div className="flex flex-col flex-row sm:items-center gap-1 text-gray-600 w-full  py-1 text-xs w-full">
+          <div className="text-center sm:text-right">
+            <div className="font-medium text-black truncate">
+              {searchParams.get("startDate") || "Start Date"}
+            </div>
+            <div>{searchParams.get("startTime") || "Start Time"}</div>
+          </div>
+          <div className="flex items-center gap-1 justify-center">
+            <span className="w-10 sm:w-14 h-px bg-gray-400"></span>
+            <span className="text-xs text-gray-500 truncate">
+              {searchParams.get("duration") || "Duration"}
+            </span>
+            <span className="w-10 sm:w-14 h-px bg-gray-400"></span>
+          </div>
+          <div className="text-center sm:text-left">
+            <div className="font-medium text-black truncate">
+              {searchParams.get("endDate") || "End Date"}
+            </div>
+            <div>{searchParams.get("endTime") || "End Time"}</div>
+          </div>
+        </div>
       </div>
-    </>
+    </LocalizationProvider>
   );
 }
 

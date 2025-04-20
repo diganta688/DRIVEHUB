@@ -110,9 +110,10 @@ router.put("/update-location/:id", async (req, res) => {
   try {
     const hostExist = await Hostmodel.findOne({ email: email });
     if (hostExist) {
-      return res
-        .status(401)
-        .json({ success: false, message: "Email is already registered as a host" });
+      return res.status(401).json({
+        success: false,
+        message: "Email is already registered as a host",
+      });
     }
 
     const updatedUser = await UserModel.findByIdAndUpdate(
@@ -136,7 +137,9 @@ router.put("/update-location/:id", async (req, res) => {
     );
 
     if (!updatedUser) {
-      return res.status(404).json({ success: false, message: "User not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
 
     res.status(200).json({
@@ -150,5 +153,39 @@ router.put("/update-location/:id", async (req, res) => {
   }
 });
 
+router.post("/bookcarforuser/:userId/:carId", async (req, res) => {
+  const { userId, carId } = req.params;
+  const carInfo = req.body;
+  console.log(carInfo);
+  
+  try {
+    const user = await UserModel.findById(userId);
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+    const car = await Carmodel.findById(carId);
+    if (!car) {
+      return res.status(404).json({ success: false, message: "Car not found" });
+    }
+    user.RentHistory.push(car);
+    car.available = "pending";
+    car.userStartDate = carInfo.userStartDate;
+    car.userStartTime = carInfo.userStartTime;
+    car.userEndDate = carInfo.userEndDate;
+    car.userEndTime = carInfo.userEndTime;
+    await user.save();
+    await car.save();
+    return res
+      .status(200)
+      .json({ success: true, message: "Booking updated successfully", user:user, car:car });
+  } catch (error) {
+    console.error("Error while booking car for user:", error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal Server Error" });
+  }
+});
 
 module.exports = router;

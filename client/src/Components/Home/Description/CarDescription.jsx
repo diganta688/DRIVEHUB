@@ -33,7 +33,8 @@ function CarDescription() {
   const fetchCarDetails = async () => {
     try {
       const res = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/user/car/getCarDetails/${id}`,{
+        `${import.meta.env.VITE_BACKEND_URL}/user/car/getCarDetails/${id}`,
+        {
           withCredentials: true,
         }
       );
@@ -45,6 +46,10 @@ function CarDescription() {
         image: data.MainImage,
         doorstepDelivery: 500,
         insurance: "Included",
+        userStartDate: "",
+        userStartTime: "",
+        userEndDate: "",
+        userEndTime: "",
         securityDeposit: 2000,
         basePrice: data.price,
         kmLimit: `${data.UsageLimits} kms`,
@@ -115,7 +120,7 @@ function CarDescription() {
       }}
     >
       <div className="min-h-screen bg-[#f8fafc]">
-        <HostNav who="user" info={user._id}/>
+        <HostNav who="user" info={user._id} />
         <main
           className="max-w-7xl mx-auto px-4 py-8 mt-2"
           style={{ paddingBottom: "5rem" }}

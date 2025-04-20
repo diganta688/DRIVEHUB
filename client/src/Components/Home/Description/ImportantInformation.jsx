@@ -1,23 +1,10 @@
-import React from 'react';
-import {
-    Car,
-    Calendar,
-    Info,
-    MapPin,
-    Fuel,
-    Settings,
-    ArrowRight,
-    Clock,
-    Users,
-    Gauge,
-    Battery,
-    Shield,
-    Star,
-    Wrench,
-  } from "lucide-react";
+import React from "react";
+import { Info, ArrowRight } from "lucide-react";
 
-function ImportantInformation({carDetails}) {
-    return ( <><div className="bg-white rounded-xl p-4 mb-4">
+function ImportantInformation() {
+  return (
+    <>
+      <div className="bg-white rounded-xl p-4 mb-4">
         <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
           <Info className="h-5 w-5 text-blue-500" />
           Important Information
@@ -37,7 +24,9 @@ function ImportantInformation({carDetails}) {
             </div>
           ))}
         </div>
-      </div></> );
+      </div>
+    </>
+  );
 }
 
 export default ImportantInformation;

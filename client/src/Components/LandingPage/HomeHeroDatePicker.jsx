@@ -18,9 +18,7 @@ function HomeHeroDatePicker() {
   const [startTime, setStartTime] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [endTime, setEndTime] = useState(null);
-
   const navigate = useNavigate();
-
   const handleSearch = () => {
     if (!city || !startDate || !startTime || !endDate || !endTime) {
       toast.warn("Please fill in all fields.");
