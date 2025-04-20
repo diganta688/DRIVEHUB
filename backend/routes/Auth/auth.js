@@ -10,8 +10,8 @@ const multer = require("multer");
 const upload = multer({ storage });
 const cookieOptions = {
   httpOnly: true,
-  secure: process.env.NODE_ENV === "production" ? true : false,
-  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+  secure: false,
+  sameSite: "lax",
   maxAge: 24 * 60 * 60 * 1000,
 };
 
@@ -44,7 +44,8 @@ router.post("/signup", upload.single("licenseImage"), async (req, res) => {
         return res.status(400).json({ message: "Phone number already exists" });
       }
     }
-    const licenseImageURL = req.file?.path || "";
+
+    const licenseImageURL = req.file ? req.file.path : "";
     const user = await UserModel.create({
       name,
       email,
@@ -61,6 +62,7 @@ router.post("/signup", upload.single("licenseImage"), async (req, res) => {
       licenseImage: licenseImageURL,
       licenseExpiryDate,
     });
+
     const token = generateToken(user._id);
     res.cookie("jwtUser", token, cookieOptions);
     res.status(201).json({
@@ -74,6 +76,7 @@ router.post("/signup", upload.single("licenseImage"), async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+
 
 router.post("/login", async (req, res) => {
   try {

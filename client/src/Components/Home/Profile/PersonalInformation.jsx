@@ -200,49 +200,39 @@ function PersonalInformation({
       !coordinates?.lng
     )
       return;
-
     mapboxgl.accessToken = accessToken;
-
     const map = new mapboxgl.Map({
       container: mapContainerRef.current,
       style: "mapbox://styles/mapbox/streets-v11",
       center: [coordinates.lng, coordinates.lat],
       zoom: 15,
     });
-
     const marker = new mapboxgl.Marker()
       .setLngLat([coordinates.lng, coordinates.lat])
       .addTo(map);
-
     let holdTimeout;
     let isDragging = false;
-
     const onMouseDown = (e) => {
       isDragging = false;
-
       const onMouseMove = () => {
         isDragging = true;
       };
-      map.on("mousemove", onMouseMove);
-
-      holdTimeout = setTimeout(async () => {
+      const onTouchMove = () => {
+        isDragging = true;
+      };
+      const onEnd = async (e) => {
         if (isDragging) return;
-
-        const { lng, lat } = e.lngLat;
+        const { lng, lat } = e.lngLat || e.touches[0].lngLat;
         marker.setLngLat([lng, lat]);
         setCoordinates({ lng, lat });
-
         const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?access_token=${accessToken}`;
-
         try {
           const response = await fetch(url);
           const data = await response.json();
           const place = data.features[0];
-
           if (place) {
             const placeName = place.place_name;
             const context = place.context || [];
-
             let city = "",
               state = "",
               zipCode = "",
@@ -253,7 +243,6 @@ function PersonalInformation({
               else if (item.id.includes("postcode")) zipCode = item.text;
               else if (item.id.includes("country")) country = item.text;
             });
-
             setUserProfileAllInfo((prev) => ({
               ...prev,
               address: placeName,
@@ -268,16 +257,24 @@ function PersonalInformation({
         } catch (err) {
           console.error("Reverse geocoding failed", err);
         }
+      };
+      map.on("mousemove", onMouseMove);
+      map.on("touchmove", onTouchMove);
+      holdTimeout = setTimeout(() => {
+        if (isDragging) return;
+        onEnd(e);
       }, 1000);
-
       map.once("mouseup", () => {
         clearTimeout(holdTimeout);
         map.off("mousemove", onMouseMove);
       });
+      map.once("touchend", () => {
+        clearTimeout(holdTimeout);
+        map.off("touchmove", onTouchMove);
+      });
     };
-
     map.on("mousedown", onMouseDown);
-
+    map.on("touchstart", onMouseDown);
     return () => {
       map.remove();
     };

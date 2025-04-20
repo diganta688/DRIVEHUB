@@ -61,64 +61,100 @@ function Location({ setInput, input }) {
       center: [coordinates.lng, coordinates.lat],
       zoom: 15,
     });
+  
     const marker = new mapboxgl.Marker()
       .setLngLat([coordinates.lng, coordinates.lat])
       .addTo(map);
+  
     let holdTimeout;
     let isDragging = false;
+  
+    const handleReverseGeocode = async (lng, lat) => {
+      marker.setLngLat([lng, lat]);
+      setCoordinates({ lng, lat });
+      const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?access_token=${accessToken}`;
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+        const place = data.features[0];
+        if (place) {
+          const placeName = place.place_name;
+          const context = place.context || [];
+  
+          let city = "", state = "", zipCode = "", country = "";
+          context.forEach((item) => {
+            if (item.id.includes("place")) city = item.text;
+            else if (item.id.includes("region")) state = item.text;
+            else if (item.id.includes("postcode")) zipCode = item.text;
+            else if (item.id.includes("country")) country = item.text;
+          });
+  
+          setInput((prev) => ({
+            ...prev,
+            address: placeName,
+            city,
+            state,
+            zipCode,
+            country,
+            lat,
+            lng,
+          }));
+        }
+      } catch (err) {
+        console.error("Reverse geocoding failed", err);
+      }
+    };
+  
     const onMouseDown = (e) => {
       isDragging = false;
       const onMouseMove = () => {
         isDragging = true;
       };
       map.on("mousemove", onMouseMove);
-      holdTimeout = setTimeout(async () => {
+  
+      holdTimeout = setTimeout(() => {
         if (isDragging) return;
         const { lng, lat } = e.lngLat;
-        marker.setLngLat([lng, lat]);
-        setCoordinates({ lng, lat });
-        const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?access_token=${accessToken}`;
-        try {
-          const response = await fetch(url);
-          const data = await response.json();
-          const place = data.features[0];
-          if (place) {
-            const placeName = place.place_name;
-            const context = place.context || [];
-  
-            let city = "", state = "", zipCode = "", country = "";
-            context.forEach((item) => {
-              if (item.id.includes("place")) city = item.text;
-              else if (item.id.includes("region")) state = item.text;
-              else if (item.id.includes("postcode")) zipCode = item.text;
-              else if (item.id.includes("country")) country = item.text;
-            });
-            setInput((prev) => ({
-              ...prev,
-              address: placeName,
-              city,
-              state,
-              zipCode,
-              country,
-              lat,
-              lng,
-            }));
-          }
-        } catch (err) {
-          console.error("Reverse geocoding failed", err);
-        }
+        handleReverseGeocode(lng, lat);
       }, 1000);
+  
       map.once("mouseup", () => {
         clearTimeout(holdTimeout);
         map.off("mousemove", onMouseMove);
       });
     };
+  
+    const onTouchStart = (e) => {
+      isDragging = false;
+      const onTouchMove = () => {
+        isDragging = true;
+      };
+      map.on("touchmove", onTouchMove);
+  
+      const touch = e.point;
+      const { lng, lat } = map.unproject([touch.x, touch.y]);
+  
+      holdTimeout = setTimeout(() => {
+        if (isDragging) return;
+        handleReverseGeocode(lng, lat);
+      }, 1000);
+  
+      map.once("touchend", () => {
+        clearTimeout(holdTimeout);
+        map.off("touchmove", onTouchMove);
+      });
+    };
+  
     map.on("mousedown", onMouseDown);
+    map.on("touchstart", onTouchStart);
+  
     return () => {
       map.off("mousedown", onMouseDown);
+      map.off("touchstart", onTouchStart);
       map.remove();
     };
-  }, [coordinates]);  
+  }, [coordinates]);
+  
   useEffect(() => {
     const loadInitialCoordinates = async () => {
       if (input.address) {

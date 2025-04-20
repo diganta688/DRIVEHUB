@@ -40,6 +40,9 @@ function EmailValidator({ open, setOpen, formdata, onetimepass }) {
         `${import.meta.env.VITE_BACKEND_URL}/auth/signup`,
         formdata,
         {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
           withCredentials: true,
         }
       );

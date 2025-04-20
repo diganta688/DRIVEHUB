@@ -72,11 +72,9 @@ const UserLicence = ({ input, setInput }) => {
   <Box width="100%">
     <DatePicker
       label="Licence Expiry Date"
-      value={
-        input.licenseExpiryDate ? dayjs(input.licenseExpiryDate) : null
-      }
+      value={input.licenseExpiryDate ? dayjs(input.licenseExpiryDate) : null}
       onChange={handleDateChange}
-      minDate={dayjs().add(7, "day")}
+      minDate={dayjs().add(7, "day")}  // Ensure this is correctly initialized
       renderInput={(params) => (
         <TextField
           required
@@ -97,6 +95,7 @@ const UserLicence = ({ input, setInput }) => {
     </Typography>
   </Box>
 </LocalizationProvider>
+
 
     </Box>
   );

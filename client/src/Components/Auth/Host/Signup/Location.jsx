@@ -63,54 +63,83 @@ function Location({ setFormData }) {
       center: [coordinates.lng, coordinates.lat],
       zoom: 15,
     });
+  
     const marker = new mapboxgl.Marker()
       .setLngLat([coordinates.lng, coordinates.lat])
       .addTo(map);
+  
     let holdTimeout;
-    map.on("mousedown", (e) => {
-      holdTimeout = setTimeout(async () => {
-        const { lng, lat } = e.lngLat;
-        marker.setLngLat([lng, lat]);
-        setCoordinates({ lng, lat });
-        const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?access_token=${accessToken}`;
-        try {
-          const response = await fetch(url);
-          const data = await response.json();
-          const place = data.features[0];
-          if (place) {
-            const placeName = place.place_name;
-            const context = place.context || [];
-            let city = "",
-              state = "",
-              zipCode = "",
-              country = "";
-            context.forEach((item) => {
-              if (item.id.includes("place")) city = item.text;
-              else if (item.id.includes("region")) state = item.text;
-              else if (item.id.includes("postcode")) zipCode = item.text;
-              else if (item.id.includes("country")) country = item.text;
-            });
-            setFormData((prev) => ({
-              ...prev,
-              address: placeName,
-              city,
-              state,
-              zipCode,
-              country,
-              lat,
-              lng,
-            }));
-          }
-        } catch (err) {
-          console.error("Reverse geocoding failed", err);
+  
+    const handleHold = async (lng, lat) => {
+      marker.setLngLat([lng, lat]);
+      setCoordinates({ lng, lat });
+      const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?access_token=${accessToken}`;
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+        const place = data.features[0];
+        if (place) {
+          const placeName = place.place_name;
+          const context = place.context || [];
+          let city = "",
+            state = "",
+            zipCode = "",
+            country = "";
+          context.forEach((item) => {
+            if (item.id.includes("place")) city = item.text;
+            else if (item.id.includes("region")) state = item.text;
+            else if (item.id.includes("postcode")) zipCode = item.text;
+            else if (item.id.includes("country")) country = item.text;
+          });
+          setFormData((prev) => ({
+            ...prev,
+            address: placeName,
+            city,
+            state,
+            zipCode,
+            country,
+            lat,
+            lng,
+          }));
         }
+      } catch (err) {
+        console.error("Reverse geocoding failed", err);
+      }
+    };
+  
+    const onMouseDown = (e) => {
+      holdTimeout = setTimeout(() => {
+        const { lng, lat } = e.lngLat;
+        handleHold(lng, lat);
       }, 900);
-    });
-    map.on("mouseup", () => {
+    };
+  
+    const onTouchStart = (e) => {
+      const touch = e.point;
+      const lngLat = map.unproject([touch.x, touch.y]);
+      holdTimeout = setTimeout(() => {
+        handleHold(lngLat.lng, lngLat.lat);
+      }, 900);
+    };
+  
+    const clearHold = () => {
       clearTimeout(holdTimeout);
-    });
-    return () => map.remove();
+    };
+  
+    map.on("mousedown", onMouseDown);
+    map.on("mouseup", clearHold);
+    map.on("touchstart", onTouchStart);
+    map.on("touchend", clearHold);
+  
+    return () => {
+      map.off("mousedown", onMouseDown);
+      map.off("mouseup", clearHold);
+      map.off("touchstart", onTouchStart);
+      map.off("touchend", clearHold);
+      map.remove();
+    };
   }, [coordinates]);
+  
   return (
     <div className="space-y-4 pt-4">
       <h4 className="text-md font-medium text-gray-700 border-b">

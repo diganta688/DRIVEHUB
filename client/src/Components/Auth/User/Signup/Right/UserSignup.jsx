@@ -26,11 +26,10 @@ const UserSignup = () => {
     country: "",
     lng: 0,
     lat: 0,
-      licenseImage: null,
-      licenseExpiryDate: "",
+    licenseImage: "",
+    licenseExpiryDate: "",
   });
-  
-  
+
   const navigate = useNavigate();
   const [emailError, setEmailError] = useState("");
   const [ageError, setAgeError] = useState("");
@@ -48,6 +47,15 @@ const UserSignup = () => {
     e.preventDefault();
     setOpen(true);
     OtpSend();
+    const formData = new FormData();
+    for (let key in input) {
+      if (input[key] !== null) {
+        formData.append(key, input[key]);
+      }
+    }
+    if (input.licenseImage) {
+      formData.append("licenseImage", input.licenseImage);
+    }
   };
   const OtpSend = async () => {
     try {

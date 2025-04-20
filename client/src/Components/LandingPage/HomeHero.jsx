@@ -14,11 +14,9 @@ import Hyperspeed from "./Hyperspeed";
 import { hyperspeedPresets } from "./presets";
 import RollingGallery from "./RollingGallery";
 import {checkUser} from "../../utils/checkHost"
-import { useNavigate } from "react-router-dom";
 
 
 function HomeHero() {
-  const navigate = useNavigate();
   const [isMouse, setIsMouse] = useState(false);
   const [display, setDisplay] = useState(true);
   const [userInfo, setUserInfo] = useState(null);

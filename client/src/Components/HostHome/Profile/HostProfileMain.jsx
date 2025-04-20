@@ -66,7 +66,7 @@ const HostProfileMain = () => {
     city: car.city,
     pricePerDay: car.price,
     fuelType: car.fuelType,
-    image: car.MainImage || "https://source.unsplash.com/featured/?car",
+    image: car.MainImage,
     status: "Active",
     listedOn: new Date(car.createdAt).toLocaleDateString("en-GB"),
   }));
