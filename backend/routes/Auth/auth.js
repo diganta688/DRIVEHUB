@@ -15,7 +15,6 @@ const cookieOptions = {
   sameSite: isProduction ? 'None' : 'Lax',
   maxAge: 24 * 60 * 60 * 1000,
 };
-
 router.post("/signup", upload.single("licenseImage"), async (req, res) => {
   try {
     const {
@@ -45,7 +44,6 @@ router.post("/signup", upload.single("licenseImage"), async (req, res) => {
         return res.status(400).json({ message: "Phone number already exists" });
       }
     }
-
     const licenseImageURL = req.file ? req.file.path : "";
     const user = await UserModel.create({
       name,
