@@ -28,7 +28,7 @@ function CarDescription() {
   const [carDetails, setCarDetails] = useState(null);
   const [user, setUser] = useState(null);
   useEffect(() => {
-    checkUser(setUser);
+    checkUser(setUser, navigate);
   }, []);
   const fetchCarDetails = async () => {
     try {

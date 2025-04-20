@@ -17,6 +17,8 @@ import HistoryIcon from "@mui/icons-material/History";
 import { Pencil } from "lucide-react";
 import { Dialog, Button } from "@mui/material";
 import { handlePhotoUpload, handleSubmit } from "../../../utils/submitOperation";
+import { useNavigate } from "react-router-dom";
+
 
 const HostProfileMain = () => {
   const [hostData, setHostData] = useState(null);
@@ -28,14 +30,20 @@ const HostProfileMain = () => {
   const [profilePhotoLoader, setProfilePhotoLoader] = useState(false);
   const [nameEmailChange, setNameEmailChange] = useState(false);
   const [nameSubmitLoader, setNameSubmitLoader] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    checkHost((data) => {
-      setHostData(data || {});
-      setHostDataCopy(data);
-      setLoading(false);
-    });
+    checkHost(
+      (data) => {
+        setHostData(data || {});
+        setHostDataCopy(data);
+        setLoading(false);
+      },
+      "",      
+      navigate
+    );
   }, []);
+  
 
   const host = {
     name: hostData?.name || "undefined",

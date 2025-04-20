@@ -6,8 +6,11 @@ import { UserHomeContext } from "../../Context/context";
 import BlurText from "./BlueText";
 import HostNav from "../HostHome/HostNav";
 import { checkUser } from "../../utils/checkHost";
+import { useNavigate } from "react-router-dom";
+
 
 function Homee() {
+  const navigate = useNavigate();
   const [cars, setCars] = useState([]);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -21,7 +24,7 @@ function Homee() {
   const check = async () => {
     setLoading(true);
     await fetchCars();
-    await checkUser(setUser);
+    await checkUser(setUser, navigate);
     setLoading(false);
   };
   

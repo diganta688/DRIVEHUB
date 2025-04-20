@@ -7,8 +7,11 @@ import HostInfo from "./HostInfo";
 import HostNav from "./HostNav";
 import { toast } from "react-toastify";
 import { checkHost } from '../../utils/checkHost';
+import { useNavigate } from "react-router-dom";
+
 
 function App() {
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [mainImagePreview, setMainImagePreview] = useState(null);
   const [optionalImagePreviews, setOptionalImagePreviews] = useState([]);
@@ -142,7 +145,7 @@ function App() {
     }));
   };
   useEffect(() => {
-   checkHost(setName, setFormData);
+   checkHost(setName, setFormData, navigate);
   }, []);
   const handleSubmit = async (e) => {
     e.preventDefault();

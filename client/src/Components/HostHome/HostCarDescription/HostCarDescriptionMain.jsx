@@ -11,8 +11,11 @@ import { HostCarEditContext } from "../../../Context/context";
 import { checkHost } from "../../../utils/checkHost";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+
 
 function HostCarDescriptionMain() {
+  const navigate = useNavigate();
   const location = useLocation();
   const { car } = location.state || {};
   const [openInCarEdit, setOpenInCarEdit] = useState("BasicInfoForm");
@@ -35,7 +38,7 @@ function HostCarDescriptionMain() {
     PeakPower: false,
   });
   useEffect(() => {
-    checkHost(setHostForEditCar);
+    checkHost(setHostForEditCar, navigate);
   }, []);
   const handleInputChange = (e) => {
     const { name, value } = e.target;

@@ -11,6 +11,7 @@ import { checkUser } from "../../../utils/checkHost";
 
 function ConfirmBookingMain() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [accepted, setAccepted] = useState(false);
   const [totalAmmount, setTotalAmmount] = useState(0);
   const [carInfo, setCarInfo] = useState(null);
@@ -19,13 +20,12 @@ function ConfirmBookingMain() {
   const [makePaymentLoading, setMakePaymentLoading] = useState(false);
   const [user, setUser] = useState(null);
   useEffect(() => {
-    checkUser(setUser);
+    checkUser(setUser, navigate);
   }, []);
   const handleCheckboxChange = (e) => {
     setAccepted(e.target.checked);
   };
   const location = useLocation();
-  const navigate = useNavigate();
   useEffect(() => {
     const {
       display,

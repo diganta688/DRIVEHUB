@@ -13,8 +13,12 @@ import axios from "axios";
 import Hyperspeed from "./Hyperspeed";
 import { hyperspeedPresets } from "./presets";
 import RollingGallery from "./RollingGallery";
+import {checkUser} from "../../utils/checkHost"
+import { useNavigate } from "react-router-dom";
+
 
 function HomeHero() {
+  const navigate = useNavigate();
   const [isMouse, setIsMouse] = useState(false);
   const [display, setDisplay] = useState(true);
   const [userInfo, setUserInfo] = useState(null);
@@ -23,24 +27,8 @@ function HomeHero() {
     setIsMouse(hasMouse);
   });
   useEffect(() => {
-    check();
+    checkUser(setUserInfo, navigate);
   }, []);
-  const check = async () => {
-    try {
-      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/auth/home`, {
-        withCredentials: true,
-      });
-      if (response.status === 200) {
-        setUserInfo(response.data.user);
-      } else {
-        setDisplay(false);
-      }
-    } catch (error) {
-      if (error.response?.status === 401) {
-        setDisplay(false);
-      }
-    }
-  };
   
   return (
     <div className="main-home-hero">
