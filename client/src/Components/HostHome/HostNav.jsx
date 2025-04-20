@@ -29,7 +29,11 @@ function HostNav({who, info}) {
       if (res.status === 200) {
         toast.success("Logout Done", {
           onClose: () => {
-            window.location.reload();
+            if(who==="user"){
+              window.location.href=`${import.meta.env.VITE_FRONTEND_URL}/log-in`
+            } else if(who==="host"){
+              window.location.href=`${import.meta.env.VITE_FRONTEND_URL}/host/login`
+            }
           },
         });
       }
