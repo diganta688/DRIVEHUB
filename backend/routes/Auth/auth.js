@@ -8,10 +8,11 @@ const { Hostmodel } = require("../../models/Host");
 const { storage } = require("../../cloudinaryConfig");
 const multer = require("multer");
 const upload = multer({ storage });
+const isProduction = process.env.NODE_ENV === 'production';
 const cookieOptions = {
   httpOnly: true,
-  secure: false,
-  sameSite: "lax",
+  secure: isProduction, 
+  sameSite: isProduction ? 'None' : 'Lax',
   maxAge: 24 * 60 * 60 * 1000,
 };
 
