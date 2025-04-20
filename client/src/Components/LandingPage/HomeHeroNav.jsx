@@ -51,14 +51,11 @@ function HomeHeroNav({
   const handleLogout = async () => {
     try {
       const res = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/auth/logout`,
+        `${import.meta.env.VITE_BACKEND_URL}/auth/user/logout`,
         { withCredentials: true }
       );
       if (res.status === 200) {
         toast.success("Logout Done", {
-          onClose: () => {
-            window.location.reload();
-          },
         });
       }
     } catch (error) {
