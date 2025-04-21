@@ -169,28 +169,34 @@ function PickupINFO({ carInfo, homeDelivery, distanceHome, setCarInfo }) {
             </div>
           </div>
         </div>
-        <h3 className="flex items-center gap-2 text-gray-600 font-medium mb-2">
+        <h3 className="flex items-center gap-2 text-gray-600 font-medium my-2">
           Availablity
         </h3>
-        <div className="flex flex-col flex-row sm:items-center gap-1 text-gray-600 w-full  py-1 text-xs w-full">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 text-gray-600 py-2 text-base justify-center">
           <div className="text-center sm:text-right">
-            <div className="font-medium text-black truncate">
+            <div className="font-semibold text-black truncate text-lg">
               {searchParams.get("startDate") || "Start Date"}
             </div>
-            <div>{searchParams.get("startTime") || "Start Time"}</div>
+            <div className="text-base">
+              {searchParams.get("startTime") || "Start Time"}
+            </div>
           </div>
-          <div className="flex items-center gap-1 justify-center">
-            <span className="w-10 sm:w-14 h-px bg-gray-400"></span>
-            <span className="text-xs text-gray-500 truncate">
+
+          <div className="flex items-center gap-3 justify-center">
+            <span className="w-14 sm:w-20 h-px bg-gray-400"></span>
+            <span className="text-base text-gray-500 truncate">
               {searchParams.get("duration") || "Duration"}
             </span>
-            <span className="w-10 sm:w-14 h-px bg-gray-400"></span>
+            <span className="w-14 sm:w-20 h-px bg-gray-400"></span>
           </div>
+
           <div className="text-center sm:text-left">
-            <div className="font-medium text-black truncate">
+            <div className="font-semibold text-black truncate text-lg">
               {searchParams.get("endDate") || "End Date"}
             </div>
-            <div>{searchParams.get("endTime") || "End Time"}</div>
+            <div className="text-base">
+              {searchParams.get("endTime") || "End Time"}
+            </div>
           </div>
         </div>
       </div>

@@ -195,7 +195,7 @@ function ConfirmBookingMain() {
               distanceHome={distanceHome}
             />
 
-            <div className="px-6 py-4">
+            <div className="px-6 pt-4">
               <div
                 style={{
                   height: "15rem",
@@ -212,7 +212,7 @@ function ConfirmBookingMain() {
                   id="acceptTerms"
                   checked={accepted}
                   onChange={handleCheckboxChange}
-                  className="mt-1"
+                  className="text-sm text-gray-500 italicmt-1"
                   required
                 />
                 <label htmlFor="acceptTerms" className="text-sm">
@@ -221,21 +221,22 @@ function ConfirmBookingMain() {
                 </label>
               </div>
 
-              <p className="text-sm text-gray-500 italic">
+              <p className="text-sm text-gray-500 italic m-0">
                 Note: These terms are governed by Indian law. Disputes will be
                 resolved under jurisdiction of [Your City] courts.
               </p>
-            </div>
-
-            <div className="w-full">
               {(!carInfo?.userStartTime ||
                 !carInfo?.userEndTime ||
                 !carInfo?.userStartDate ||
                 !carInfo?.userEndDate) && (
-                <p className="text-red-500 text-sm mt-2">
+                <p className="text-red-500 text-sm m-0">
                   Please select both start and end date/time before proceeding.
                 </p>
               )}
+            </div>
+
+            <div className="w-full">
+              
               <button
                 className="w-full bg-orange-500 text-white py-2 rounded hover:bg-orange-600 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 disabled={

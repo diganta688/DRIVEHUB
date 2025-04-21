@@ -28,11 +28,33 @@ function CarCard({ car }) {
             alt="Tesla Model 3"
             className="w-full h-full object-cover"
           />
-          <div className="absolute top-4 left-4 bg-white px-2 py-1 rounded-full">
-            <div className="flex items-center gap-1">
-              <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-              <span className="text-sm font-medium">4.9</span>
+          <div className="flex justify-between absolute top-4 w-full px-3">
+            <div
+              className=" bg-white px-2 py-1 rounded-full "
+              style={{ height: "1.8rem" }}
+            >
+              <div className="flex items-center gap-1">
+                <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                <span className="text-sm font-medium">4.9</span>
+              </div>
             </div>
+            {car.available === "pending" ? (
+              <button
+                type="button"
+                className="btn btn-outline-success btn-sm"
+                disabled
+              >
+                Available
+              </button>
+            ) : (
+              <button
+                type="button"
+                className="btn btn-outline-secondary btn-sm"
+                disabled
+              >
+                Not Available
+              </button>
+            )}
           </div>
         </div>
         <div className="p-4">
@@ -71,7 +93,11 @@ function CarCard({ car }) {
                       : `No extra charges even if the distance limit is exceeded – it's completely free`
                   }
                 >
-                  <InfoIcon fontSize="small" className="mx-1" style={{cursor: "pointer"}} />
+                  <InfoIcon
+                    fontSize="small"
+                    className="mx-1"
+                    style={{ cursor: "pointer" }}
+                  />
                 </Tooltip>
               </span>
             </div>
@@ -84,7 +110,7 @@ function CarCard({ car }) {
               <span className="text-gray-600">/day</span>
             </div>
             <button
-            style={{borderRadius: "10px"}}
+              style={{ borderRadius: "10px" }}
               className="bg-orange-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-orange-700 transition-colors"
               onClick={navigateToCarDescription}
             >

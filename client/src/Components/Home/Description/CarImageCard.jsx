@@ -48,19 +48,36 @@ function CarImageCard({
           </div>
         </div>
         <div className="w-full">
+          {carDetails.available !== "active" && (
+            <p className="m-0 text-sm text-red-500">
+              * You can't book this car right now it is not available.
+            </p>
+          )}
+
           <button
+            disabled={carDetails.available !== "active"}
             onClick={() => {
               if (carDetails.doorstepDelivery === 500) {
                 setFullScreenMapOpen((p) => !p);
               } else {
                 navigate(
                   `/confirm-booking/${carDetails.id}?startDate=${carDetails.StartDate}&startTime=${carDetails.StartTime}&endDate=${carDetails.EndDate}&endTime=${carDetails.EndTime}`,
-                  { state: { display: true, carDetails: carDetails, homeDelivery: false} }
+                  {
+                    state: {
+                      display: true,
+                      carDetails: carDetails,
+                      homeDelivery: false,
+                    },
+                  }
                 );
               }
             }}
             ref={bookButtonRef}
-            className="border w-full mt-2 py-3 bg-orange-500"
+            className={`border w-full mt-2 py-3  ${
+              carDetails.available !== "active"
+                ? "bg-orange-200 cursor-not-allowed"
+                : "bg-orange-500 coursor-pointer"
+            }`}
             style={{ borderRadius: "10px", fontWeight: "700", color: "white" }}
           >
             Book Now

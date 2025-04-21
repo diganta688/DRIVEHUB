@@ -150,8 +150,18 @@ function CarDescription() {
         </main>
         {!inView && (
           <div className="fixed bottom-0 left-0 w-full z-50 px-4 pb-4 bg-white shadow-md">
+            {carDetails.available !== "active" && (
+              <p className="m-0 text-sm text-red-500">
+                * You can't book this car right now it is not available.
+              </p>
+            )}
             <button
-              className="w-full px-8 py-3 bg-orange-500 text-white font-bold rounded-xl shadow-lg"
+              disabled={carDetails.available !== "active"}
+              className={`w-full px-8 py-3 text-white font-bold rounded-xl shadow-lg ${
+                carDetails.available !== "active"
+                  ? "bg-orange-200 cursor-not-allowed"
+                  : "bg-orange-500 coursor-pointer"
+              }`}
               onClick={() => {
                 bookButtonRef?.current?.scrollIntoView({ behavior: "smooth" });
                 if (carDetails.doorstepDelivery === 500) {
