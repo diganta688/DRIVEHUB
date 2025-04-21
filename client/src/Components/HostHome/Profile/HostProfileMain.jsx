@@ -67,7 +67,7 @@ const HostProfileMain = () => {
     pricePerDay: car.price,
     fuelType: car.fuelType,
     image: car.MainImage,
-    status: "Active",
+    status: car.availableSituation,
     listedOn: new Date(car.createdAt).toLocaleDateString("en-GB"),
   }));
 
@@ -227,7 +227,7 @@ const HostProfileMain = () => {
               {carsListed.map((car, index) => (
                 <motion.div
                   key={index}
-                  className="bg-white border rounded-xl shadow-sm p-4 flex flex-col sm:flex-row items-center sm:items-start hover:shadow-md transition"
+                  className="bg-white border rounded-xl shadow-sm p-4 flex flex-col sm:flex-row items-center sm:items-start hover:shadow-md transition mb-3"
                   whileHover={{ scale: 1.02 }}
                 >
                   <img
@@ -252,7 +252,7 @@ const HostProfileMain = () => {
                     </p>
                     <p
                       className={`text-sm font-medium mt-2 ${
-                        car.status === "Active"
+                        car.status === "active"
                           ? "text-blue-600"
                           : "text-yellow-600"
                       }`}

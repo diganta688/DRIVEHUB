@@ -16,8 +16,11 @@ import HostNav from "../../HostHome/HostNav";
 import { useLocation } from "react-router-dom";
 import { carDetailsContext } from "../../../Context/context";
 import { checkUser } from "../../../utils/checkHost";
+import dayjs from "dayjs";
+
 
 function CarDescription() {
+
   const location = useLocation();
   const navigate = useNavigate();
   const [FullScreenMapOpen, setFullScreenMapOpen] = useState(false);
@@ -42,6 +45,7 @@ function CarDescription() {
       const newCarDetails = {
         id: data._id,
         availableLocations: data.city,
+        available: data.available,
         name: `${data.make} ${data.model}`,
         image: data.MainImage,
         doorstepDelivery: 500,
@@ -132,6 +136,7 @@ function CarDescription() {
               bookButtonRef={bookButtonRef}
               FullScreenMapOpen={FullScreenMapOpen}
               setFullScreenMapOpen={setFullScreenMapOpen}
+              user={user}
             />
             <div
               className="col-span-12 lg:col-span-8 space-y-6 custom-scrollbar"
@@ -150,40 +155,51 @@ function CarDescription() {
         </main>
         {!inView && (
           <div className="fixed bottom-0 left-0 w-full z-50 px-4 pb-4 bg-white shadow-md">
-            {carDetails.available !== "active" && (
-              <p className="m-0 text-sm text-red-500">
-                * You can't book this car right now it is not available.
-              </p>
-            )}
-            <button
-              disabled={carDetails.available !== "active"}
-              className={`w-full px-8 py-3 text-white font-bold rounded-xl shadow-lg ${
-                carDetails.available !== "active"
-                  ? "bg-orange-200 cursor-not-allowed"
-                  : "bg-orange-500 coursor-pointer"
-              }`}
-              onClick={() => {
-                bookButtonRef?.current?.scrollIntoView({ behavior: "smooth" });
-                if (carDetails.doorstepDelivery === 500) {
-                  setFullScreenMapOpen((p) => !p);
-                } else {
-                  navigate(
-                    `/confirm-booking/${carDetails.id}?startDate=${carDetails.StartDate}&startTime=${carDetails.StartTime}&endDate=${carDetails.EndDate}&endTime=${carDetails.EndTime}`,
-                    {
-                      state: {
-                        display: true,
-                        carDetails: carDetails,
-                        homeDelivery: false,
-                      },
-                    }
-                  );
-                }
-              }}
-              style={{ borderRadius: "10px", fontWeight: "700" }}
-            >
-              Book Now
-            </button>
-          </div>
+          {!carDetails.available && (
+            <p className="m-0 text-sm text-red-500">
+              * You can't book this car right now. It is not available.
+            </p>
+          )}
+          {dayjs(user.licenseExpiryDate).isBefore(dayjs(), "day") && (
+            <p className="m-0 text-sm text-red-500">
+              * You can't book this car right now. Your license has expired.
+            </p>
+          )}
+        
+          <button
+            disabled={
+              !carDetails.available ||
+              dayjs(user.licenseExpiryDate).isBefore(dayjs(), "day")
+            }
+            className={`w-full px-8 py-3 text-white font-bold rounded-xl shadow-lg ${
+              !carDetails.available ||
+              dayjs(user.licenseExpiryDate).isBefore(dayjs(), "day")
+                ? "bg-orange-200 cursor-not-allowed"
+                : "bg-orange-500 cursor-pointer"
+            }`}
+            onClick={() => {
+              bookButtonRef?.current?.scrollIntoView({ behavior: "smooth" });
+              if (carDetails.doorstepDelivery === 500) {
+                setFullScreenMapOpen((p) => !p);
+              } else {
+                navigate(
+                  `/confirm-booking/${carDetails.id}?startDate=${carDetails.StartDate}&startTime=${carDetails.StartTime}&endDate=${carDetails.EndDate}&endTime=${carDetails.EndTime}`,
+                  {
+                    state: {
+                      display: true,
+                      carDetails: carDetails,
+                      homeDelivery: false,
+                    },
+                  }
+                );
+              }
+            }}
+            style={{ borderRadius: "10px", fontWeight: "700" }}
+          >
+            Book Now
+          </button>
+        </div>
+        
         )}
       </div>
     </carDetailsContext.Provider>

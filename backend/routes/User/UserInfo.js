@@ -3,6 +3,7 @@ const router = express.Router();
 const { Carmodel } = require("../../models/Car");
 const { UserModel } = require("../../models/User");
 const { Hostmodel } = require("../../models/Host");
+const NotificationModel = require("../../models/Notifications");
 const { storage } = require("../../cloudinaryConfig");
 const multer = require("multer");
 const upload = multer({ storage });
@@ -36,7 +37,7 @@ router.get("/car/getCarDetails/:id", async (req, res) => {
 router.get("/getUserInfo/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const user = await UserModel.findById(id);
+    const user = await UserModel.findById(id).populate("RentHistory");
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -156,8 +157,6 @@ router.put("/update-location/:id", async (req, res) => {
 router.post("/bookcarforuser/:userId/:carId", async (req, res) => {
   const { userId, carId } = req.params;
   const carInfo = req.body;
-  console.log(carInfo);
-  
   try {
     const user = await UserModel.findById(userId);
     if (!user) {
@@ -170,16 +169,35 @@ router.post("/bookcarforuser/:userId/:carId", async (req, res) => {
       return res.status(404).json({ success: false, message: "Car not found" });
     }
     user.RentHistory.push(car);
-    car.available = "pending";
+    car.available = false;
+    car.availableSituation = "pending";
     car.userStartDate = carInfo.userStartDate;
     car.userStartTime = carInfo.userStartTime;
     car.userEndDate = carInfo.userEndDate;
     car.userEndTime = carInfo.userEndTime;
     await user.save();
     await car.save();
+    const Host = await Hostmodel.findById(car.host);
+    let notificationModel = await NotificationModel.create({
+      userId: user,
+      carId: car,
+      bookingStatus: "pending",
+      userStartDate: carInfo.userStartDate,
+      userEndDate: carInfo.userEndDate,
+      userStartTime: carInfo.userStartTime,
+      userEndTime: carInfo.userEndTime,
+      message: "Booking",
+    });
+    Host.notifications.push(notificationModel);
+    await Host.save();
     return res
       .status(200)
-      .json({ success: true, message: "Booking updated successfully", user:user, car:car });
+      .json({
+        success: true,
+        message: "Booking updated successfully",
+        user: user,
+        car: car,
+      });
   } catch (error) {
     console.error("Error while booking car for user:", error);
     return res

@@ -15,7 +15,6 @@ function Dashboard() {
   useEffect(() => {
     const filterCars = () => {
       let filtered = [...cars];
-
       const city = searchParams.get("city");
       const startDate = searchParams.get("startDate");
       const startTime = searchParams.get("startTime");

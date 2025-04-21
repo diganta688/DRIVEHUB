@@ -35,7 +35,7 @@ exports.ProtectHost = async (req, res, next) => {
         .status(401)
         .json({ status: false, error: "User no longer exists" });
     }
-    req.user = await user.populate("cars");
+    req.user = await user.populate(["cars", "notifications"]);
     next();
   } catch (error) {
     console.error("Protect middleware error:", error);

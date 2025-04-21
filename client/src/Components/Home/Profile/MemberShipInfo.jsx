@@ -4,7 +4,7 @@ import { Pencil, Shield } from "lucide-react";
 
 function MemberShipInfo({}) {
     return ( <><div>
-        <div className="flex items-center justify-between mb-4 px-3">
+        <div className="flex items-center justify-between mb-4 px-4">
           <h2 className="text-xl font-semibold text-gray-800">
             Membership Status
           </h2>

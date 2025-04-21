@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useRef} from "react";
 import { Calendar, MapPin } from "lucide-react";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers";
@@ -11,6 +11,7 @@ import { useLocation } from "react-router-dom";
 
 function PickupINFO({ carInfo, homeDelivery, distanceHome, setCarInfo }) {
   const location = useLocation();
+  const price = useRef()
   const searchParams = new URLSearchParams(location.search);
   const availableStart = carInfo.StartDate ? dayjs(carInfo.StartDate) : null;
   const availableEnd = carInfo.EndDate ? dayjs(carInfo.EndDate) : null;
@@ -53,7 +54,25 @@ function PickupINFO({ carInfo, homeDelivery, distanceHome, setCarInfo }) {
       }));
     }
   };
-
+  useEffect(() => {
+    if (carInfo.userStartDate && carInfo.userEndDate) {
+      const start = dayjs(carInfo.userStartDate);
+      const end = dayjs(carInfo.userEndDate);
+      let rentalDays = end.diff(start, "day");
+      rentalDays = rentalDays > 0 ? rentalDays : 1;
+      if (rentalDays > 0) {
+        setCarInfo((prev) => ({
+          ...prev,
+          basePrice: rentalDays * price.current,
+        }));
+      }
+    }
+  }, [carInfo.userStartDate, carInfo.userEndDate, price]);
+  
+  
+  useEffect(()=>{
+    price.current=carInfo.basePrice;
+  },[])
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className="px-6 py-4 border-b">

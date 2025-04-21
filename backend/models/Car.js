@@ -59,8 +59,12 @@ const carSchema = new mongoose.Schema(
     },
     host: { type: mongoose.Schema.Types.ObjectId, ref: "Host", required: true },
     available:{
+      type:Boolean,
+      default: true
+    },
+    availableSituation:{
       type:String,
-      enum: ["active", "pending", "booked", "conpleted"] ,
+      enum: ["active", "pending", "booked", "conpleted", "canceled", "diactive"] ,
       default: "active"
     }
   },

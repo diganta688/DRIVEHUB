@@ -38,10 +38,10 @@ function CarCard({ car }) {
                 <span className="text-sm font-medium">4.9</span>
               </div>
             </div>
-            {car.available === "pending" ? (
+            {car.available ? (
               <button
                 type="button"
-                className="btn btn-outline-success btn-sm"
+                className="btn btn-success btn-sm"
                 disabled
               >
                 Available
@@ -49,7 +49,7 @@ function CarCard({ car }) {
             ) : (
               <button
                 type="button"
-                className="btn btn-outline-secondary btn-sm"
+                className="btn btn-secondary btn-sm"
                 disabled
               >
                 Not Available

@@ -282,7 +282,7 @@ function PersonalInformation({
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-4 px-3">
+      <div className="flex items-center justify-between mb-4 px-4">
         <h2 className="text-xl font-semibold text-gray-800">
           Personal Information
         </h2>

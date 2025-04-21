@@ -62,7 +62,7 @@ const userSchema = new Schema({
     type: Boolean,
     default: false
   },
-  RentHistory:[],
+  RentHistory:[{ type: Schema.Types.ObjectId, ref: "Car" }],
   profilePhoto:{
     type: String,
     default:""

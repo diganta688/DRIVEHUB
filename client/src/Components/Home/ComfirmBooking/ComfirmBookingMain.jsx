@@ -54,9 +54,9 @@ function ConfirmBookingMain() {
     const gst = 0.18 * (base + platform);
     const total = base + security + delivery + platform + gst;
     setTotalAmmount(total.toFixed(2));
-  }, [carInfo, homeDelivery, distanceHome]);
+  }, [carInfo, homeDelivery, distanceHome]);  
 
-  const handlePayment2 = async () => {
+  const handlePayment = async () => {
     const randomId = uuidv4();
     setMakePaymentLoading(true);
     try {
@@ -95,74 +95,74 @@ function ConfirmBookingMain() {
     }
   };
 
-  const handlePayment = async () => {
-    setMakePaymentLoading(true);
-    const amount = Number(totalAmmount);
-    if (!amount || amount < 100 || amount > 10000) {
-      toast.error("Please enter a valid amount!");
-      setMakePaymentLoading(false);
-      return;
-    }
+  // const handlePayment = async () => {
+  //   setMakePaymentLoading(true);
+  //   const amount = Number(totalAmmount);
+  //   if (!amount || amount < 100 || amount > 10000) {
+  //     toast.error("Please enter a valid amount!");
+  //     setMakePaymentLoading(false);
+  //     return;
+  //   }
 
-    try {
-      const orderResponse = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/pay/create-order`,
-        {
-          amount: Math.round(amount * 100),
-          currency: "INR",
-          receipt: `receipt_${id}`,
-          notes: { userId: id },
-        },
-        {
-          withCredentials: true,
-        }
-      );
+  //   try {
+  //     const orderResponse = await axios.post(
+  //       `${import.meta.env.VITE_BACKEND_URL}/pay/create-order`,
+  //       {
+  //         amount: Math.round(amount * 100),
+  //         currency: "INR",
+  //         receipt: `receipt_${id}`,
+  //         notes: { userId: id },
+  //       },
+  //       {
+  //         withCredentials: true,
+  //       }
+  //     );
 
-      const order = orderResponse.data;
-      const options = {
-        key: import.meta.env.VITE_RAZOR_PAY_ID,
-        amount: order.amount,
-        currency: order.currency,
-        name: "Keshab",
-        description: "Test Transaction",
-        order_id: order.id,
-        handler: async (response) => {
-          try {
-            const verification = await axios.post(
-              `${import.meta.env.VITE_BACKEND_URL}/pay/verify-payment/${id}`,
-              response,
-              {
-                withCredentials: true,
-              }
-            );
-            if (verification.data.status === "ok") {
-              toast.success("Payment Successful!");
-              handlePayment2();
-            } else {
-              toast.error("Payment verification failed");
-            }
-          } catch (err) {
-            toast.error("Payment verification error");
-            console.error(err);
-          } finally {
-            setMakePaymentLoading(false);
-          }
-        },
-        modal: {
-          ondismiss: () => {
-            toast.info("Payment cancel by user");
-            setMakePaymentLoading(false);
-          },
-        },
-      };
-      const rzp = new window.Razorpay(options);
-      rzp.open();
-    } catch (err) {
-      setMakePaymentLoading(false);
-      toast.error("Error processing payment");
-      console.error(err);
-    }
-  };
+  //     const order = orderResponse.data;
+  //     const options = {
+  //       key: import.meta.env.VITE_RAZOR_PAY_ID,
+  //       amount: order.amount,
+  //       currency: order.currency,
+  //       name: "Keshab",
+  //       description: "Test Transaction",
+  //       order_id: order.id,
+  //       handler: async (response) => {
+  //         try {
+  //           const verification = await axios.post(
+  //             `${import.meta.env.VITE_BACKEND_URL}/pay/verify-payment/${id}`,
+  //             response,
+  //             {
+  //               withCredentials: true,
+  //             }
+  //           );
+  //           if (verification.data.status === "ok") {
+  //             toast.success("Payment Successful!");
+  //             handlePayment2();
+  //           } else {
+  //             toast.error("Payment verification failed");
+  //           }
+  //         } catch (err) {
+  //           toast.error("Payment verification error");
+  //           console.error(err);
+  //         } finally {
+  //           setMakePaymentLoading(false);
+  //         }
+  //       },
+  //       modal: {
+  //         ondismiss: () => {
+  //           toast.info("Payment cancel by user");
+  //           setMakePaymentLoading(false);
+  //         },
+  //       },
+  //     };
+  //     const rzp = new window.Razorpay(options);
+  //     rzp.open();
+  //   } catch (err) {
+  //     setMakePaymentLoading(false);
+  //     toast.error("Error processing payment");
+  //     console.error(err);
+  //   }
+  // };
   if (!user) return null;
   return (
     <div className="min-h-screen bg-gray-50 py-12 pb-3">

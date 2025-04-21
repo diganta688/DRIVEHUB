@@ -11,6 +11,7 @@ import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import HostNav from "../../HostHome/HostNav";
+import LoadingScreen from "../../LoadingScreen";
 
 function UserProfileMain() {
   const location = useLocation();
@@ -37,7 +38,7 @@ function UserProfileMain() {
           }
         );
         if (response.status === 200) {
-          setUserProfileInfo(response.data.user);
+          setUserProfileInfo(response.data.user);          
           setUserProfileAllInfo(response.data.user);
         } else {
           toast.error("Failed to fetch user info");
@@ -50,7 +51,6 @@ function UserProfileMain() {
     if (id) getUserInfo();
   }, [id]);
   const handleButtonClick = () => {
-    console.log("Button clicked!");
     if (state?.paymentId) {
       navigate(`/home`);
     } else {
@@ -108,9 +108,7 @@ function UserProfileMain() {
                 emailValidOpen={emailValidOpen}
               />
               <MemberShipInfo />
-              <div className="" style={{maxHeight:"30rem",overflowY: "auto"}}>
-              <CarRentHistory userProfileInfo={userProfileInfo} payment={state}/>
-              </div>
+              {userProfileInfo ? <CarRentHistory userProfileInfo={userProfileInfo} payment={state}/> : <LoadingScreen/>}
             </div>
           </div>
         </div>

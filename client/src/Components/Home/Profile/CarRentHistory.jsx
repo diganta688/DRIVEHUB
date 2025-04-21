@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import HistoryIcon from "@mui/icons-material/History";
 import { Calendar, MapPin } from "lucide-react";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
@@ -8,7 +8,6 @@ import { motion, AnimatePresence } from "framer-motion";
 function CarRentHistory({ userProfileInfo }) {
   const rentHistory = userProfileInfo?.RentHistory || [];
   const [expandedIndex, setExpandedIndex] = useState(null);
-
   const calculateDuration = (startDate, endDate) => {
     const start = new Date(startDate);
     const end = new Date(endDate);
@@ -19,24 +18,35 @@ function CarRentHistory({ userProfileInfo }) {
     setExpandedIndex(index === expandedIndex ? null : index);
   };
 
+  const formatDate = (dateStr) =>
+    new Date(dateStr).toLocaleDateString("en-IN", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+
   return (
     <>
       {rentHistory.length > 0 ? (
-        <div >
+        <div>
           <h2 className="text-xl font-semibold text-gray-800 mb-4 px-3">
             Recent Rentals
           </h2>
-          <div className="space-y-4 mx-4">
+          <div
+            className="space-y-4 mx-4"
+            style={{ maxHeight: "30rem", overflowY: "auto" }}
+          >
             {rentHistory.map((car, index) => {
               const isExpanded = expandedIndex === index;
               const duration = calculateDuration(
                 car.userStartDate,
                 car.userEndDate
               );
+              const status = car.availableSituation;
 
               return (
                 <div
-                key={car._id || index}
+                  key={car._id || index}
                   className="bg-white border border-gray-200 rounded-xl shadow-sm transition-all overflow-hidden mb-3"
                 >
                   <div
@@ -50,44 +60,37 @@ function CarRentHistory({ userProfileInfo }) {
                     />
                     <div className="ml-4 w-full">
                       <h5 className="font-semibold text-gray-800 mx-3">
-                        {car.make.toUpperCase()} {car.model.toUpperCase()}{" "}
+                        {car.make} {car.model}{" "}
                         <span className="text-gray-500">({car.year})</span>
                       </h5>
-
                       <div className="flex justify-between mt-2 text-sm text-gray-500 mx-3">
                         <div className="flex items-center">
-                          <Calendar size={16} className="mr-1" />
-                          {new Date(car.userStartDate).toLocaleDateString("en-IN")}
+                          <Calendar size={16} className="mx-1" />
+                          {formatDate(car.userStartDate)}
                         </div>
                         <div className="flex items-center">
-                          <AccessTimeIcon
-                            sx={{ fontSize: 16 }}
-                            className="mr-1"
-                          />
+                          <AccessTimeIcon sx={{ fontSize: 16 }} className="mr-1" />
                           {duration} days
                         </div>
                         <div className="flex items-center">
-                          <CurrencyRupeeIcon
-                            sx={{ fontSize: 16 }}
-                            className="mr-1"
-                          />
+                          <CurrencyRupeeIcon sx={{ fontSize: 16 }} className="mr-1" />
                           {car.price}/day
                         </div>
-                        <div>
-                          <span
-                            className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${
-                              car.available === "pending"
-                                ? "bg-yellow-100 text-yellow-700"
-                                : car.available === "booked"
-                                ? "bg-green-100 text-green-700"
-                                : car.available === "canceled"
-                                ? "bg-gray-100 text-gray-700"
-                                : ""
-                            }`}
-                          >
-                            {car.available}
-                          </span>
-                        </div>
+                        <span
+                          className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${
+                            car.availableSituation === "pending"
+                              ? "bg-yellow-100 text-yellow-700"
+                              : car.availableSituation === "booked"
+                              ? "bg-green-100 text-green-700"
+                              : car.availableSituation === "canceled"
+                              ? "bg-gray-100 text-gray-700"
+                              : car.availableSituation === "completed"
+                              ? "bg-green-100 text-green-700"
+                              : ""
+                          }`}
+                        >
+                          {car.availableSituation}
+                        </span>
                       </div>
                     </div>
                     <svg
@@ -140,10 +143,7 @@ function CarRentHistory({ userProfileInfo }) {
                                 <li className="flex justify-between">
                                   <span>Extra Charges:</span>
                                   <span>
-                                    <CurrencyRupeeIcon
-                                      sx={{ fontSize: 13 }}
-                                      className="mr-1"
-                                    />
+                                    <CurrencyRupeeIcon sx={{ fontSize: 13 }} className="mr-1" />
                                     {car.ExtraCharges}/day
                                   </span>
                                 </li>
@@ -152,13 +152,12 @@ function CarRentHistory({ userProfileInfo }) {
                                   <span>{car.transmission}</span>
                                 </li>
                                 <li className="flex justify-between">
-                                  <span>Fule Type:</span>
+                                  <span>Fuel Type:</span>
                                   <span>{car.fuelType}</span>
                                 </li>
                                 <li className="flex justify-between">
-                                <span>Last Service:</span>
-                                <span>{new Date(car.lastService).toLocaleDateString("en-IN")}</span>
-
+                                  <span>Last Service:</span>
+                                  <span>{formatDate(car.lastService)}</span>
                                 </li>
                               </ul>
                             </div>
@@ -169,20 +168,19 @@ function CarRentHistory({ userProfileInfo }) {
                               <ul className="space-y-1 text-gray-600">
                                 <li className="flex justify-between">
                                   <span>Pickup:</span>
-                                  <span>{car.userStartDate}</span>
+                                  <span>{formatDate(car.userStartDate)}</span>
                                 </li>
                                 <li className="flex justify-between">
                                   <span>Return:</span>
-                                  <span>{car.userEndDate}</span>
+                                  <span>{formatDate(car.userEndDate)}</span>
                                 </li>
                                 <li className="flex justify-between">
                                   <span>Duration:</span>
                                   <span>{duration} days</span>
                                 </li>
-
                                 <li className="flex justify-between">
                                   <span>Payment Method:</span>
-                                  <span>online</span>
+                                  <span>Online</span>
                                 </li>
                                 <li className="flex justify-between">
                                   <span>Segment:</span>
@@ -193,23 +191,31 @@ function CarRentHistory({ userProfileInfo }) {
                                   <span>
                                     {car.mileage}
                                     {car.fuelType === "Electric"
-                                      ? "/hr charge"
-                                      : "/l"}
+                                      ? " km/hr charge"
+                                      : " km/l"}
                                   </span>
                                 </li>
                                 <li className="flex justify-between">
-                                <span>Upcomming Service:</span>
-                                <span>{new Date(car.upcomingService).toLocaleDateString("en-IN")}</span>
-
+                                  <span>Upcoming Service:</span>
+                                  <span>{formatDate(car.upcomingService)}</span>
                                 </li>
                               </ul>
                             </div>
                           </div>
+
                           <div className="flex justify-between items-center mt-4 pt-4 border-t text-gray-500">
                             <div className="flex items-center">
                               <MapPin size={14} className="mr-1" />
                               <span className="mx-2">{car.address}</span>
                             </div>
+                            {(status === "pending" || status === "booked") && (
+                              <button
+                                type="button"
+                                className="px-4 py-1 border border-red-500 text-red-500 hover:bg-red-50 rounded-md text-sm"
+                              >
+                                Cancel
+                              </button>
+                            )}
                           </div>
                         </div>
                       </motion.div>

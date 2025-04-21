@@ -1,13 +1,15 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Star } from "lucide-react";
 import UserLocation from "./UserLocation";
 import { carDetailsContext } from "../../../Context/context";
 import { useNavigate } from "react-router-dom";
+import dayjs from "dayjs";
 
 function CarImageCard({
   bookButtonRef,
   setFullScreenMapOpen,
   FullScreenMapOpen,
+  user,
 }) {
   const navigate = useNavigate();
   const { carDetails } = useContext(carDetailsContext);
@@ -48,14 +50,22 @@ function CarImageCard({
           </div>
         </div>
         <div className="w-full">
-          {carDetails.available !== "active" && (
+          {!carDetails.available&& (
             <p className="m-0 text-sm text-red-500">
               * You can't book this car right now it is not available.
             </p>
           )}
+          {dayjs(user.licenseExpiryDate).isBefore(dayjs(), "day") && (
+            <p className="m-0 text-sm text-red-500">
+              * You can't book this car right now. Your license has expired.
+            </p>
+          )}
 
           <button
-            disabled={carDetails.available !== "active"}
+            disabled={
+              !carDetails.available||
+              dayjs(user.licenseExpiryDate).isBefore(dayjs(), "day")
+            }
             onClick={() => {
               if (carDetails.doorstepDelivery === 500) {
                 setFullScreenMapOpen((p) => !p);
@@ -74,9 +84,10 @@ function CarImageCard({
             }}
             ref={bookButtonRef}
             className={`border w-full mt-2 py-3  ${
-              carDetails.available !== "active"
+              !carDetails.available||
+              dayjs(user.licenseExpiryDate).isBefore(dayjs(), "day")
                 ? "bg-orange-200 cursor-not-allowed"
-                : "bg-orange-500 coursor-pointer"
+                : "bg-orange-500 cursor-pointer"
             }`}
             style={{ borderRadius: "10px", fontWeight: "700", color: "white" }}
           >
