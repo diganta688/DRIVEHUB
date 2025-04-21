@@ -15,7 +15,6 @@ function NotificationDialog({
   notificationDialogOpen,
   setNotificationDialogOpen,
   host,
-  cars,
   setCars,
 }) {
   const [notificationDetails, setNotificationDetails] = useState([]);
@@ -50,20 +49,52 @@ function NotificationDialog({
 
     fetchNotificationsDetails();
   }, [host?.notifications]);
-  const availableChange = async (carId, e, status, notificationId,notification) => {
+  const availableChange = async (
+    carId,
+    e,
+    status,
+    notificationId,
+    notification
+  ) => {
     const start = new Date(notification.userStartDate);
-const end = new Date(notification.userEndDate);
+    const end = new Date(notification.userEndDate);
     const totalDays = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+    const totalAmmount = notification.carId.price * totalDays;
+  
     try {
       setCarAcceptLoader(true);
+  
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/host/cars/activeStatus/${carId}`,
-        { status , notificationId:notificationId, hostId: host._id, totalAmmount: notification.carId.price*totalDays},
+        {
+          status,
+          notificationId,
+          hostId: host._id,
+          totalAmmount,
+        },
         { withCredentials: true }
       );
+  
       if (response.status === 200) {
         toast.success(response.data.message);
-        setIsAcceptDeclineDisable(true);
+          try {
+          const mailResponse = await axios.get(
+            `${import.meta.env.VITE_BACKEND_URL}/host/send-mail/confirmation/${notification.carId._id}/${notification.userId._id}?totalAmmount=${totalAmmount}`,
+            {
+              withCredentials: true,
+            }
+          );
+  
+          if (mailResponse.status === 200) {
+            toast.success(mailResponse.data.message || "Confirmation mail sent!");
+          } else {
+            toast.warning("Unexpected response from mail server.");
+          }
+        } catch (mailError) {
+          console.error("Failed to send confirmation mail:", mailError);
+          toast.error("Failed to send confirmation mail. Please try again.");
+        }
+          setIsAcceptDeclineDisable(true);
         setCarAcceptLoader(false);
           setCars((prevCars) =>
           prevCars.map((c) =>
@@ -99,8 +130,7 @@ const end = new Date(notification.userEndDate);
       console.error(error);
       toast.error("Updation failed");
     }
-  };
-  
+  };  
   return (
     <React.Fragment>
       <Dialog
@@ -111,71 +141,87 @@ const end = new Date(notification.userEndDate);
       >
         <DialogTitle id="alert-dialog-title">Notifications</DialogTitle>
         <DialogContent dividers>
-  {notificationLoader ? (
-    <LoadingScreen />
-  ) : notificationDetails?.length > 0 ? (
-    <div className="flex flex-col gap-4">
-      {notificationDetails.map((notification, index) => (
-        <div
-          key={index}
-          className="p-4 rounded-xl border border-gray-300 bg-white shadow-md w-full max-w-md mx-auto"
-        >
-          <DialogContentText className="text-sm md:text-base">
-            <p>
-              <strong>Booking Status:</strong> {notification.bookingStatus}
-            </p>
-            <div className="flex items-center gap-1">
-              <strong>From:</strong> <Calendar size={16} />{" "}
-              {notification.userStartDate} {notification.userStartTime}
-            </div>
-            <div className="flex items-center gap-1">
-              <strong>To:</strong> <Calendar size={16} />{" "}
-              {notification.userEndDate} {notification.userEndTime}
-            </div>
-            <p>
-              <strong>User:</strong> {notification.userId?.name || "User"}
-            </p>
-            <p>
-              <strong>Car:</strong> {notification.carId?.make}{" "}
-              {notification.carId?.model} ({notification.carId?.year})
-            </p>
-            <p>
-              <strong>Notification regarding:</strong> {notification?.message}
-            </p>
-          </DialogContentText>
-          {notification.carId.availableSituation !== "booked" &&
-            notification.carId.availableSituation !== "canceled" &&
-            notification.message === "Booking" && (
-              <div className="flex flex-col sm:flex-row justify-end gap-2 mt-4">
-                <button
-                  disabled={carAcceptLoader}
-                  type="button"
-                  className="btn btn-outline-secondary"
-                  onClick={(e) =>
-                    availableChange(notification.carId._id, e, "canceled", notification._id,notification)
-                  }
+          {notificationLoader ? (
+            <LoadingScreen />
+          ) : notificationDetails?.length > 0 ? (
+            <div className="flex flex-col gap-4">
+              {notificationDetails.map((notification, index) => (
+                <div
+                  key={index}
+                  className="p-4 rounded-xl border border-gray-300 bg-white shadow-md w-full max-w-md mx-auto"
                 >
-                  {carAcceptLoader ? "loading..." : "Reject"}
-                </button>
-                <button
-                  disabled={carAcceptLoader}
-                  type="button"
-                  className="btn btn-outline-success"
-                  onClick={(e) =>
-                    availableChange(notification.carId._id, e, "booked", notification._id,notification)
-                  }
-                >
-                  {carAcceptLoader ? "loading..." : "Accept"}
-                </button>
-              </div>
-            )}
-        </div>
-      ))}
-    </div>
-  ) : (
-    <DialogContentText>No notifications found.</DialogContentText>
-  )}
-</DialogContent>
+                  <DialogContentText className="text-sm md:text-base">
+                    <p>
+                      <strong>Booking Status:</strong>{" "}
+                      {notification.bookingStatus}
+                    </p>
+                    <div className="flex items-center gap-1">
+                      <strong>From:</strong> <Calendar size={16} />{" "}
+                      {notification.userStartDate} {notification.userStartTime}
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <strong>To:</strong> <Calendar size={16} />{" "}
+                      {notification.userEndDate} {notification.userEndTime}
+                    </div>
+                    <p>
+                      <strong>User:</strong>{" "}
+                      {notification.userId?.name || "User"}
+                    </p>
+                    <p>
+                      <strong>Car:</strong> {notification.carId?.make}{" "}
+                      {notification.carId?.model} ({notification.carId?.year})
+                    </p>
+                    <p>
+                      <strong>Notification regarding:</strong>{" "}
+                      {notification?.message}
+                    </p>
+                  </DialogContentText>
+                  {notification.carId.availableSituation !== "booked" &&
+                    notification.carId.availableSituation !== "canceled" &&
+                    notification.message === "Booking" && (
+                      <div className="flex flex-col sm:flex-row justify-end gap-2 mt-4">
+                        <button
+                          disabled={carAcceptLoader}
+                          type="button"
+                          className="btn btn-outline-secondary"
+                          onClick={(e) =>
+                            availableChange(
+                              notification.carId._id,
+                              e,
+                              "canceled",
+                              notification._id,
+                              notification
+                            )
+                          }
+                        >
+                          {carAcceptLoader ? "loading..." : "Reject"}
+                        </button>
+                        <button
+                          disabled={carAcceptLoader}
+                          type="button"
+                          className="btn btn-outline-success"
+                          onClick={(e) =>
+                            availableChange(
+                              notification.carId._id,
+                              e,
+                              "booked",
+                              notification._id,
+                              notification
+                            )
+                            // sendConfirmationMail(notification)
+                          }
+                        >
+                          {carAcceptLoader ? "loading..." : "Accept"}
+                        </button>
+                      </div>
+                    )}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <DialogContentText>No notifications found.</DialogContentText>
+          )}
+        </DialogContent>
 
         <DialogActions>
           <Button

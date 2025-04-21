@@ -5,7 +5,9 @@ const multer = require("multer");
 const upload = multer({ storage });
 const { Carmodel } = require("../../models/Car");
 const { Hostmodel } = require("../../models/Host");
+const { UserModel } = require("../../models/User");
 const NotificationModel = require("../../models/Notifications");
+const nodemailer = require("nodemailer");
 
 router.post(
   "/cars/upload/:id",
@@ -183,6 +185,75 @@ router.post("/cars/activeStatus/:id", async (req, res) => {
   } catch (error) {
     console.error("Update Error:", error);
     res.status(500).json({ message: "Updation failed" });
+  }
+});
+
+
+router.get("/send-mail/confirmation/:carId/:userId", async (req, res) => {
+  const { carId, userId } = req.params;
+  const { totalAmmount } = req.query;
+
+  const user = await UserModel.findById(userId);
+  const car = await Carmodel.findById(carId);
+
+  if (!user)
+    return res
+      .status(404)
+      .json({ message: "user not found cant send the confirmation mail" });
+
+  if (!car)
+    return res.status(401).json({ message: "car not found " });
+
+  try {
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    const mailOptions = {
+      from: `"Drive HUB" <${process.env.EMAIL_USER}>`,
+      to: user.email,
+      subject: "🚗 Car Booking Confirmation - Drive HUB",
+      html: `
+        <div style="font-family: Arial, sans-serif; color: #333;">
+          <h2>Booking Confirmed!</h2>
+          <p>Hi <strong>${user.name}</strong>,</p>
+          <p>Thank you for booking with <strong>Drive HUB</strong>. Here are your booking details:</p>
+          <hr />
+          <h3>Car Details:</h3>
+          <ul>
+            <li><strong>Car:</strong> ${car.make} ${car.model} (${car.year})</li>
+            <li><strong>Fuel Type:</strong> ${car.fuelType}</li>
+            <li><strong>Transmission:</strong> ${car.transmission}</li>
+            <li><strong>Seats:</strong> ${car.seats}</li>
+            <li><strong>Color:</strong> ${car.color}</li>
+            <li><strong>Car Location:</strong> ${car.address}, ${car.city}, ${car.state}, ${car.country} - ${car.zipCode}</li>
+          </ul>
+          <h3>Rental Period:</h3>
+          <ul>
+            <li><strong>From:</strong> ${car.userStartDate} at ${car.userStartTime}</li>
+            <li><strong>To:</strong> ${car.userEndDate} at ${car.userEndTime}</li>
+          </ul>
+          <h3>Price:</h3>
+          <p><strong>₹${car.price}/day</strong></p>
+          <p><strong>Total Price: ₹${totalAmmount}</strong></p>
+          <hr />
+          <p>If you have any questions, feel free to reach out to us.</p>
+          <p>Thank you for choosing <strong>Drive HUB</strong>!</p>
+          <br />
+          <p>🚗 Happy Driving!</p>
+        </div>
+      `,
+    };
+
+    const info = await transporter.sendMail(mailOptions);
+    res.status(200).json({ message: `Confirmation Mail sent to ${user.name} successfully` });
+  } catch (error) {
+    console.error("Error sending confirmation email:", error);
+    res.status(500).json({ message: "internal server error" });
   }
 });
 
