@@ -108,7 +108,7 @@ function UserProfileMain() {
                 emailValidOpen={emailValidOpen}
               />
               <MemberShipInfo />
-              {userProfileInfo ? <CarRentHistory userProfileInfo={userProfileInfo} payment={state}/> : <LoadingScreen/>}
+              {userProfileInfo ? <CarRentHistory userProfileInfo={userProfileInfo} payment={state} setUserProfileInfo={setUserProfileInfo}/> : <LoadingScreen/>}
             </div>
           </div>
         </div>

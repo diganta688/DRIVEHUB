@@ -146,12 +146,17 @@ router.post("/cars/activeStatus/:id", async (req, res) => {
       status,
       notificationId = "680642ea375b8e257e8fab03",
       hostId = "680642ea375b8e257e8fab03",
+      userId = "680642ea375b8e257e8fab03",
+      carId = "680642ea375b8e257e8fab03",
       totalAmmount = 0,
     } = req.body;
+    let booking="none";
     const car = await Carmodel.findById(id);
     if (!car) return res.status(404).json({ message: "Car not found" });
     const notification = await NotificationModel.findById(notificationId);
     const host = await Hostmodel.findById(hostId);
+    const user = await UserModel.findById(userId);
+    
     if (status === true) {
       car.available = true;
       car.availableSituation = "active";
@@ -159,16 +164,33 @@ router.post("/cars/activeStatus/:id", async (req, res) => {
       car.available = false;
       car.availableSituation = "diactive";
     } else if (status === "booked") {
+      const rentHistoryEntry = user.RentHistory.find(
+        (entry) => entry.carId.toString() === carId
+      );
+      if (!rentHistoryEntry) {
+        return res.status(404).json({ message: "Rent history entry not found" });
+      }
       car.available = false;
       car.availableSituation = "booked";
       notification.bookingStatus = "booked";
+      rentHistoryEntry.bookingStatus="booked"
       host.Earnings = (host.Earnings+totalAmmount)-500;
+      booking="booked";
       await notification.save();
       await host.save();
+      await user.save();
     } else if (status === "canceled") {
+      const rentHistoryEntry = user.RentHistory.find(
+        (entry) => entry.carId.toString() === carId
+      );
+      if (!rentHistoryEntry) {
+        return res.status(404).json({ message: "Rent history entry not found" });
+      }
       car.available = true;
       car.availableSituation = "active";
+      rentHistoryEntry.bookingStatus="canceled";
       await NotificationModel.findByIdAndDelete(notificationId);
+      await user.save();
     } else {
       return res.status(400).json({ message: "Invalid status" });
     }
@@ -181,6 +203,7 @@ router.post("/cars/activeStatus/:id", async (req, res) => {
           ? "Car deactivated"
           : `Car marked as ${status}`,
       car: car,
+      book:booking
     });
   } catch (error) {
     console.error("Update Error:", error);

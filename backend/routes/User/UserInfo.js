@@ -168,19 +168,63 @@ router.post("/bookcarforuser/:userId/:carId", async (req, res) => {
     if (!car) {
       return res.status(404).json({ success: false, message: "Car not found" });
     }
-    user.RentHistory.push(car);
     car.available = false;
     car.availableSituation = "pending";
     car.userStartDate = carInfo.userStartDate;
     car.userStartTime = carInfo.userStartTime;
     car.userEndDate = carInfo.userEndDate;
     car.userEndTime = carInfo.userEndTime;
+    const snapshot = {
+      make: car.make,
+      model: car.model,
+      year: car.year,
+      price: car.price,
+      address: car.address,
+      city: car.city,
+      state: car.state,
+      zipCode: car.zipCode,
+      country: car.country,
+      fuelType: car.fuelType,
+      transmission: car.transmission,
+      segment: car.segment,
+      seats: car.seats,
+      color: car.color,
+      mileage: car.mileage,
+      MainImage: car.MainImage,
+      description: car.description,
+      files: car.files,
+      startDate: car.startDate,
+      startTime: car.startTime,
+      endDate: car.endDate,
+      endTime: car.endTime,
+      upcomingService: car.upcomingService,
+      lastService: car.lastService,
+      tiresCondition: car.tiresCondition,
+      rcBook: car.rcBook,
+      insuranceDocument: car.insuranceDocument,
+      pollutionCertificate: car.pollutionCertificate,
+      UsageLimits: car.UsageLimits,
+      ExtraCharges: car.ExtraCharges,
+      Acceleration: car.Acceleration,
+      TopSpeed: car.TopSpeed,
+      PeakPower: car.PeakPower,
+      features: car.features,
+    };
+    user.RentHistory.push({
+      carId: car._id,
+      snapshot,
+      userStartDate: carInfo.userStartDate,
+      userStartTime: carInfo.userStartTime,
+      userEndDate: carInfo.userEndDate,
+      userEndTime: carInfo.userEndTime,
+      bookingStatus: "pending",
+    });
     await user.save();
     await car.save();
     const Host = await Hostmodel.findById(car.host);
-    let notificationModel = await NotificationModel.create({
-      userId: user,
-      carId: car,
+    const notificationModel = await NotificationModel.create({
+      userId: user._id,
+      carId: car._id,
       bookingStatus: "pending",
       userStartDate: carInfo.userStartDate,
       userEndDate: carInfo.userEndDate,
@@ -190,19 +234,75 @@ router.post("/bookcarforuser/:userId/:carId", async (req, res) => {
     });
     Host.notifications.push(notificationModel);
     await Host.save();
-    return res
-      .status(200)
-      .json({
-        success: true,
-        message: "Booking updated successfully",
-        user: user,
-        car: car,
-      });
+    return res.status(200).json({
+      success: true,
+      message: "Booking updated successfully",
+      user,
+      car,
+    });
   } catch (error) {
     console.error("Error while booking car for user:", error);
     return res
       .status(500)
       .json({ success: false, message: "Internal Server Error" });
+  }
+});
+
+router.get("/check-status/:id/:carId", async (req, res) => {
+  const user = await UserModel.findById(req.params.id);
+  if (!user) {
+    return res.status(404).json({ success: false, message: "User not found" });
+  }
+  const rentHistoryEntry = user.RentHistory.find(
+    (entry) => entry.carId.toString() === req.params.carId
+  );
+  if (!rentHistoryEntry) {
+    return res.status(404).json({
+      success: false,
+      message: "No rental history found for this car",
+    });
+  }
+  return res.status(200).json({
+    success: true,
+    message: "Rental status retrieved successfully",
+    rentStatus: rentHistoryEntry.bookingStatus,
+  });
+});
+
+router.get("/cancel/booking-cancel/:id/:carId", async (req, res) => {
+  try {
+    const user = await UserModel.findById(req.params.id);
+    const car = await Carmodel.findById(req.params.carId);
+    await NotificationModel.deleteOne({ carId: req.params.carId });
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+    if (!car) {
+      return res.status(404).json({ success: false, message: "Car not found" });
+    }
+    const rentHistoryEntry = user.RentHistory.find(
+      (entry) => entry.carId.toString() === req.params.carId
+    );
+    if (!rentHistoryEntry) {
+      return res.status(404).json({
+        success: false,
+        message: "No rental history found for this car",
+      });
+    }
+    rentHistoryEntry.bookingStatus = "canceled";
+    car.available = true;
+    car.availableSituation = "active";
+    await user.save();
+    await car.save();
+    return res.status(200).json({
+      success: true,
+      message: "Booking canceled successfully",
+      user,
+      car,
+    });
+  } catch (error) {
+    console.error("Cancel Error:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
 });
 

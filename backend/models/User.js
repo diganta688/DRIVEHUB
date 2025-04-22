@@ -1,6 +1,65 @@
 const { Schema, model } = require("mongoose");
 const bcrypt = require("bcryptjs");
 
+// RentHistory Snapshot Schema
+const RentHistorySchema = new Schema({
+  carId: { type: Schema.Types.ObjectId, ref: "Car" },
+  snapshot: {
+    make: String,
+    model: String,
+    year: Number,
+    price: Number,
+    address: String,
+    city: String,
+    state: String,
+    zipCode: String,
+    country: String,
+    fuelType: String,
+    transmission: String,
+    segment: String,
+    seats: Number,
+    color: String,
+    mileage: Number,
+    MainImage: String,
+    description: String,
+    files: [String],
+    startDate: String,
+    startTime: String,
+    endDate: String,
+    endTime: String,
+    upcomingService: String,
+    lastService: String,
+    tiresCondition: String,
+    rcBook: String,
+    insuranceDocument: String,
+    pollutionCertificate: String,
+    UsageLimits: Number,
+    ExtraCharges: Number,
+    Acceleration: Number,
+    TopSpeed: Number,
+    PeakPower: Number,
+    features: {
+      airbags: Boolean,
+      abs: Boolean,
+      parkingSensors: Boolean,
+      blindSpotMonitoring: Boolean,
+      Bluetooth: Boolean,
+      GPS: Boolean,
+      sunRoof: Boolean,
+      crouseControl: Boolean
+    }
+  },
+  userStartDate: String,
+  userStartTime: String,
+  userEndDate: String,
+  userEndTime: String,
+  bookingStatus: {
+    type: String,
+    enum: ["pending", "booked", "canceled", "completed"],
+    default: "pending"
+  }
+});
+
 const userSchema = new Schema({
   name: {
     type: String,
@@ -58,22 +117,26 @@ const userSchema = new Schema({
     type: String,
     required: [true, "License expiry date is required"],
   },
-  Premium:{
+  Premium: {
     type: Boolean,
     default: false
   },
-  RentHistory:[{ type: Schema.Types.ObjectId, ref: "Car" }],
-  profilePhoto:{
+  RentHistory: [RentHistorySchema],
+  profilePhoto: {
     type: String,
-    default:""
+    default: ""
   }
 });
+
+// Password hashing
 userSchema.pre("save", async function (next) {
   if (this.isModified("password")) {
     this.password = await bcrypt.hash(this.password, 10);
   }
   next();
 });
+
+// Compare password method
 userSchema.methods.comparePassword = async function (password) {
   return bcrypt.compare(password, this.password);
 };

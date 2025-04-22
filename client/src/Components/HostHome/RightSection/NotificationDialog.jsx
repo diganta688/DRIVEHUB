@@ -42,7 +42,7 @@ function NotificationDialog({
           }
         });
         const results = await Promise.all(promises);
-        setNotificationDetails(results);
+        setNotificationDetails(results.filter((n) => n && typeof n === "object"));
         setNotificationLoader(false);
       }
     };
@@ -60,10 +60,10 @@ function NotificationDialog({
     const end = new Date(notification.userEndDate);
     const totalDays = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
     const totalAmmount = notification.carId.price * totalDays;
-  
+
     try {
       setCarAcceptLoader(true);
-  
+
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/host/cars/activeStatus/${carId}`,
         {
@@ -71,32 +71,42 @@ function NotificationDialog({
           notificationId,
           hostId: host._id,
           totalAmmount,
+          userId: notification.userId._id,
+          carId: notification.carId._id,
         },
         { withCredentials: true }
       );
-  
+
       if (response.status === 200) {
         toast.success(response.data.message);
+        if (response.data.book === "booked") {
           try {
-          const mailResponse = await axios.get(
-            `${import.meta.env.VITE_BACKEND_URL}/host/send-mail/confirmation/${notification.carId._id}/${notification.userId._id}?totalAmmount=${totalAmmount}`,
-            {
-              withCredentials: true,
+            const mailResponse = await axios.get(
+              `${
+                import.meta.env.VITE_BACKEND_URL
+              }/host/send-mail/confirmation/${notification.carId._id}/${
+                notification.userId._id
+              }?totalAmmount=${totalAmmount}`,
+              {
+                withCredentials: true,
+              }
+            );
+
+            if (mailResponse.status === 200) {
+              toast.success(
+                mailResponse.data.message || "Confirmation mail sent!"
+              );
+            } else {
+              toast.warning("Unexpected response from mail server.");
             }
-          );
-  
-          if (mailResponse.status === 200) {
-            toast.success(mailResponse.data.message || "Confirmation mail sent!");
-          } else {
-            toast.warning("Unexpected response from mail server.");
+          } catch (mailError) {
+            console.error("Failed to send confirmation mail:", mailError);
+            toast.error("Failed to send confirmation mail. Please try again.");
           }
-        } catch (mailError) {
-          console.error("Failed to send confirmation mail:", mailError);
-          toast.error("Failed to send confirmation mail. Please try again.");
         }
-          setIsAcceptDeclineDisable(true);
+        setIsAcceptDeclineDisable(true);
         setCarAcceptLoader(false);
-          setCars((prevCars) =>
+        setCars((prevCars) =>
           prevCars.map((c) =>
             c._id === carId
               ? {
@@ -107,7 +117,7 @@ function NotificationDialog({
               : c
           )
         );
-          setNotificationDetails((prevDetails) =>
+        setNotificationDetails((prevDetails) =>
           prevDetails.map((n) =>
             n.carId._id === carId
               ? {
@@ -130,7 +140,7 @@ function NotificationDialog({
       console.error(error);
       toast.error("Updation failed");
     }
-  };  
+  };
   return (
     <React.Fragment>
       <Dialog
@@ -146,6 +156,7 @@ function NotificationDialog({
           ) : notificationDetails?.length > 0 ? (
             <div className="flex flex-col gap-4">
               {notificationDetails.map((notification, index) => (
+                
                 <div
                   key={index}
                   className="p-4 rounded-xl border border-gray-300 bg-white shadow-md w-full max-w-md mx-auto"
@@ -208,7 +219,6 @@ function NotificationDialog({
                               notification._id,
                               notification
                             )
-                            // sendConfirmationMail(notification)
                           }
                         >
                           {carAcceptLoader ? "loading..." : "Accept"}

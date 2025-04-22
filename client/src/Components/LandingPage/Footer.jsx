@@ -160,7 +160,6 @@ function App() {
               <a href="#" className="footer-link">Do not sell or share my personal information</a>
             </div>
             <button className="language-selector">
-              <img src="https://turo.com/public/images/us-flag.svg" alt="US Flag" />
               <span>English</span>
             </button>
           </div>

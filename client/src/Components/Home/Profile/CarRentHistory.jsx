@@ -4,10 +4,13 @@ import { Calendar, MapPin } from "lucide-react";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import { motion, AnimatePresence } from "framer-motion";
+import axios from "axios";
+import { toast } from "react-toastify";
 
-function CarRentHistory({ userProfileInfo }) {
+function CarRentHistory({ userProfileInfo,setUserProfileInfo }) {
   const rentHistory = userProfileInfo?.RentHistory || [];
   const [expandedIndex, setExpandedIndex] = useState(null);
+  const[bookingCancelLoader, setBookingCancelLoader] = useState(false);
   const calculateDuration = (startDate, endDate) => {
     const start = new Date(startDate);
     const end = new Date(endDate);
@@ -25,6 +28,64 @@ function CarRentHistory({ userProfileInfo }) {
       year: "numeric",
     });
 
+  const cancelCheck = async (carId) => {
+    setBookingCancelLoader(true);
+    try {
+      const responce = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/user/check-status/${
+          userProfileInfo._id
+        }/${carId}`,
+        { withCredentials: true }
+      );
+      if (responce.status === 200) {
+        if (
+          responce.data.rentStatus === "booked" ||
+          responce.data.rentStatus === "canceled"
+        ) {
+          toast.warn(
+            `You cannot cancel this booking right now. host was already ${responce.data.rentStatus} your car`
+          );
+          setBookingCancelLoader(false);
+        }
+        else{
+          cancelCar(carId);
+        }
+      } else {
+        setBookingCancelLoader(false);
+        console.error(responce.data.message);
+        toast.error(responce.data.message);
+      }
+    } catch (error) {
+      setBookingCancelLoader(false);
+      console.error(error);
+      toast.error("An error occurred while checking the booking status.");
+    }
+  };
+  
+  const cancelCar = async (carId) => {
+    setBookingCancelLoader(true);
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/user/cancel/booking-cancel/${userProfileInfo._id}/${carId}`,
+        { withCredentials: true }
+      )
+      if (response.status === 200) {
+        setBookingCancelLoader(false);
+        toast.success("Booking canceled successfully!");
+        setUserProfileInfo((prev) => ({
+          ...prev,
+          RentHistory: prev.RentHistory.map((entry) =>
+            entry.carId === carId ? { ...entry, bookingStatus: "canceled" } : entry
+          ),
+        }));
+      }
+    } catch (error) {
+      setBookingCancelLoader(false);
+      console.error(error);
+      toast.error("An error occurred while canceling the booking.");
+    }
+  };
+  
   return (
     <>
       {rentHistory.length > 0 ? (
@@ -42,7 +103,7 @@ function CarRentHistory({ userProfileInfo }) {
                 car.userStartDate,
                 car.userEndDate
               );
-              const status = car.availableSituation;
+              const status = car.bookingStatus;
 
               return (
                 <div
@@ -50,65 +111,59 @@ function CarRentHistory({ userProfileInfo }) {
                   className="bg-white border border-gray-200 rounded-xl shadow-sm transition-all overflow-hidden mb-3"
                 >
                   <div
-                    className="flex items-center p-4 cursor-pointer"
+                    className="flex flex-col sm:flex-row sm:items-center p-4 gap-4 cursor-pointer"
                     onClick={() => handleToggle(index)}
                   >
                     <img
-                      src={car.MainImage}
-                      alt={car.make}
-                      className="w-28 h-20 object-cover rounded"
+                      src={car.snapshot.MainImage}
+                      alt={car.snapshot.make}
+                      className="w-full sm:w-28 h-28 object-cover rounded"
                     />
-                    <div className="ml-4 w-full">
-                      <h5 className="font-semibold text-gray-800 mx-3">
-                        {car.make} {car.model}{" "}
-                        <span className="text-gray-500">({car.year})</span>
+                    <div className="w-full">
+                      <h5 className="font-semibold text-gray-800">
+                        {car.snapshot.make} {car.snapshot.model}{" "}
+                        <span className="text-gray-500">
+                          ({car.snapshot.year})
+                        </span>
                       </h5>
-                      <div className="flex justify-between mt-2 text-sm text-gray-500 mx-3">
+                      <div className="flex flex-col sm:flex-row sm:justify-between mt-2 text-sm text-gray-500 gap-2">
                         <div className="flex items-center">
-                          <Calendar size={16} className="mx-1" />
+                          <Calendar size={16} className="mr-1" />
                           {formatDate(car.userStartDate)}
                         </div>
                         <div className="flex items-center">
-                          <AccessTimeIcon sx={{ fontSize: 16 }} className="mr-1" />
+                          <AccessTimeIcon
+                            sx={{ fontSize: 16 }}
+                            className="mr-1"
+                          />
                           {duration} days
                         </div>
                         <div className="flex items-center">
-                          <CurrencyRupeeIcon sx={{ fontSize: 16 }} className="mr-1" />
-                          {car.price}/day
+                          <CurrencyRupeeIcon
+                            sx={{ fontSize: 16 }}
+                            className="mr-1"
+                          />
+                          {car.snapshot.price}/day
                         </div>
                         <span
-                          className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${
-                            car.availableSituation === "pending"
+                          className={`inline-block px-2 py-1 text-xs font-medium rounded-full text-center w-fit ${
+                            status === "pending"
                               ? "bg-yellow-100 text-yellow-700"
-                              : car.availableSituation === "booked"
+                              : status === "booked"
                               ? "bg-green-100 text-green-700"
-                              : car.availableSituation === "canceled"
+                              : status === "canceled"
                               ? "bg-gray-100 text-gray-700"
-                              : car.availableSituation === "completed"
+                              : status === "completed"
                               ? "bg-green-100 text-green-700"
                               : ""
                           }`}
                         >
-                          {car.availableSituation}
+                          {status}
                         </span>
                       </div>
                     </div>
-                    <svg
-                      className={`w-5 h-5 text-gray-400 transition-transform ${
-                        isExpanded ? "rotate-180" : ""
-                      }`}
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
                   </div>
+
                   <AnimatePresence>
                     {isExpanded && (
                       <motion.div
@@ -129,35 +184,40 @@ function CarRentHistory({ userProfileInfo }) {
                                 <li className="flex justify-between">
                                   <span>Make & Model:</span>
                                   <span>
-                                    {car.make} {car.model}
+                                    {car.snapshot.make} {car.snapshot.model}
                                   </span>
                                 </li>
                                 <li className="flex justify-between">
                                   <span>Year:</span>
-                                  <span>{car.year}</span>
+                                  <span>{car.snapshot.year}</span>
                                 </li>
                                 <li className="flex justify-between">
                                   <span>Color:</span>
-                                  <span>{car.color}</span>
+                                  <span>{car.snapshot.color}</span>
                                 </li>
                                 <li className="flex justify-between">
                                   <span>Extra Charges:</span>
                                   <span>
-                                    <CurrencyRupeeIcon sx={{ fontSize: 13 }} className="mr-1" />
-                                    {car.ExtraCharges}/day
+                                    <CurrencyRupeeIcon
+                                      sx={{ fontSize: 13 }}
+                                      className="mr-1"
+                                    />
+                                    {car.snapshot.ExtraCharges}/day
                                   </span>
                                 </li>
                                 <li className="flex justify-between">
                                   <span>Transmission:</span>
-                                  <span>{car.transmission}</span>
+                                  <span>{car.snapshot.transmission}</span>
                                 </li>
                                 <li className="flex justify-between">
                                   <span>Fuel Type:</span>
-                                  <span>{car.fuelType}</span>
+                                  <span>{car.snapshot.fuelType}</span>
                                 </li>
                                 <li className="flex justify-between">
                                   <span>Last Service:</span>
-                                  <span>{formatDate(car.lastService)}</span>
+                                  <span>
+                                    {formatDate(car.snapshot.lastService)}
+                                  </span>
                                 </li>
                               </ul>
                             </div>
@@ -184,36 +244,41 @@ function CarRentHistory({ userProfileInfo }) {
                                 </li>
                                 <li className="flex justify-between">
                                   <span>Segment:</span>
-                                  <span>{car.segment}</span>
+                                  <span>{car.snapshot.segment}</span>
                                 </li>
                                 <li className="flex justify-between">
                                   <span>Mileage:</span>
                                   <span>
-                                    {car.mileage}
-                                    {car.fuelType === "Electric"
+                                    {car.snapshot.mileage}
+                                    {car.snapshot.fuelType === "Electric"
                                       ? " km/hr charge"
                                       : " km/l"}
                                   </span>
                                 </li>
                                 <li className="flex justify-between">
                                   <span>Upcoming Service:</span>
-                                  <span>{formatDate(car.upcomingService)}</span>
+                                  <span>
+                                    {formatDate(car.snapshot.upcomingService)}
+                                  </span>
                                 </li>
                               </ul>
                             </div>
                           </div>
 
-                          <div className="flex justify-between items-center mt-4 pt-4 border-t text-gray-500">
+                          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-4 pt-4 border-t text-gray-500 gap-2">
                             <div className="flex items-center">
                               <MapPin size={14} className="mr-1" />
-                              <span className="mx-2">{car.address}</span>
+                              <span>{car.snapshot.address}</span>
                             </div>
-                            {(status === "pending" || status === "booked") && (
+                            {(status === "pending") && (
                               <button
+                              disabled={bookingCancelLoader}
                                 type="button"
-                                className="px-4 py-1 border border-red-500 text-red-500 hover:bg-red-50 rounded-md text-sm"
+                                className="px-4 py-1 text-red-500 hover:bg-red-50 rounded-md text-sm w-fit"
+                                style={{ borderRadius: "10px" }}
+                                onClick={() => cancelCheck(car.carId)}
                               >
-                                Cancel
+                                {bookingCancelLoader? "loading..." : "cancel"}
                               </button>
                             )}
                           </div>

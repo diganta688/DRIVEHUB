@@ -9,7 +9,6 @@ import Questions from "./Questions";
 import BookCarImage from "./BookCarImage";
 import Footer from "./Footer";
 import CircularGallery from "./CircularGallery";
-import axios from "axios";
 import Hyperspeed from "./Hyperspeed";
 import { hyperspeedPresets } from "./presets";
 import RollingGallery from "./RollingGallery";
@@ -56,7 +55,7 @@ function HomeHero() {
         </div>
         <HomeHeroDatePicker />
         <Tagline />
-        <div className="image-galary-main">
+        <div className="image-galary-main px-3">
           <div className="image-galary">
           <RollingGallery autoplay={true} pauseOnHover={true} />
           </div>
@@ -70,7 +69,7 @@ function HomeHero() {
             />
           </div>
         </div>
-        <div className="image-galary-main img-width">
+        <div className="image-galary-main img-width p-3">
           <div
             className="image-text"
             style={{ width: "38%", display: "flex", alignItems: "center" }}
@@ -84,7 +83,7 @@ function HomeHero() {
             <CircularGallery />
           </div>
         </div>
-        <div className="image-galary-main img-display">
+        <div className="image-galary-main img-display p-3">
           <div className="image-galary">
             <CircularGallery />
           </div>

@@ -68,7 +68,7 @@ const FAQItem = ({ question, answer, isActive, onClick }) => {
         className="p-2 bg-gray-50 cursor-pointer flex justify-between items-center hover:bg-gray-100 transition-colors duration-300"
         onClick={onClick}
       >
-        <h5 className="">{question}</h5>
+        <p className="">{question}</p>
         <span
           className={`transform transition-transform duration-300 text-sm ${
             isActive ? "rotate-45" : ""
@@ -85,7 +85,7 @@ const FAQItem = ({ question, answer, isActive, onClick }) => {
         }}
       >
         <div className="p-2 text-xs text-gray-600 whitespace-pre-line">
-          <h6>{answer}</h6>
+          <p>{answer}</p>
         </div>
       </div>
     </div>
