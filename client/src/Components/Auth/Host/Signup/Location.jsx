@@ -62,6 +62,7 @@ function Location({ setFormData }) {
       style: "mapbox://styles/mapbox/streets-v11",
       center: [coordinates.lng, coordinates.lat],
       zoom: 15,
+      doubleClickZoom: true,
     });
   
     const marker = new mapboxgl.Marker()
@@ -289,6 +290,7 @@ function Location({ setFormData }) {
           ref={mapContainerRef}
           className="w-full h-64 rounded-lg border border-gray-300 shadow cursor-pointer"
         />
+        <p className="mx-3">click &  hold for 2 sec in the map to pin</p>
       </div>
     </div>
   );

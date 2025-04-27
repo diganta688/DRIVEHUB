@@ -54,72 +54,78 @@ function UserLocation({ FullScreenMapOpen, setFullScreenMapOpen, carDetails }) {
       !defaultCoordinates?.lng
     )
       return;
-
+  
     const initializeMap = () => {
       if (mapRef.current || !mapContainerRef.current) return;
       mapboxgl.accessToken = accessToken;
-
+  
       mapRef.current = new mapboxgl.Map({
         container: mapContainerRef.current,
         style: "mapbox://styles/mapbox/streets-v11",
         center: [coordinates.lng, coordinates.lat],
         zoom: 15,
-        doubleClickZoom: false,
+        doubleClickZoom: true,
       });
-
+  
       mapRef.current.on("load", () => {
         setMapLoaded(true);
       });
-
+  
       const distanceDiv = document.createElement("div");
       distanceDiv.className = "mapboxgl-ctrl custom-distance-box";
       distanceDiv.style.cssText = `
-      background: white;
-      padding: 6px 10px;
-      border-radius: 6px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.3);
-      font-size: 14px;
-      font-weight: 500;
-    `;
-
+        background: white;
+        padding: 6px 10px;
+        border-radius: 6px;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+        font-size: 14px;
+        font-weight: 500;
+      `;
       const distanceControl = {
         onAdd: () => distanceDiv,
         onRemove: () => distanceDiv.parentNode.removeChild(distanceDiv),
       };
-
       mapRef.current.addControl(distanceControl, "top-left");
-
       markerRef.current = new mapboxgl.Marker()
         .setLngLat([coordinates.lng, coordinates.lat])
         .addTo(mapRef.current);
-
-      mapRef.current.on("dblclick", (e) => {
-        const { lng, lat } = e.lngLat;
-        markerRef.current.setLngLat([lng, lat]);
-        setCoordinates({ lng, lat });
-        reverseGeocode(lng, lat);
-        const dist = calculateDistance(
-          lat,
-          lng,
-          defaultCoordinates.lat,
-          defaultCoordinates.lng
-        );
-        setDistanceKM(dist)
-        distanceDiv.innerText = `Distance from ${carDetails.hostCity}: ${dist} km`;
-        if (dist > Number(carDetails.hostServiceArea)) {
-          setServiceAreaError(
-            `We're not there yet — you must be within ${carDetails.hostServiceArea} km of the service area.`
+        let timer;
+      const holdDuration = 1000;
+      const startHold = (e) => {
+        timer = setTimeout(() => {
+          const { lng, lat } = e.lngLat || e.touches[0];
+          markerRef.current.setLngLat([lng, lat]);
+          setCoordinates({ lng, lat });
+          reverseGeocode(lng, lat);
+          const dist = calculateDistance(
+            lat,
+            lng,
+            defaultCoordinates.lat,
+            defaultCoordinates.lng
           );
-        } else {
-          setServiceAreaError("");
-        }
-        drawRoute(defaultCoordinates, { lat, lng });
-      });
+          setDistanceKM(dist);
+          distanceDiv.innerText = `Distance from ${carDetails.hostCity}: ${dist} km`;
+          if (dist > Number(carDetails.hostServiceArea)) {
+            setServiceAreaError(
+              `We're not there yet — you must be within ${carDetails.hostServiceArea} km of the service area.`
+            );
+          } else {
+            setServiceAreaError("");
+          }
+          drawRoute(defaultCoordinates, { lat, lng });
+        }, holdDuration);
+      };
+      const cancelHold = () => {
+        clearTimeout(timer);
+      };
+      mapRef.current.on("mousedown", startHold); 
+      mapRef.current.on("touchstart", startHold); 
+      mapRef.current.on("mouseup", cancelHold); 
+      mapRef.current.on("touchend", cancelHold);
+      mapRef.current.on("mouseleave", cancelHold); 
       mapRef.current._distanceDiv = distanceDiv;
     };
-
     setTimeout(() => initializeMap(), 100);
-
     return () => {
       if (mapRef.current) {
         mapRef.current.remove();
@@ -137,7 +143,6 @@ function UserLocation({ FullScreenMapOpen, setFullScreenMapOpen, carDetails }) {
       !defaultCoordinates?.lng
     )
       return;
-
     const dist = calculateDistance(
       coordinates.lat,
       coordinates.lng,

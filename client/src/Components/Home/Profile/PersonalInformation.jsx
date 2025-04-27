@@ -456,6 +456,7 @@ function PersonalInformation({
                   ref={mapContainerRef}
                   style={{ width: "100%", height: "400px" }}
                 />
+                <p className="mx-3">click &  hold for 2 sec in the map to pin</p>
               </div>
             )}
           </div>

@@ -335,6 +335,7 @@ function Location({ setInput, input }) {
           ref={mapContainerRef}
           className="w-full h-64 rounded-lg border border-gray-300 shadow cursor-pointer"
         />
+        <p className="mx-3">click &  hold for 2 sec in the map to pin</p>
       </div>
     </div>
   );
