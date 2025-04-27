@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 require("dotenv").config();
-const { UserModel } = require("../../models/User");
-const { Hostmodel } = require("../../models/Host");
+const { UserModel } = require("../models/User");
+const { Hostmodel } = require("../models/Host");
 
 router.post("/user/password", async (req, res) => {
     const { email, password } = req.body;

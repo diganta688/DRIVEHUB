@@ -2,17 +2,17 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
-const auth = require("./routes/Auth/auth");
-const EmailValidatorSignup = require("./routes/Auth/EmailValidatorSignup");
-const forgetEmailCheck = require("./routes/Auth/forgetEmailCheck");
-const resetPassword = require("./routes/Auth/resetPassword");
-const host = require("./routes/Host/Host");
+const auth = require("./routes/auth");
+const EmailValidatorSignup = require("./routes/EmailValidatorSignup");
+const forgetEmailCheck = require("./routes/forgetEmailCheck");
+const resetPassword = require("./routes/resetPassword");
+const host = require("./routes/Host");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
-const user = require("./routes/User/UserInfo");
-const payment = require("./routes/Payment/orderPayment")
+const user = require("./routes/UserInfo");
+const payment = require("./routes/orderPayment")
 
 const sessionoption = {
   secret: "secret key",

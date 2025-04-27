@@ -1,11 +1,11 @@
 const express = require("express");
 const router = express.Router();
 require("dotenv").config();
-const { UserModel } = require("../../models/User");
-const { generateToken } = require("../../util/jwt");
-const { Protect, ProtectHost } = require("../../middleware");
-const { Hostmodel } = require("../../models/Host");
-const { storage } = require("../../cloudinaryConfig");
+const { UserModel } = require("../models/User");
+const { generateToken } = require("../util/jwt");
+const { Protect, ProtectHost } = require("../middleware");
+const { Hostmodel } = require("../models/Host");
+const { storage } = require("../cloudinaryConfig");
 const multer = require("multer");
 const upload = multer({ storage });
 const isProduction = process.env.NODE_ENV === 'production';

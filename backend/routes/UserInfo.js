@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const { Carmodel } = require("../../models/Car");
-const { UserModel } = require("../../models/User");
-const { Hostmodel } = require("../../models/Host");
-const NotificationModel = require("../../models/Notifications");
-const { storage } = require("../../cloudinaryConfig");
+const { Carmodel } = require("../models/Car");
+const { UserModel } = require("../models/User");
+const { Hostmodel } = require("../models/Host");
+const NotificationModel = require("../models/Notifications");
+const { storage } = require("../cloudinaryConfig");
 const multer = require("multer");
 const upload = multer({ storage });
 
