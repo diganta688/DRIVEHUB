@@ -61,7 +61,7 @@ function CarCard({ car }) {
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-2xl font-bold text-gray-800">
               {car.make}
-              {car.model}
+              ({car.model})
             </h2>
             <div className="flex items-center gap-1">
               <CarFront className="w-5 h-5 text-orange-600" />

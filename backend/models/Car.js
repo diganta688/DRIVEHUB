@@ -22,7 +22,7 @@ const carSchema = new mongoose.Schema(
         "Subcompact", "Full-size", "Off-Road", "Van", "Electric", "Hybrid", "CNG"
       ],
     },
-    seats: { type: Number, required: true, min: 1, max: 7 },
+    seats: { type: Number, required: true, min: 1, max: 10 },
     color: { type: String, required: true },
     mileage: { type: Number, required: true, min: 0 },
     MainImage: { type: String, required: true },

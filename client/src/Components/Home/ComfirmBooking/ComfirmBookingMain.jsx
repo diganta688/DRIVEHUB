@@ -100,7 +100,7 @@ function ConfirmBookingMain() {
     const amount = Number(totalAmmount);
     if (!amount || amount < 100 ) {
       toast.error("Please enter a valid amount!");
-      setMakePaymentLoading(false);
+      setMakePaymentLoading(false); 
       return;
     }
 
