@@ -12,21 +12,35 @@ import CircularGallery from "./CircularGallery";
 import Hyperspeed from "./Hyperspeed";
 import { hyperspeedPresets } from "./presets";
 import RollingGallery from "./RollingGallery";
-import {checkUser} from "../../utils/checkHost"
-
+import axios from "axios";
 
 function HomeHero() {
   const [isMouse, setIsMouse] = useState(false);
   const [display, setDisplay] = useState(true);
-  const [userInfo, setUserInfo] = useState(null);
+  const [city, setCity] = useState([]);
   useEffect(() => {
     const hasMouse = window.matchMedia("(pointer: fine)").matches;
     setIsMouse(hasMouse);
   });
+  const cities = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/user/get-cities`,
+        { withcredentials: true }
+      );
+      if (response) {        
+        setCity(response.data.cities);
+      } else {
+        console.error("Error fetching cities:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error fetching cities:", error);
+    }
+  };
   useEffect(() => {
-    checkUser(setUserInfo);
+    cities();
   }, []);
-  
+
   return (
     <div className="main-home-hero">
       <div className="HomeHeroVideo">
@@ -39,7 +53,6 @@ function HomeHero() {
           img="\media\Images\logo.png"
           imgClass="nav-logo"
           is={false}
-          userInfo={userInfo}
         />
         {isMouse && <p className="chakra-text css-1gyytsn">Click Me</p>}
         <div
@@ -53,11 +66,11 @@ function HomeHero() {
         >
           <Hyperspeed effectOptions={hyperspeedPresets.four} />
         </div>
-        <HomeHeroDatePicker />
+        <HomeHeroDatePicker availableCities={city}/>
         <Tagline />
         <div className="image-galary-main px-3">
           <div className="image-galary">
-          <RollingGallery autoplay={true} pauseOnHover={true} />
+            <RollingGallery autoplay={true} pauseOnHover={true} />
           </div>
           <div
             className="image-text"

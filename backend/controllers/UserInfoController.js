@@ -289,8 +289,18 @@ const cancelBooking = async (req, res) => {
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
+const getCities = async (req, res) => {
+    try {
+    const cities = await Carmodel.distinct("city");
+    res.status(200).json({ cities });
+  } catch (error) {
+    console.error("Error fetching cities:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
 
 module.exports = {
+  getCities,
   getAllCars,
   getCarDetails,
   getUserInfo,

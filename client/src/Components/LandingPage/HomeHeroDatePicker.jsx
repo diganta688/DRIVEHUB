@@ -12,8 +12,10 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { toast } from "react-toastify";
 
-function HomeHeroDatePicker() {
+function HomeHeroDatePicker({ availableCities }) {
   const [city, setCity] = useState("");
+  const [filteredCities, setFilteredCities] = useState([]);
+  const [showDropdown, setShowDropdown] = useState(false);
   const [startDate, setStartDate] = useState(null);
   const [startTime, setStartTime] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -30,7 +32,7 @@ function HomeHeroDatePicker() {
     params.append("startTime", startTime);
     params.append("endDate", endDate);
     params.append("endTime", endTime);
-  
+
     navigate(`/home?${params.toString()}`);
   };
   const generateTimeOptions = () => {
@@ -50,19 +52,64 @@ function HomeHeroDatePicker() {
     }
     return times;
   };
+  const handleCityChange = (e) => {
+    const value = e.target.value;
+    setCity(value);
+    if (value.trim() === "") {
+      setFilteredCities([]);
+      setShowDropdown(false);
+      return;
+    }
+
+    const matches = availableCities.filter((c) =>
+      c.toLowerCase().includes(value.toLowerCase())
+    );
+
+    setFilteredCities(matches);
+    setShowDropdown(true);
+  };
+
+  const handleCitySelect = (cityName) => {
+    setCity(cityName);
+    setFilteredCities([]);
+    setShowDropdown(false);
+  };
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <div className="search-container grid gap-4 p-6 bg-transparent rounded-xl shadow-lg md:grid-cols-3">
-        <div className="w-full col-span-3 md:col-span-1">
+      <div className="search-container grid gap-6 p-8 bg-white/80 rounded-2xl shadow-2xl backdrop-blur-sm border border-gray-200 md:grid-cols-3 transition-all duration-300">
+
+        <div className="relative w-full">
           <TextField
+          
             label="City, airport, address or hotel"
             fullWidth
             variant="outlined"
             value={city}
-            onChange={(e) => setCity(e.target.value)}
+            onChange={handleCityChange}
             required
-            />
+          />
+          {showDropdown && (
+            <ul className="absolute z-10 bg-white border border-gray-300 rounded-xl mt-1 max-h-40 overflow-y-auto w-full shadow-xl transition-all duration-200">
+            {filteredCities.length > 0 ? (
+              filteredCities.map((cityItem) => (
+                <li
+                  key={cityItem}
+                  className="px-4 py-2 hover:bg-blue-100 text-gray-800 cursor-pointer transition-colors"
+                  onClick={() => handleCitySelect(cityItem)}
+                >
+                  {cityItem}
+                </li>
+              ))
+            ) : (
+              <li className="px-4 py-2 text-gray-500 italic">
+                No cities found. You can access Home from top menu after login.
+              </li>
+            )}
+          </ul>
+          
+          )}
         </div>
+
         <div className="w-full col-span-3 md:col-span-1 flex flex-col md:flex-row gap-4">
           <DatePicker
             label="Start Date"
@@ -72,14 +119,14 @@ function HomeHeroDatePicker() {
             }
             renderInput={(params) => (
               <TextField
-              required
-              {...params}
-              fullWidth
-              variant="outlined"
-              sx={{ backgroundColor: "white", borderRadius: "8px" }}
+                required
+                {...params}
+                fullWidth
+                variant="outlined"
+                sx={{ backgroundColor: "white", borderRadius: "8px" }}
               />
             )}
-            />
+          />
           <FormControl fullWidth>
             <InputLabel id="startTime-label">Select Start Time</InputLabel>
             <Select
@@ -89,7 +136,7 @@ function HomeHeroDatePicker() {
               label="Select Start Time"
               onChange={(e) => setStartTime(e.target.value)}
               required
-              >
+            >
               {generateTimeOptions().map((time) => (
                 <MenuItem key={time} value={time}>
                   {time}
@@ -108,14 +155,14 @@ function HomeHeroDatePicker() {
             }
             renderInput={(params) => (
               <TextField
-              {...params}
-              fullWidth
-              variant="outlined"
-              required
-              sx={{ backgroundColor: "white", borderRadius: "8px" }}
+                {...params}
+                fullWidth
+                variant="outlined"
+                required
+                sx={{ backgroundColor: "white", borderRadius: "8px" }}
               />
             )}
-            />
+          />
           <FormControl fullWidth>
             <InputLabel id="endTime-label">Select End Time</InputLabel>
             <Select
@@ -125,7 +172,7 @@ function HomeHeroDatePicker() {
               label="Select End Time"
               required
               onChange={(e) => setEndTime(e.target.value)}
-              >
+            >
               {generateTimeOptions().map((time) => (
                 <MenuItem key={time} value={time}>
                   {time}

@@ -22,7 +22,6 @@ function HomeHeroNav({
   img,
   imgClass,
   is,
-  userInfo,
 }) {
   const scrollToAbout = () => {
     handleCloseUserMenu();
